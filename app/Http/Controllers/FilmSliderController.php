@@ -15,10 +15,10 @@ class FilmSliderController extends Controller {
 	}
 	public function postAdd(AdminAddFilmSliderRequest $request){
 		//check exist dir?
-		$check = FilmSlider::where('slider_dir', $request->slider_dir)->select('id')->get();
+		$check = FilmSlider::where('slider_name', $request->slider_name)->select('id')->get();
 		if(count($check) >= 1){
 			//
-			return redirect()->route('admin.slider.getList')->with(['flash_message'=>'Success ! Complete Add Slider new']);
+			return redirect()->back()->withErrors('Tên Slider đã tồn tại')->withInput();
 		}
 		$slider = new FilmSlider();
 		$slider->slider_name = $request->slider_name;

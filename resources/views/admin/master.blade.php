@@ -105,7 +105,7 @@
                             <!-- /input-group -->
                         </li>
                         <li>
-                            <a href="{{ url('admin') }}"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
+                            <a href="{!! url('admin') !!}"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
                         </li>
                         
                         <li>
@@ -122,6 +122,33 @@
                                 </li>
                                 <li>
                                     <a href="{!! route('admin.film.getSearch') !!}">Search Film</a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                        <li>
+                            <a href="#"><i class="glyphicon glyphicon-star"></i> Film Person<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="{!! route('admin.person.getList') !!}">List Person</a>
+                                </li>
+                                <li>
+                                    <a href="{!! route('admin.person.getAdd') !!}">Add Person</a>
+                                </li>
+                                <li>
+                                    <a href="{!! route('admin.person.getSearch') !!}">Search Person</a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                        <li>
+                            <a href="#"><i class="glyphicon glyphicon-tree-deciduous"></i> Film Job<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="{!! route('admin.job.getList') !!}">List Job</a>
+                                </li>
+                                <li>
+                                    <a href="{!! route('admin.job.getAdd') !!}">Add Job</a>
                                 </li>
                             </ul>
                             <!-- /.nav-second-level -->
@@ -171,6 +198,13 @@
                         <div class="col-lg-12">
                             <div class="alert alert-success result-message">
                                 {!! Session::get('flash_message') !!}
+                            </div>
+                        </div>
+                    @endif
+                    @if(Session::has('flash_message_error'))
+                        <div class="col-lg-12">
+                            <div class="alert alert-danger result-message">
+                                {!! Session::get('flash_message_error') !!}
                             </div>
                         </div>
                     @endif

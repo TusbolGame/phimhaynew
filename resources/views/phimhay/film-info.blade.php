@@ -50,8 +50,13 @@
 							<dd class="film-status">{!! $film_list->film_status !!}</dd>
 							<br>
 							<dt>Đạo diễn:</dt>
-							<dd>{!! $film_detail->film_director !!}</dd>
-							<br>
+							<dd>
+								<ul>
+									@foreach ($directors as $director)
+									<li><a href="{!! route('person.getProfile', [$director->filmPerson->person_dir_name, $director->filmPerson->id]) !!}" title="{!! $director->filmPerson->person_name !!}">{!! $director->filmPerson->person_name !!}</a></li>
+									@endforeach
+								</ul>
+							</dd>
 							<dt>Quốc gia:</dt>
 							<dd class="film-type">{!! $film_process->xulyGetFilmCountry($film_detail->film_country) !!}</dd>
 							<br>
@@ -75,9 +80,6 @@
 							<dt>Ngày chiếu:</dt>
 							<dd>{!! $film_detail->film_release_date !!}</dd>
 							<br>
-							<dt>Diễn viên:</dt>
-							<dd>{!! $film_detail->film_actor !!}</dd>
-							<br>
 							<dt>Công ty sx:</dt>
 							<dd>{!! $film_detail->film_production_company !!}</dd>
 							<br>
@@ -93,6 +95,28 @@
 			</div>
 		</div>
 		<div class="clearfix"></div>
+		@if(count($actors) > 0)
+		<div class="film-actor film-detail-border">
+			<h4 class="film-title-box"><span class="glyphicon glyphicon-user"></span> DIỄN VIÊN</h4>
+			<div class="film-actor-list">
+				<ol>
+					@foreach($actors as $actor)
+					<li>
+						<a href="{!! route('person.getProfile', [$actor->filmPerson->person_dir_name, $actor->filmPerson->id]) !!}" title="{!! $actor->filmPerson->person_name !!} ({!! $actor->actor_character !!})">
+							<div class="film-actor-img">
+								<img src="{!! $actor->filmPerson->person_image !!}" alt="Error">
+							</div>
+							<div class="film-actor-name">
+								<span class="film-actor-name-1">{!! $actor->filmPerson->person_name !!}</span>
+								<span class="film-actor-name-2">{!! $actor->actor_character !!}</span>
+							</div>
+						</a>
+					</li>
+					@endforeach
+				</ol>
+			</div>
+		</div>
+		@endif
 		<div class="film-trailer film-detail-border">
 			<h4 class="film-title-box"><span class="glyphicon glyphicon-film"></span> TRAILER</h4>
 			<div class="background-video">

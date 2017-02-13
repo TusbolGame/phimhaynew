@@ -73,6 +73,9 @@ class AuthController extends Controller {
 				if($this->auth->attempt($login, true)){
 					//
 					UserSession::updateCurrent();
+					//$key = $this->auth->getRecallerName();
+					// Adding the cookie to the next outgoing response, with a one-day expiry.
+					//cookie()->queue($key, cookie()->get($key), 1440);
 					return redirect('/');
 				}else{
 					return redirect()->back()->with('errors_login', '* Tài khoản hoặc Mật khẩu không đúng!!');

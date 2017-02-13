@@ -120,7 +120,7 @@
                     </select>
                 </div>
                 <div class="col-xs-3">
-                    <input type="text" class="form-control" name="film_release_date_year" value="" placeholder="Nhập năm">
+                    <input type="text" class="form-control" name="film_release_date_year" value="" required="true" placeholder="Nhập năm">
                 </div>
                 
                 
@@ -242,7 +242,7 @@
                 <label>Phim Liên Quan:</label>
                 <p><em>Không có phim liên quan</em></p>
                 <div class="form-group">
-                    <label><input type="checkbox" name="film_relate_no" value="1">Không có phim liên quan</label>
+                    <label><input type="checkbox" name="film_relate_no" value="1" checked="true">Không có phim liên quan</label>
                 </div>
                 <p><em>Hoặc Tìm kiếm: phim liên quan</em></p>
                 <div class="input-group">
@@ -320,7 +320,69 @@
                     });
                 </script>
             </div>
-
+            <div>
+                <div class="form-group">
+                    <label>Đạo diễn</label><br>
+                    <div class="director-list">
+                        <ol>
+                            <!-- <li>
+                                <input type="hidden" name="derector_id[]" value="">
+                                <span>ABC</span>
+                                <button type="button" class="btn btn-default btn-remove-director">Xóa</button>
+                            </li> -->
+                        </ol>
+                    </div>
+                    <label>Tìm kiếm đạo diễn</label>
+                    <div class="input-group">
+                        <input type="text" class="search-film-director form-control" placeholder="Đạo diễn">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button">Search!</button>
+                        </span>
+                    </div><!-- /input-group -->
+                    <div class="search-result-film-director">
+                        <ol>
+                            <!-- <li>
+                                <input type="hidden" name="search-result-director-id" value="1" disabled="true">
+                                <span class="search-result-director-name">Chon</span>
+                                <button type="button" class="btn btn-default btn-add-director">Thêm</button>
+                            </li> -->
+                        </ol>
+                    </div>
+                    <button type="button" class="btn btn-success show-film-person-director">Thêm đạo diễn mới</button>
+                </div>
+                <div class="form-group">
+                    <label>Diễn viên</label><br>
+                    <div class="actor-list">
+                        <ol>
+                           <!--  <li>
+                                <input type="hidden" name="actor_id[]" value="">
+                                <span>ABC</span>
+                                <div class="col-sm-4 actor-character">
+                                    <input type="text" class="form-control" name="actor_character[]" value="" placeholder="ABC trong vai">
+                                </div>
+                                <button type="button" class="btn btn-default btn-remove-actor">Xóa</button>
+                            </li> -->
+                        </ol>
+                    </div>
+                    <label>Tìm kiếm diễn viên</label>
+                    <div class="input-group">
+                        <input type="text" class="search-film-actor form-control" placeholder="Diễn viên">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button">Search!</button>
+                        </span>
+                    </div><!-- /input-group -->
+                    <div class="search-result-film-actor">
+                        <ol>
+                            <!-- <li>
+                                <input type="hidden" name="search-result-actor-id" value="1" disabled="true">
+                                <span class="search-result-actor-name">Chon</span>
+                                <button type="button" class="btn btn-default btn-add-actor">Thêm</button>
+                            </li> -->
+                        </ol>
+                    </div>
+                    <button type="button" class="btn btn-success show-film-person-actor">Thêm diễn viên mới</button>
+                </div>
+            </div>
         </div> <!-- ./col-lg-8 -->
 
          <div class="col-lg-4">
@@ -370,4 +432,6 @@
         
     <form>
 </div>
+@include('admin.film.modal-add-film-person-director', $film_job)
+@include('admin.film.modal-add-film-person-actor', $film_job)
 @endsection

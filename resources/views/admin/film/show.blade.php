@@ -178,11 +178,23 @@
                 </tr>
                 <tr>
                     <th>Đạo Diễn</th>
-                    <td>{!! $film_detail->film_director !!}</td>
+                    <td>
+                        <ul>
+                            @foreach ($film_director as $director)
+                            <li><a href="" title="">{!! $director->filmPerson->person_name !!}</a></li>
+                            @endforeach
+                        </ul>
+                    </td>
                 </tr>
                 <tr>
                     <th>Diễn Viên</th>
-                    <td>{!! $film_detail->film_actor !!}</td>
+                    <td>
+                        <ul>
+                            @foreach ($film_actor as $actor)
+                            <li><a href="" title="">{!! $actor->filmPerson->person_name !!} ({!! $actor->actor_character !!})</a></li>
+                            @endforeach
+                        </ul>
+                    </td>
                 </tr>
                 <tr>
                     <th>Hãng Sản Xuất</th>

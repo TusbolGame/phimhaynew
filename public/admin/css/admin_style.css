@@ -63,7 +63,7 @@ table.mceLayout, textarea.tinyMCE {
 }
 .admin-detail{
 	width: 100%;
-	overflow: hidden;
+	/* overflow: hidden; */
 }
 .film-content-info img{
 	display: block;
@@ -124,4 +124,32 @@ table.fix-word-break tr{
 }
 .user-search-result ul li{
 	width: 100%;
+	margin-top: 10px;
+}
+.user-search-result ul li span{
+	padding-left: 5px;
+}
+/* add director - actor */
+
+.search-result-film-director, .search-result-film-actor{
+	padding-top: 10px;
+}
+.search-result-film-director ol li, 
+.director-list ol li, 
+.search-result-film-actor ol li{
+	margin-bottom: 5px;
+}
+.search-result-film-director ol li span, 
+.director-list ol li span, 
+.search-result-film-actor ol li span{
+	padding-right: 5px;
+}
+.actor-character{
+	float: none;
+	display: inline-block;
+}
+.person_info{
+	height: auto;
+	white-space: pre;
+	overflow: auto !important;
 }

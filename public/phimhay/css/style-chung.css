@@ -757,6 +757,44 @@ div.vote a{
     color: #ddd;
     font-size: 13px;
 }
+.film-actor{
+    overflow: hidden;
+    
+    min-height: 150px;
+}
+.film-actor-list{
+
+}
+.film-actor-list ol li{
+    min-height: 165px;
+    width: 98px;
+    float: left;
+    margin-left: 16px;
+}
+.film-actor-img{
+    height: 128px;
+}
+.film-actor-img img{
+    width: 100%;
+    height: 100%;
+}
+.film-actor-name{
+
+}
+.film-actor-name span{
+    display: block;
+    white-space: normal;
+}
+.film-actor-name-1{
+    color: aqua;
+    margin: 3px 0 -1px;
+    padding-bottom: 1px;
+}
+.film-actor-name-2{
+    color: #f5f5dc;
+    font-size: x-small;
+    padding-top: 2px;
+}
 .film-trailer{
     min-height: 270px;
 }
@@ -1040,3 +1078,14 @@ div.vote a{
     padding-right: 10px;
 }
 /* end film search */
+
+/*person */
+.film-person-image{
+    height: 300px;
+}
+.film-person-info{
+    min-height: 310px;
+}
+.list-film-person{
+    min-height: 300px;
+}

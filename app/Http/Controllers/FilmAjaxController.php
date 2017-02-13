@@ -9,8 +9,12 @@ use App\FilmRelate;
 use App\FilmList;
 use App\FilmUserDiff;
 use App\FilmCommentLocal;
+use App\FilmPerson;
+use App\FilmPersonJob;
+use App\Lib\FilmProcess\FilmProcess;
 use Auth;
 use Cookie;
+use DB;
 use Illuminate\Http\Response;
 class FilmAjaxController extends Controller {
 
@@ -171,4 +175,5 @@ class FilmAjaxController extends Controller {
 		return response()->json($result);
 	}
 
+	
 }

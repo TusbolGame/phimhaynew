@@ -8,7 +8,7 @@
 @endsection
 @section('content')
 <div class="col-lg-12" style="padding-bottom:120px">
-    <form action="{{ route('admin.film.getAdd') }}" method="POST" class="form-add-film">
+    <form action="{{ route('admin.film.getEdit', $film_id) }}" method="POST" class="form-add-film">
         @include('admin.messages.messages')
         <input type="hidden" name="_token" value="{!! csrf_token() !!}">
 
@@ -70,13 +70,13 @@
                     $date = explode('-', $film_detail->film_release_date);
                  ?>
                 <div class="col-xs-3">
-                    <input type="text" name="film_release_date_day" class="form-control" value="@if (isset($date[0])) {!! $date[0] !!} @endif" placeholder="Nhập ngày">
+                    <input type="text" name="film_release_date_day" class="form-control" value="@if( count($date) == 3 && isset($date[0])){!! $date[0] !!}@endif" placeholder="Nhập ngày">
                 </div>
                 <div class="col-xs-3">
-                    <input type="text" name="film_release_date_month" class="form-control" value="@if (isset($date[1])) {!! $date[1] !!} @endif" placeholder="Nhập tháng">
+                    <input type="text" name="film_release_date_month" class="form-control" value="@if (count($date) == 3 && isset($date[1])){!! $date[1] !!}@endif" placeholder="Nhập tháng">
                 </div>
                 <div class="col-xs-3">
-                    <input type="text" name="film_release_date_year" class="form-control" value="@if (isset($date[2])) {!! $date[2] !!} @endif" placeholder="Nhập năm">
+                    <input type="text" name="film_release_date_year" class="form-control" value="@if (count($date) == 3 && isset($date[2])){!! $date[2] !!}@endif" required="true" placeholder="Nhập năm">
                 </div>
                 
                 
@@ -198,22 +198,22 @@
                 </div>
             </div>
             <div class="clearfix"></div>
-            <div class="col-lg-6">
+            <!-- <div class="col-lg-6">
                 <div class="form-group">
                     <label>Đạo Diễn:</label>
                     <span class="text-giai-thich"><i>Nếu có nhiều đạo diễn thì cách nhau bằng dấu phẩy và khoảng trắng ', '</i></span>
                     <span class="text-giai-thich"><i>Ex: Director 1, Director 2</i></span>
                     <textarea name="film_director" class="form-control" placeholder="Nhập tên đạo diễn" >{!! $film_detail->film_director !!}</textarea>
                 </div>
-            </div>
-            <div class="col-lg-6">
+            </div> -->
+            <!-- <div class="col-lg-6">
                 <div class="form-group">
                     <label>Diễn Viên:</label>
                     <span class="text-giai-thich"><i>Nếu có nhiều diễn viên thì cách nhau bằng dấu phẩy và khoảng trắng ', '</i></span>
                     <span class="text-giai-thich"><i>Ex: Actor 1, Actor 2</i></span>
                     <textarea name="film_actor" class="form-control" placeholder="Nhập tên diễn viên" >{!! $film_detail->film_actor !!}</textarea>
                 </div>
-            </div>
+            </div> -->
             <div class="col-lg-6">
                 <div class="form-group">
                     <label>Hãng Sản Xuất:</label>
@@ -315,7 +315,73 @@
                     });
                 </script>
             </div>
-
+            <div>
+                <div class="form-group">
+                    <label>Đạo diễn</label><br>
+                    <div class="director-list">
+                        <ol>
+                            @foreach($directors as $director)
+                            <li>
+                                <input type="hidden" name="director_id[]" value="{!! $director->filmPerson->id !!}">
+                                <span>{!! $director->filmPerson->person_name !!}</span>
+                                <button type="button" class="btn btn-default btn-remove-director">Xóa</button>
+                            </li>
+                            @endforeach
+                        </ol>
+                    </div>
+                    <label>Tìm kiếm đạo diễn</label>
+                    <div class="input-group">
+                        <input type="text" class="search-film-director form-control" placeholder="Đạo diễn">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button">Search!</button>
+                        </span>
+                    </div><!-- /input-group -->
+                    <div class="search-result-film-director">
+                        <ol>
+                            <!-- <li>
+                                <input type="hidden" name="search-result-director-id" value="1" disabled="true">
+                                <span class="search-result-director-name">Chon</span>
+                                <button type="button" class="btn btn-default btn-add-director">Thêm</button>
+                            </li> -->
+                        </ol>
+                    </div>
+                    <button type="button" class="btn btn-success show-film-person-director">Thêm đạo diễn mới</button>
+                </div>
+                <div class="form-group">
+                    <label>Diễn viên</label><br>
+                    <div class="actor-list">
+                        <ol>
+                            @foreach ($actors as $actor)
+                            <li>
+                                <input type="hidden" name="actor_id[]" value="{!! $actor->filmPerson->id !!}">
+                                <span>{!! $actor->filmPerson->person_name !!}</span>
+                                <div class="col-sm-4 actor-character">
+                                    <input type="text" class="form-control" name="actor_character[]" value="{!! $actor->actor_character !!}" placeholder="{!! $actor->filmPerson->person_name !!} trong vai">
+                                </div>
+                                <button type="button" class="btn btn-default btn-remove-actor">Xóa</button>
+                            </li>
+                            @endforeach
+                        </ol>
+                    </div>
+                    <label>Tìm kiếm diễn viên</label>
+                    <div class="input-group">
+                        <input type="text" class="search-film-actor form-control" placeholder="Diễn viên">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button">Search!</button>
+                        </span>
+                    </div><!-- /input-group -->
+                    <div class="search-result-film-actor">
+                        <ol>
+                            <!-- <li>
+                                <input type="hidden" name="search-result-actor-id" value="1" disabled="true">
+                                <span class="search-result-actor-name">Chon</span>
+                                <button type="button" class="btn btn-default btn-add-actor">Thêm</button>
+                            </li> -->
+                        </ol>
+                    </div>
+                    <button type="button" class="btn btn-success show-film-person-actor">Thêm diễn viên mới</button>
+                </div>
+            </div>
         </div> <!-- ./col-lg-8 -->
 
          <div class="col-lg-4">
@@ -357,27 +423,14 @@
                 </select>
             </div>
           </div>
-        </div>
-        
-
-        
-       
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+        </div>        
         <div class="text-center">
-            <button type="submit" class="btn btn-primary">Thêm Phim Mới</button>
+            <button type="submit" class="btn btn-primary">Sửa Phim</button>
             <button type="reset" class="btn btn-default">Reset</button>
         </div>
         
     <form>
 </div>
+@include('admin.film.modal-add-film-person-director')
+@include('admin.film.modal-add-film-person-actor')
 @endsection

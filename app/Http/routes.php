@@ -62,6 +62,14 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth'], function() {
     Route::post('change-password', ['as' => 'user.postChangePassword', 'uses' => 'UserController@postChangePassword']);
     Route::post('change-info', ['as' => 'user.postChangeInfo', 'uses' => 'UserController@postChangeInfo']);
 });
+//person 
+Route::group(['prefix' => 'person'], function() {
+    //
+    Route::get('/', ['as' => 'person.getList', 'uses' => 'FilmPersonController@getPersonList']);
+    Route::get('profile/{dir_name}/{id}', ['as' => 'person.getProfile', 'uses' => 'FilmPersonController@getProfile']);
+    //Route::post('change-password', ['as' => 'user.postChangePassword', 'uses' => 'UserController@postChangePassword']);
+    //Route::post('change-info', ['as' => 'user.postChangeInfo', 'uses' => 'UserController@postChangeInfo']);
+});
 //route captcha
 Route::group(['prefix' => 'captcha'], function() {
 	//captcha login
@@ -96,7 +104,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function(
         //
         Route::get('episode/edit/{film_id}/{id}',['as'=>'admin.film.getEditFilmEpisode', 'uses'=>'FilmController@getEditFilmEpisode']);
         Route::post('episode/edit/{film_id}/{id}',['as'=>'admin.film.postEditFilmEpisode', 'uses'=>'FilmController@postEditFilmEpisode']);
-        // Route::post('episode/edit/{film_id}',['as'=>'admin.film.postEditFilmEpisoder', 'uses'=>'FilmController@postEditFilmEpisode']);
+
         Route::get('search',['as'=>'admin.film.getSearch', 'uses'=>'FilmController@getSearchAdmin']);
         // //delete
         Route::get('delete/{id}',['as'=>'admin.film.getDelete', 'uses'=>'FilmController@getDelete']);
@@ -131,6 +139,40 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function(
         Route::post('edit/{id}', 'FilmSliderController@postEdit');
         //delete
         Route::get('delete/{id}',['as'=>'admin.slider.getDelete', 'uses'=>'FilmSliderController@getDelete']);
+    });
+    //person
+    Route::group(['prefix' => 'person'], function() {
+        //add
+        Route::get('add',['as'=>'admin.person.getAdd', 'uses'=>'FilmPersonController@getAdd']);
+        Route::post('add', 'FilmPersonController@postAdd');
+        //list
+        Route::get('list',['as'=>'admin.person.getList', 'uses'=>'FilmPersonController@getList']);
+        //edit
+        Route::get('edit/{id}',['as'=>'admin.person.getEdit', 'uses'=>'FilmPersonController@getEdit']);
+        Route::post('edit/{id}', 'FilmPersonController@postEdit');
+        //delete
+        Route::get('delete/{id}',['as'=>'admin.person.getDelete', 'uses'=>'FilmPersonController@getDelete']);
+        Route::get('search',['as'=>'admin.person.getSearch', 'uses'=>'FilmPersonController@getSearch']);
+        //ajax
+        Route::group(['prefix' => 'ajax'], function() {
+            //add person
+            Route::post('film-person-add', ['as' => 'admin.filmPersonAjax.postAdd', 'uses' => 'FilmPersonAjaxController@postAdd']);
+            //search person
+            Route::post('film-person-search', ['as' => 'admin.filmPersonAjax.postSearch', 'uses' => 'FilmPersonAjaxController@postSearch']);
+
+        });
+    });
+    Route::group(['prefix' => 'job'], function() {
+        //add
+        Route::get('add',['as'=>'admin.job.getAdd', 'uses'=>'FilmJobController@getAdd']);
+        Route::post('add', 'FilmJobController@postAdd');
+        //list
+        Route::get('list',['as'=>'admin.job.getList', 'uses'=>'FilmJobController@getList']);
+        //edit
+        Route::get('edit/{id}',['as'=>'admin.job.getEdit', 'uses'=>'FilmJobController@getEdit']);
+        Route::post('edit/{id}', 'FilmJobController@postEdit');
+        //delete
+        Route::get('delete/{id}',['as'=>'admin.job.getDelete', 'uses'=>'FilmJobController@getDelete']);
     });
 });
 

@@ -14,14 +14,15 @@ class DatabaseSeeder extends Seeder {
 	{
 		Model::unguard();
 		
-		$this->call('FilmSliderDatabaseSeeder');
-		$this->call('FilmRelateDatabaseSeeder');
-		$this->call('PhimHayConfigDatabaseSeeder');
-		$this->call('FilmDetailDatabaseSeeder');
-		$this->call('FilmListDatabaseSeeder');
-		$this->call('FilmTrailerDatabaseSeeder');
-		$this->call('FilmEpisodeDatabaseSeeder');
-		$this->call('FilmUserDiffDatabaseSeeder');
+		// $this->call('FilmJobDatabaseSeeder');
+		// $this->call('FilmSliderDatabaseSeeder');
+		// $this->call('FilmRelateDatabaseSeeder');
+		// $this->call('PhimHayConfigDatabaseSeeder');
+		// $this->call('FilmDetailDatabaseSeeder');
+		// $this->call('FilmListDatabaseSeeder');
+		// $this->call('FilmTrailerDatabaseSeeder');
+		// $this->call('FilmEpisodeDatabaseSeeder');
+		// $this->call('FilmUserDiffDatabaseSeeder');
 	}
 
 }
@@ -68,6 +69,30 @@ class FilmRelateDatabaseSeeder extends Seeder {
 			['film_relate_name' => 'Hercules'],
 			//7
 			['film_relate_name' => 'Constantine']
+			]);
+	}
+
+}
+class FilmJobDatabaseSeeder extends Seeder {
+
+	/**
+	 * Run the database seeds.
+	 *
+	 * @return void
+	 */
+	public function run()
+	{
+		DB::table('film_jobs')->insert([
+			//1
+			['job_name' => 'đạo diễn'],
+			//2
+			['job_name' => 'diễn viên'],
+			//3
+			['job_name' => 'nhà sản xuất'],
+			//4
+			['job_name' => 'nhạc phim'],
+			//5
+			['job_name' => 'nhà văn']
 			]);
 	}
 

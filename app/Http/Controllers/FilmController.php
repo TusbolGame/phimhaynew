@@ -17,6 +17,11 @@ use App\FilmEpisode;
 use App\PhimHayConfig;
 use App\FilmUserDiff;
 use App\FilmCommentLocal;
+use App\FilmActor;
+use App\FilmDirector;
+use App\FilmPerson;
+use App\FilmJob;
+use App\FilmPersonJob;
 use App\Lib\FilmProcess\FilmProcess;
 use Input;
 use Auth;
@@ -27,9 +32,10 @@ class FilmController extends Controller {
 		// echo '<br>'.$film_dir;
 		// die();
 		//find
-		$film_list = FilmList::where('id', $film_id)->where('film_dir_name', $film_dir)->first();
+		// $film_list = FilmList::where('id', $film_id)->where('film_dir_name', $film_dir)->first();
+		$film_list = FilmList::find($film_id);
 		//fb
-		if(count($film_list) == 1){
+		if(count($film_list) == 1 && $film_list->film_dir_name == $film_dir){
 			//get info
 			$film_detail = FilmDetail::find($film_id);
 			//get trailer
@@ -47,18 +53,18 @@ class FilmController extends Controller {
 				//ran
 				$type_random = $data_type[random_int(0, count($data_type)-1)];
 				//var_dump($type_random);
-				$film_relates = FilmDetail::where('film_type', 'LIKE', '%'.$type_random.'%')->where('id', '!=', $film_id)->take($relate_max)->get();
+				$film_relates = FilmDetail::where('film_type', 'LIKE', '%'.$type_random.'%')->where('id', '!=', $film_id)->with('filmList')->take($relate_max)->get();
 				//dump($film_relates);
-				//die();
+				
 			}else{
 				//maximum 12
-				$film_relates = FilmDetail::where('film_relate_id', $film_detail->film_relate_id)->where('id', '!=', $film_id)->take($relate_max)->get();
+				$film_relates = FilmDetail::where('film_relate_id', $film_detail->film_relate_id)->where('id', '!=', $film_id)->with('filmList')->take($relate_max)->get();
 				if(count($film_relates) < $relate_max){
 					//random type
 					$data_type = explode(',', $film_detail->film_type);
 					//ran
 					$type_random = $data_type[random_int(0, count($data_type)-1)];
-					$film_relate_adds = FilmDetail::where('film_type', 'LIKE', '%'.$type_random.'%')->where('id', '!=', $film_id)->where('film_relate_id', '!=', $film_detail->film_relate_id)->take($relate_max - count($film_relates))->get();
+					$film_relate_adds = FilmDetail::where('film_type', 'LIKE', '%'.$type_random.'%')->where('id', '!=', $film_id)->where('film_relate_id', '!=', $film_detail->film_relate_id)->with('filmList')->take($relate_max - count($film_relates))->get();
 				}
 			}
 			// var_dump($film_episode);die();
@@ -77,7 +83,14 @@ class FilmController extends Controller {
 			}
 			//comment
 			$film_comments = FilmCommentLocal::where('film_id', $film_id)->orderBy('id', 'DESC')->take(10)->with('user')->get();
-			return view('phimhay.film-info', compact('film_list', 'film_detail', 'film_trailer', 'ticked', 'film_episode_id', 'film_relates', 'film_relate_adds', 'film_comments'));
+			//director
+			$directors = FilmDirector::where('film_id', $film_id)->with(['filmPerson' => function ($query){
+				$query->select('id', 'person_name', 'person_dir_name');
+			}])->get();
+			$actors = FilmActor::where('film_id', $film_id)->with(['filmPerson' => function ($query){
+				$query->select('id', 'person_name', 'person_image', 'person_dir_name');
+			}])->get();
+			return view('phimhay.film-info', compact('film_list', 'film_detail', 'film_trailer', 'ticked', 'film_episode_id', 'film_relates', 'film_relate_adds', 'film_comments', 'directors', 'actors'));
 		}
 		//not found
 		return redirect()->route('404');
@@ -148,23 +161,25 @@ class FilmController extends Controller {
 
 	//admin
 	public function getAdd(){
-		return view('admin.film.add');
+		$film_job = FilmJob::all();
+		return view('admin.film.add', compact('film_job'));
 	}
 	public function postAdd(Request $request){
 		// if($request->has('film_relate_no')){
 		// 	var_dump($request->film_relate_no);
 		// }
-		// die();
+
+		//die();
 		$film_detail = new FilmDetail();
 		$film_detail->film_category = $request->film_category;
 		$film_detail->film_info = $request->film_info;
 		$film_detail->film_score_imdb = $request->film_score_imdb;
 		$film_detail->film_score_aw = $request->film_score_aw;
 		//film_type
-		$film_detail->film_type = implode(',', $request->film_type);
-		$film_detail->film_country = implode(',', $request->film_country);
-		$film_detail->film_director = $request->film_director;
-		$film_detail->film_actor = $request->film_actor;
+		$film_detail->film_type = (count($request->film_type) >= 1) ? implode(',', $request->film_type) : null;
+		$film_detail->film_country = (count($request->film_country) >= 1) ? implode(',', $request->film_country) : null;
+		//$film_detail->film_director = $request->film_director;
+		//$film_detail->film_actor = $request->film_actor;
 		//date
 		$film_detail->film_release_date = $request->film_release_date_year.'-'.$request->film_release_date_month.'-'.$request->film_release_date_day;
 		$film_detail->film_production_company = $request->film_production_company;
@@ -174,17 +189,36 @@ class FilmController extends Controller {
 			$film_relate->film_relate_name = $request->film_relate_new;
 			$film_relate->save();
 			$film_detail->film_relate_id = $film_relate->id;
-		}else if($request->has('film_relate_no')){
-			//ko co phim lien quan
-			$film_detail->film_relate_id = 1;
 		}else if($request->has('film_relate_selected')){
 			//co phim lien quan
 			$film_detail->film_relate_id = $request->film_relate_selected;
+		}else if($request->has('film_relate_no')){
+			//ko co phim lien quan
+			$film_detail->film_relate_id = 1;
 		}
 		$film_detail->film_thumbnail_big = $request->film_thumbnail_big;
 		$film_detail->film_poster_video = $request->film_poster_video;
 		$film_detail->film_key_words = $request->film_key_words;
 		$film_detail->save();
+		//add film actor
+		$actors = [];
+		$dk = count($request->actor_id);
+		$i = 0;
+		while($i < $dk){
+			$actors[$i] = ['film_id' => $film_detail->id, 'actor_id' => $request->actor_id[$i], 'actor_character' => $request->actor_character[$i]];
+			$i++;
+		}
+		$film_actor = FilmActor::insert($actors);
+		//add film director
+		$directors = [];
+		$dk = count($request->director_id);
+		$i = 0;
+		while($i < $dk){
+			$directors[$i] = ['film_id' => $film_detail->id, 'director_id' => $request->director_id[$i]];
+			$i++;
+		}
+		$film_director = FilmDirector::insert($directors);
+		die();
 		//add film trailer
 		$film_trailer = new FilmTrailer();
 		$film_trailer->id = $film_detail->id;
@@ -249,8 +283,14 @@ class FilmController extends Controller {
 		$film_detail = FilmDetail::find($film_id);
 		$film_list = FilmList::find($film_id);
 		$film_trailer = FilmTrailer::find($film_id);
-		$film_process = new FilmProcess();
-		return view('admin.film.edit', compact('film_detail', 'film_list', 'film_trailer'));
+		$film_job = FilmJob::all();
+		$directors = FilmDirector::where('film_id', $film_id)->with(['filmPerson' => function($query){
+			$query->select('id', 'person_name');
+		}])->get();
+		$actors = FilmActor::where('film_id', $film_id)->with(['filmPerson' => function($query){
+			$query->select('id', 'person_name');
+		}])->get();
+		return view('admin.film.edit', compact('film_id', 'film_detail', 'film_list', 'film_trailer','film_job', 'directors', 'actors'));
 	}
 	public function postEdit($film_id, Request $request){
 		$film_detail = FilmDetail::find($film_id);
@@ -261,12 +301,16 @@ class FilmController extends Controller {
 		//film_type
 		$film_detail->film_type = implode(',', $request->film_type);
 		$film_detail->film_country = implode(',', $request->film_country);
-		$film_detail->film_director = $request->film_director;
-		$film_detail->film_actor = $request->film_actor;
+		//fix change table person
+		// $film_detail->film_director = $request->film_director;
+		// $film_detail->film_actor = $request->film_actor;
 		//date
-		$film_detail->film_release_date = $request->film_release_date_year.'-'.$request->film_release_date_month.'-'.$request->film_release_date_day;
+		$day = (!empty($request->film_release_date_day)) ? $request->film_release_date_day : '??';
+		$month = (!empty($request->film_release_date_month)) ? $request->film_release_date_month : '??';
+		$year = (!empty($request->film_release_date_year)) ? $request->film_release_date_year : '??';
+		$film_detail->film_release_date = $day.'-'.$month.'-'.$year;
 		$film_detail->film_production_company = $request->film_production_company;
-		if($request->relate != 'no'){
+		if(!$request->has('relate')){
 			//phim lien quan moi
 			if($request->film_relate_new != ''){
 				$film_relate = new FilmRelate();
@@ -285,6 +329,36 @@ class FilmController extends Controller {
 		$film_detail->film_poster_video = $request->film_poster_video;
 		$film_detail->film_key_words = $request->film_key_words;
 		$film_detail->save();
+		//person
+		//xoa all film director --> add lai
+		//delete all director from film_director
+		FilmDirector::where('film_id', $film_id)->delete();
+		//crate arr director
+		if(count($request->director_id) > 0){
+			$directors = [];
+			foreach ($request->director_id as $key) {
+				array_push($directors, ['film_id' => $film_id, 'director_id' => $key]);
+			}
+			//add
+			if(count($directors) > 0){
+				FilmDirector::insert($directors);
+			}
+		}
+		//xoa all film actor --> add lai
+		//delete all actor from film_actor
+		FilmActor::where('film_id', $film_id)->delete();
+		//crate arr director
+		if(count($request->actor_id) > 0){
+			$actors = [];
+			foreach ($request->actor_id as $key => $val) {
+				array_push($actors, ['film_id' => $film_id, 'actor_id' => $val, 'actor_character' => $request->actor_character[$key]]);
+			}
+			//add
+			if(count($actors) > 0){
+				FilmActor::insert($actors);
+			}
+		}
+		// die();
 		//add film trailer
 		$film_trailer = FilmTrailer::find($film_id);
 		$film_trailer->film_episode_language = $request->film_episode_language;
@@ -342,8 +416,15 @@ class FilmController extends Controller {
 		$film_trailer = FilmTrailer::find($film_id);
 		$film_episodes = FilmEpisode::where('film_id', $film_id)->paginate(12);
 		$film_episodes->setPath(route('admin.film.getShow', $film_id));
-		$film_process = new FilmProcess();
-		return view('admin.film.show', compact('film_detail', 'film_list', 'film_trailer', 'film_id', 'film_episodes'));
+		$film_director = FilmDirector::where('film_id', $film_id)->with(['filmPerson' => 
+			function ($query){
+			$query->select('id', 'person_name', 'person_dir_name');
+		}])->get();
+		$film_actor = FilmActor::where('film_id', $film_id)->with(['filmPerson' => 
+			function ($query){
+			$query->select('id', 'person_name', 'person_dir_name');
+		}])->get();
+		return view('admin.film.show', compact('film_detail', 'film_list', 'film_trailer', 'film_id', 'film_episodes', 'film_director', 'film_actor'));
 	}
 	public function postEditFilmTrailer($film_id, Request $request){
 		$film_trailer = FilmTrailer::find($film_id);

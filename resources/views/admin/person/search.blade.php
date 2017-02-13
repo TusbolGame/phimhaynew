@@ -1,19 +1,19 @@
 @extends('admin.master')
 @section('header')
 <div class="col-lg-12">
-    <h1 class="page-header">User
+    <h1 class="page-header">Person
         <small>Search</small>
     </h1>
 </div>
 @endsection
 @section('content')
 <div class="col-lg-7" style="padding-bottom:120px">
-    <form action="#" method="POST" class="form-search-user">
+    <form action="#" method="POST" class="form-search-person">
         @include('admin.messages.messages')
         <input type="hidden" name="_token" value="{!! csrf_token() !!}">
         <div class="form-group">
-            <label>Tìm kiếm user:</label>
-            <input class="form-control" id="search-key-value" name="txtUsername" value="{{ old('txtUsername') }}" placeholder="Please Enter Username or Full name" required="true" />
+            <label>Tìm kiếm Person:</label>
+            <input class="form-control" id="search-key-value" name="person_name" value="{{ old('person_name') }}" placeholder="Nhập Person Name" required="true" />
         </div>
     <form>
     <div class="user-search-result">
@@ -47,22 +47,25 @@ $('input#search-key-value').click(function() {
     $(this).keyup(function() {
         //goi ajax
         var data = {
-            _token : $('form.form-search-user').children('input[name="_token"]').val(),
-            search_key_value : $('input#search-key-value').val()
+            _token : $('form.form-search-person').children('input[name="_token"]').val(),
+            person_name : $('input#search-key-value').val()
         };
         $.ajax({
             type : 'POST',
             dataType : 'json',
-            url : '{!! route('admin.userAjax.postSearch') !!}',
+            url : '{!! route('admin.filmPersonAjax.postSearch') !!}',
             data : data,
             success : function (result){
                 //call remove
+                //
+                // $person_edit_url = '{!! route('home') !!}/admin/person/edit/';
+                $person_edit_url = '{!! route('admin.person.getEdit', '') !!}/';
                 removeSearchUser();
                 if(result['status'] == 1){
                     var dk = result['content'].length;
                     var i = 0;
                     while(i < dk){
-                        addSearchUser('{!! route('admin.user.getEdit', '') !!}/'+result['content'][i]['id'], '{!! route('home') !!}/resources/photos/'+result['content'][i]['image'], result['content'][i]['username'], result['content'][i]['first_name']+' '+result['content'][i]['last_name']);                     
+                        addSearchUser($person_edit_url+result['content'][i]['id'], result['content'][i]['person_image'], result['content'][i]['person_name'], '');                     
                         i++;
                     }
                     //show

@@ -7,7 +7,7 @@
 @endsection
 @section('content')
 <div class="col-lg-12 admin-detail">
-    <table class="table table-bordered">
+    <table class="table table-bordered table-hover table-striped">
         <caption>Danh sách</caption>
         <thead>
             <tr>
