@@ -97,6 +97,33 @@ class FilmJobDatabaseSeeder extends Seeder {
 	}
 
 }
+class FilmCountryDatabaseSeeder extends Seeder {
+
+	/**
+	 * Run the database seeds.
+	 *
+	 * @return void
+	 */
+	public function run()
+	{
+		DB::table('film_countries')->insert([
+			//1
+			['country_name' => 'Anh', 'country_alias' => 'anh'],
+			['country_name' => 'Ấn Độ', 'country_alias' => 'an-do'],
+			['country_name' => 'Âu-Mỹ', 'country_alias' => 'au-my'],
+			['country_name' => 'Đài Loan', 'country_alias' => 'dai-loan'],
+			['country_name' => 'Hồng Kông', 'country_alias' => 'hong-kong'],
+			['country_name' => 'Mỹ', 'country_alias' => 'my'],
+			['country_name' => 'Nga', 'country_alias' => 'nga'],
+			['country_name' => 'Nhật Bản', 'country_alias' => 'nhat-ban'],
+			['country_name' => 'Việt Nam', 'country_alias' => 'viet-nam'],
+			['country_name' => 'Thái Lan', 'country_alias' => 'thai-lan'],
+			['country_name' => 'Trung Quốc', 'country_alias' => 'trung-quoc'],
+			['country_name' => 'Quốc Gia Khác', 'country_alias' => 'quoc-gia-khac']
+			]);
+	}
+
+}
 class FilmSliderDatabaseSeeder extends Seeder {
 
 	/**

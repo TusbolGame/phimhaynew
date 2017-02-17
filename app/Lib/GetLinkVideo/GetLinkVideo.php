@@ -114,6 +114,12 @@ $thumbnail = $jsonData[‘args’][‘thumbnail_url’];
 	    }
 	    
 	}
+	function getLinkDrive($url = 'https://drive.google.com/file/d/0B5vaC4qOISLQSTk1ZjNnOUJJVVE/view'){
+		$data = file_get_contents($url);
+		json_encode($data);
+		var_dump($data);
+
+	}
 	function getLinkVideoGoogleDrive($curl){ 
 	    $get = file_get_contents($curl); 
 	    $cat = explode(',["fmt_stream_map","', $get); 

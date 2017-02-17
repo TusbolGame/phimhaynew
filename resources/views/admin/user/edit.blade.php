@@ -12,33 +12,39 @@
         @include('admin.messages.messages')
         <input type="hidden" name="_token" value="{!! csrf_token() !!}">
         <div class="form-group">
-            <label>Username<span class="text-danger">*</span></label>
+            <label>Tên đăng nhập<span class="text-danger">*</span></label>
             <input class="form-control" name="txtUsername" value="{!! old('txtUsername', isset($user) ? $user['username'] : '') !!}" readonly  />
         </div>
+        @if(Auth::user()->id == $id)
         <div class="checkbox">
             <label>
-            <input type="checkbox" name="chkEditPassword" class="chkEditPassword" value="1" @if(old('chkEditPassword')) checked @endif/>Show/Hide Edit Password</label>
+            <input type="checkbox" name="chkEditPassword" class="chkEditPassword" value="1" @if(old('chkEditPassword')) checked @endif/>Hiện/Ẩn cập nhật mật khẩu</label>
         </div>
         <div class="form-group edit-password hide">
-            <label>Password<span class="text-danger">*</span></label>
-            <input type="password" class="form-control" name="txtPass" value="" placeholder="Please Enter Password" />
+            <label>Mật khẩu cũ<span class="text-danger">*</span></label>
+            <input type="password" class="form-control" name="txtPassOld" value="" placeholder="Please Enter Password" />
         </div>
         <div class="form-group edit-password hide">
-            <label>RePassword<span class="text-danger">*</span></label>
-            <input type="password" class="form-control" name="txtRePass" placeholder="Please Enter RePassword" />
+            <label>Mật khẩu mới<span class="text-danger">*</span></label>
+            <input type="password" class="form-control" name="txtPass" value="" placeholder="Nhập mật khẩu mới" />
+        </div>
+        <div class="form-group edit-password hide">
+            <label>Xác nhận mật khẩu mới<span class="text-danger">*</span></label>
+            <input type="password" class="form-control" name="txtRePass" placeholder="Nhập lại mật khẩu mới" />
+        </div> 
+        <div class="form-group">
+            <label>Tên<span class="text-danger">*</span></label>
+            <input type="text" class="form-control" name="txtFirstName" value="{!! old('txtFirstName', isset($user) ? $user['first_name'] : '') !!}" placeholder="Nhập tên" required="true" />
         </div>
         <div class="form-group">
-            <label>First Name<span class="text-danger">*</span></label>
-            <input type="text" class="form-control" name="txtFirstName" value="{!! old('txtFirstName', isset($user) ? $user['first_name'] : '') !!}" placeholder="Please enter First Name" required="true" />
-        </div>
-        <div class="form-group">
-            <label>Last Name<span class="text-danger">*</span></label>
-            <input type="text" class="form-control" name="txtLastName" value="{!! old('txtLastName', isset($user) ? $user['last_name'] : '') !!}" placeholder="Please enter Last Name" required="true" />
+            <label>Họ<span class="text-danger">*</span></label>
+            <input type="text" class="form-control" name="txtLastName" value="{!! old('txtLastName', isset($user) ? $user['last_name'] : '') !!}" placeholder="Nhập họ" required="true" />
         </div>
         <div class="form-group">
             <label>Email<span class="text-danger">*</span></label>
-            <input type="email" class="form-control" name="txtEmail" value="{!! old('txtEmail', isset($user) ? $user['email'] : '') !!}" placeholder="Please Enter Email" />
+            <input type="email" class="form-control" name="txtEmail" value="{!! old('txtEmail', isset($user) ? $user['email'] : '') !!}" placeholder="Nhập email" />
         </div>
+        @endif
         @if(Auth::user()->id == 1 && $id == 1 || Auth::user()->id == $id)
         @else
         <div class="form-group">
@@ -52,7 +58,7 @@
         </div>
         @endif
         <div class="form-group">
-            <label>Actived</label>
+            <label>Kích hoạt</label>
             <label class="radio-inline">
                 <input name="rdoActived" value="1" @if(old('rdoActived', $user['actived']) == 1) checked @endif type="radio">True
             </label>
@@ -61,7 +67,7 @@
             </label>
         </div>
         <div class="form-group">
-            <label>Blocked</label>
+            <label>Đã Chặn</label>
             <label class="radio-inline">
                 <input name="rdoBlocked" value="1" @if(old('rdoBlocked', $user['blocked']) == 1) checked @endif type="radio">True
             </label>

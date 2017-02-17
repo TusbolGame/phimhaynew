@@ -762,14 +762,45 @@ div.vote a{
     
     min-height: 150px;
 }
-.film-actor-list{
-
+.film-actor-list ol{
+    padding-left: 0px;
+    text-align: center;
 }
 .film-actor-list ol li{
     min-height: 165px;
     width: 98px;
     float: left;
+    /* display: inline-block; */
     margin-left: 16px;
+    list-style: none;
+}
+.film-actor-list ol li:hover{
+    background-color: #504c4c;
+}
+.film-actor-list ol li:hover .film-actor-img{
+    opacity: 0.75;
+}
+.person-list ol{
+    background-color: #201f21;
+    padding: 5px;
+    border: 1px solid #868489;
+    border-radius: 4px;
+    height: auto;
+    overflow: hidden;
+    /* min-height: 200px; */
+    /* height: 200px; */
+}
+.person-list ol li{
+    min-height: 192px;
+    width: 115px;
+    margin-top: 5px;
+    padding: 2px;
+    border: 1px solid #717171;
+    margin-bottom: 3px;
+    transition: 0.2s;
+}
+.person-list ol li .film-actor-img{
+    height: 145px;
 }
 .film-actor-img{
     height: 128px;

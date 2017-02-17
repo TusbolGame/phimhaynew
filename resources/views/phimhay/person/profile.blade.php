@@ -87,7 +87,7 @@
 			<ul class="list-film-new-ul list-film-person">
 				@foreach ($film_director as $film)
 				<li>
-					<a href="{!! route('film.getFilm', [$film->filmList->film_dir_name, $film->id]) !!}" title="">
+					<a href="{!! route('film.getFilm', [$film->filmList->film_dir_name, $film->filmList->id]) !!}" title="">
 						<div class="film-new-thumbnail">
 							<img src="{!! $film->filmList->film_thumbnail_small !!}" alt="Error Thumbnail small">
 							<div class="film-ribbon-status"><span>{!! $film->filmList->film_status !!}</span></div>
@@ -102,6 +102,7 @@
 				</li>
 				@endforeach
 			</ul>
+			{!! $film_director->render() !!}
 		</div>
 		@endif
 		@if (count($film_actor) > 0)
@@ -112,7 +113,7 @@
 			<ul class="list-film-new-ul list-film-person">
 				@foreach ($film_actor as $film)
 				<li>
-					<a href="{!! route('film.getFilm', [$film->filmList->film_dir_name, $film->id]) !!}" title="">
+					<a href="{!! route('film.getFilm', [$film->filmList->film_dir_name, $film->filmList->id]) !!}" title="">
 						<div class="film-new-thumbnail">
 							<img src="{!! $film->filmList->film_thumbnail_small !!}" alt="Error Thumbnail small">
 							<div class="film-ribbon-status"><span>{!! $film->filmList->film_status !!}</span></div>
@@ -127,8 +128,34 @@
 				</li>
 				@endforeach
 			</ul>
+			{!! $film_actor->render() !!}
 		</div>
 		@endif
 	</div>
-	
+<script type="text/javascript">
+//http://laraget.com/blog/how-to-create-an-ajax-pagination-using-laravel
+$(function() {
+    $('body').on('click', '.pagination a', function(e) {
+        e.preventDefault();
+
+        $('#load a').css('color', '#dfecf6');
+        $('#load').append('<img style="position: absolute; left: 0; top: 0; z-index: 100000;" src="/images/loading.gif" />');
+
+        var url = $(this).attr('href');  
+        getArticles(url);
+        window.history.pushState("", "", url);
+    });
+
+    function getArticles(url) {
+        $.ajax({
+            url : url  
+        }).done(function (data) {
+            $('.articles').html(data);  
+        }).fail(function () {
+            alert('Articles could not be loaded.');
+        });
+    }
+});
+
+</script>
 @stop

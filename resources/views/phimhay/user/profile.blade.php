@@ -35,7 +35,7 @@
                             </tr>
                             <tr>
                                 <td>Email</td>
-                                <td>{{ Auth::user()->email }}</td>
+                                <td>{{ $email }}</td>
                             </tr>
                             <tr>
                                 <td>Ngày Tạo Tài Khoản</td>
@@ -126,11 +126,11 @@
                                 </div>
                                 <div class="form-group">
                                     <label>Email<span class="text-danger">*</span>: <i>Khôi phục mật khẩu</i></label>
-                                    <input type="email" class="form-control" name="txtEmail" value="{{ Auth::user()->email }}" placeholder="Email" required="true" />
+                                    <input type="email" class="form-control" name="txtEmail" value="{{ $email }}" placeholder="Email" required="true" />
                                 </div>
                                 <div class="form-group">
                                     <label>Ảnh đại diện:</label><br>
-                                    <label>Mặc định <img src="{!! url('resources/images/'.Auth::user()->image) !!}" class="user-avata" alt="Error Image User"></label><br>
+                                    <label>Mặc định <img src="@if(substr(Auth::user()->image, 0, 4) == 'icon'){{ url('resources/photos/'.Auth::user()->image) }}@else{{ Auth::user()->image }}@endif" class="user-avata" alt="Error Image User"></label><br>
                                     <label>Ảnh khác</label><input type="file" class="" name="fileImageUser" />
                                     
                                 </div>

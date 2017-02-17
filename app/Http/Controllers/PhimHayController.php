@@ -14,6 +14,7 @@ use DB;
 use App\FilmList;
 use App\FilmSlider;
 use App\Lib\FilmProcess\FilmProcess;
+
 class PhimHayController extends Controller {
 
 	//
@@ -54,18 +55,6 @@ class PhimHayController extends Controller {
 		$film_sliders = FilmSlider::all();
 		return view('phimhay.home', compact('film_news', 'film_sliders'));
 	}
-	public function getTest(){
-		
-		
-		// $user_encrypt = new UserEncrypt();
-		// //create active_hash
-		// $active_hash = $user_encrypt->getActivedHash(1, 'admin');
-		// //connect db, save active_hash
-		// $user = \App\User::find(1);
-		// $user->active_hash = $active_hash;
-		// $user->save();
-		//redirect
-		//return redirect()->route('auth.getActived', $active_hash);
-	}
+	
 	
 }

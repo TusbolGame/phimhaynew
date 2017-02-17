@@ -53,81 +53,88 @@ class UserController extends Controller {
 		$user = User::findOrFail($id)->toArray();
 		//admin bt, ko edit dc diff admin, supperadmin
 		if(Auth::user()->id != 1 && ($id == 1 || ($user['level'] == 1) && Auth::user()->id != $id)){
-			return redirect()->route('admin.user.getList')->with(['flash_message'=>'Fail ! Can\'t edit this user! Because Amin do not edit Supperadmin or do not edit diff Admin']);
+			return redirect()->route('admin.user.getList')->with(['flash_message'=>'Lỗi ! Không thể cập nhật user '.$id.'! Bởi vì Admin không thể cập nhật Supperadmin hoặc không thể cập nhật Admin khác']);
 		}
 		return view('admin.user.edit', compact('user', 'id'));
 	}
 	public function postEdit($id, Request $request){
 		//var_dump($request->chkEditPassword);
 		//die();
-		$v = null;
-		if(Input::has('chkEditPassword')){
-			//have edit pass
-			$v = Validator::make($request->all(), [
-				'txtUsername' => 'required',
-				'txtFirstName' => 'required',
-				'txtLastName' => 'required',
-				'txtEmail' => 'required',
-			 	'txtPass' => 'required',
-			 	'txtRePass' => 'required|same:txtPass',
-			 	'rdoActived' => 'required',
-			 	'rdoBlocked' => 'required',
-			], [
-					'txtUsername.required' => 'Please enter the Username',
-					'txtUser.unique' => 'The Username has already been taken',
-					'txtPass.required' => 'Please enter the Password',
-					'txtRePass.required' => 'Please enter the Re Password',
-					'txtRePass.same' => 'The RePassword not same Password',
-					'txtFirstName.required' => 'Please enter the First Name',
-					'txtLastName.required' => 'Please enter the Last Name',
-					'txtEmail.required' => 'Please enter the Email',
-					'txtEmail.email' => 'This the Email is not email',
-					'rdoLevel.required' => 'Please enter the User Level',
-					'rdoActived.required' => 'Please enter the Actived',
-					'rdoBlocked.required' => 'Please enter the Blocked',
-			]);
-		}else{
-			$v = Validator::make($request->all(), [
-				'txtUsername' => 'required',
-				'txtFirstName' => 'required',
-				'txtLastName' => 'required',
-				'txtEmail' => 'required',
-			 	'rdoActived' => 'required',
-			 	'rdoBlocked' => 'required',
-			], [
-					'txtUsername.required' => 'Please enter the Username',
-					'txtUser.unique' => 'The Username has already been taken',
-					'txtFirstName.required' => 'Please enter the First Name',
-					'txtLastName.required' => 'Please enter the Last Name',
-					'txtEmail.required' => 'Please enter the Email',
-					'txtEmail.email' => 'This the Email is not email',
-					'rdoLevel.required' => 'Please enter the User Level',
-					'rdoActived.required' => 'Please enter the Actived',
-					'rdoBlocked.required' => 'Please enter the Blocked',
-			]);
+		if(Auth::user()->id != 1 && ($id == 1 || ($user['level'] == 1) && Auth::user()->id != $id)){
+			return redirect()->route('admin.user.getList')->with(['flash_message'=>'Lỗi ! Không thể cập nhật user '.$id.'! Bởi vì Admin không thể cập nhật Supperadmin hoặc không thể cập nhật Admin khác']);
 		}
-		
+		$v = null;
+		//only admin can edit me
+		if(Auth::user()->id == $id){
+			if(Input::has('chkEditPassword')){
+				//have edit pass
+				$v = Validator::make($request->all(), [
+					'txtFirstName' => 'required',
+					'txtLastName' => 'required',
+					'txtEmail' => 'required',
+				 	'txtPass' => 'required',
+				 	'txtPassOld' => 'required',
+				 	'txtRePass' => 'required|same:txtPass',
+				 	'rdoActived' => 'required',
+				 	'rdoBlocked' => 'required',
+				], [
+						'txtUsername.required' => 'Please enter the Username',
+						'txtPassOld.required' => 'Please enter the Password',
+						'txtPass.required' => 'Please enter the Password',
+						'txtRePass.required' => 'Please enter the Re Password',
+						'txtRePass.same' => 'The RePassword not same Password',
+						'txtFirstName.required' => 'Please enter the First Name',
+						'txtLastName.required' => 'Please enter the Last Name',
+						'txtEmail.required' => 'Please enter the Email',
+						'txtEmail.email' => 'This the Email is not email',
+						'rdoLevel.required' => 'Please enter the User Level',
+						'rdoActived.required' => 'Please enter the Actived',
+						'rdoBlocked.required' => 'Please enter the Blocked',
+				]);
+			}else{
+				$v = Validator::make($request->all(), [
+					'txtFirstName' => 'required',
+					'txtLastName' => 'required',
+					'txtEmail' => 'required',
+				 	'rdoActived' => 'required',
+				 	'rdoBlocked' => 'required',
+				], [
+						'txtFirstName.required' => 'Please enter the First Name',
+						'txtLastName.required' => 'Please enter the Last Name',
+						'txtEmail.required' => 'Please enter the Email',
+						'txtEmail.email' => 'This the Email is not email',
+						'rdoLevel.required' => 'Please enter the User Level',
+						'rdoActived.required' => 'Please enter the Actived',
+						'rdoBlocked.required' => 'Please enter the Blocked',
+				]);
+			}
+		}
 		//hiển thị thông báo lỗi
 		if ($v->fails()) {
 			return redirect()->back()->withErrors($v->errors());
 		}
 		$user = User::find($id);
-		if(Input::has('chkEditPassword')){
-			$user->password = Hash::make($request->txtPass);
+		if(Auth::user()->id == $id){
+			if(Input::has('chkEditPassword')){
+				if(!Hash::check($request->txtPassOld, $user->password)){
+					return redirect()->back()->withErrors('Mật khẩu nhập không đúng');
+				}
+				$user->password = Hash::make($request->txtPass);
+			}
+			$user->first_name = $request->txtFirstName;
+			$user->Last_name = $request->txtLastName;
+			$user->email = $request->txtEmail;
 		}
-		$user->first_name = $request->txtFirstName;
-		$user->Last_name = $request->txtLastName;
-		$user->email = $request->txtEmail;
 		//is admin -> not edit level of chinh minh
 		if(Auth::user()->id != $id){
-			$user->level = $request->rdoLevel;
+			$user->level = $request->rdoLevel;	
+			$user->actived = $request->rdoActived;
+			$user->blocked = $request->rdoBlocked;
 		}
-		$user->actived = $request->rdoActived;
-		$user->blocked = $request->rdoBlocked;
 		//remember
 		$user->remember_token = $request->_token;
 		$user->save();
-		return redirect()->route('admin.user.getList')->with(['flash_message'=>'Success ! Complete Edit User']);
+		return redirect()->route('admin.user.getList')->with(['flash_message'=>'Thành công ! Cập nhật User '.$id]);
 	}
 	//delete
 	public function getDelete($id){
@@ -158,7 +165,16 @@ class UserController extends Controller {
 		if($id != Auth::user()->id){
 			return redirect()->route('home');
 		}
-		return view('phimhay.user.profile');
+		//hash email
+		$email = null;
+		if (!empty(Auth::user()->email)) {
+			$data = explode('@', Auth::user()->email);
+			if(count($data) == 2){
+				$name_hash_star = str_repeat('*', strlen($data[0])-2);
+				$email = substr($data[0], 0, 2).$name_hash_star.'@'.$data[1];
+			}
+		}
+		return view('phimhay.user.profile', compact('email'));
 	}
 	public function postChangePassword(ChangePasswordRequest $request){
 		//check pass

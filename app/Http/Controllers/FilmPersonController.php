@@ -16,27 +16,53 @@ class FilmPersonController extends Controller {
 
 	public function getProfile($dir_name, $id){
 		$person = FilmPerson::find($id);
+		// var_dump($dir_name);die();
 		if(count($person) == 1 && $person->person_dir_name == $dir_name){
 			//update viewed
 			$person->person_viewed = $person->person_viewed + 1;
 			$person->save();
 			$film_actor = FilmActor::where('actor_id', $id)->with('filmList')->with(['filmDetail' => function($query){
 				$query->select('film_category');
-			}])->get();
+			}])->paginate(1, ['*'], 'page_actor');
+			$film_actor->setPath(route('person.getProfile', $id));
+			$film_actor->setPageName('page_actor');
 			$film_director = FilmDirector::where('director_id', $id)->with('filmList')->with(['filmDetail' => function($query){
 				$query->select('film_category');
-			}])->get();
+			}])->paginate(1, ['*'], 'page_director');
+			$film_director->setPath(route('person.getProfile', $id));
+			$film_director->setPageName('page_director');
 			// var_dump($film_actor);
+			//get job
 			$film_person_job = FilmPersonJob::where('film_person_id', $id)->with('filmJob')->get();
 			// var_dump($film_person_job->filmJob);
 			// die();
 			return view('phimhay.person.profile', compact('person', 'film_actor', 'film_director', 'film_person_job'));
 		}
 		//not found
-		return redirect()->route('404');
+		// return redirect()->route('404');
 	}
-	public function getPersonList(){
+	//search person
+	public function getPersonList(Request $request){
+		//job
+		$film_job = FilmJob::all();
+		$person_name = null;
+		$person_job = null;
+		//get
+		if($request->isMethod('get')){
+			$film_person = FilmPerson::orderBy('id', 'DESC')->paginate(18);
+		}else if($request->isMethod('post')){
+			$person_name = $request->person_name;
+			$person_job = (int)$request->person_job;
+			// var_dump($person_name);
+			// var_dump($person_job);die();
 
+			$film_person = FilmPerson::where('person_name', 'LIKE', '%'.$person_name.'%')->whereHas('filmPersonJob', function($query) use($person_job){
+				$query->where('film_job_id', $person_job);
+			})->orderBy('id', 'DESC')->paginate(18);
+			// dd($film_person);die();
+		}
+		$film_person->setPath(route('person.getList'));
+		return view('phimhay.person.search', compact('film_person', 'film_job'))->with(['person_name' => $person_name, 'person_job' => $person_job]);
 	}
 	public function getAdd(){
 		$film_job = FilmJob::all();

@@ -65,9 +65,14 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth'], function() {
 //person 
 Route::group(['prefix' => 'person'], function() {
     //
-    Route::get('/', ['as' => 'person.getList', 'uses' => 'FilmPersonController@getPersonList']);
+    Route::match(['get', 'post'],'/', ['as' => 'person.getList', 'uses' => 'FilmPersonController@getPersonList']);
     Route::get('profile/{dir_name}/{id}', ['as' => 'person.getProfile', 'uses' => 'FilmPersonController@getProfile']);
-    //Route::post('change-password', ['as' => 'user.postChangePassword', 'uses' => 'UserController@postChangePassword']);
+    //ajax get list 
+    Route::group(['prefix' => 'ajax'], function() {
+        //director
+        Route::post('page-director', ['as' => 'personAjax.postPageDirector', 'uses' => 'PersonAjaxController@postPageDirector']);
+    });
+    
     //Route::post('change-info', ['as' => 'user.postChangeInfo', 'uses' => 'UserController@postChangeInfo']);
 });
 //route captcha
@@ -81,7 +86,9 @@ Route::group(['prefix' => 'captcha'], function() {
 });
 //test
 Route::get('test', 'TestController@getTest');
-
+// Route::get('test', function (){
+//     // $aa = new App\Lib\GetLinkVideo\GetLinkVideo();
+// });
 //admin
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function() {
     Route::get('/', function(){

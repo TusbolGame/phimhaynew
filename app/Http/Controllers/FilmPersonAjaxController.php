@@ -86,5 +86,22 @@ class FilmPersonAjaxController extends Controller {
 		$result['content'] = 'Không thêm đc person';
 		return response()->json($result);
 	}
-
+	//ajax list director
+	public function postPageDirector(){
+		$result = array('status' => 0, 'content' => '', 'login' => 1, 'timeout' => 1);
+		if (Request::ajax())
+		{
+			//get 10 row 
+			$film_director = FilmDirector::where('director_id', $id)->with('filmList')->with(['filmDetail' => function($query){
+				$query->select('film_category');
+			}])->paginate(1, ['*'], 'page_director');
+			if(count($person) >= 1){
+				$result['content'] = $person;
+				$result['status'] = 1;
+				return response()->json($result);
+			}
+		}
+		$result['content'] = 'Error dont Ajax';
+		return response()->json($result);
+	}
 }

@@ -13,6 +13,11 @@
 				<li><a href="" title="Phim lẻ">Phim bộ</a></li>
 				<li><a href="" title="Phim lẻ">Phim hoạt hình</a></li>
 			</ul>
+			<ul>
+				<li><a href="{!! route('auth.getLogin') !!}" title="Đăng nhập">Đăng nhập</a></li>
+				<li><a href="{!! route('auth.getLogout') !!}" title="Đăng ký">Đăng ký</a></li>
+				<li><a href="{!! route('auth.getRecover') !!}" title="Khôi phục mật khẩu">Khôi phục mật khẩu</a></li>
+			</ul>
 		</div>
 		<div class="col-sm-3">
 			<h4>Liên hệ quảng cáo:</h4>

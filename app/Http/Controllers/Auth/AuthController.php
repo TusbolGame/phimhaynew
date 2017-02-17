@@ -68,24 +68,24 @@ class AuthController extends Controller {
 				'blocked' => 0
 			];
 			//var_dump($login);
-			if($request->has('txtRemember')){
+			if($request->has('chkRemember')){
 				//co remember
 				if($this->auth->attempt($login, true)){
-					//
-					UserSession::updateCurrent();
+					//count user login
+					//UserSession::updateCurrent();
 					//$key = $this->auth->getRecallerName();
 					// Adding the cookie to the next outgoing response, with a one-day expiry.
 					//cookie()->queue($key, cookie()->get($key), 1440);
 					return redirect('/');
 				}else{
-					return redirect()->back()->with('errors_login', '* Tài khoản hoặc Mật khẩu không đúng!!');
+					return redirect()->back()->with('errors_login', '* Tài khoản hoặc Mật khẩu không đúng hoặc chưa kích hoạt, hoặc bị khóa!!');
 				}
 			}else{
 				//ko co remember
 				if($this->auth->attempt($login)){
 					return redirect('/');
 				}else{
-					return redirect()->back()->with('errors_login', '* Tài khoản hoặc Mật khẩu không đúng!!');
+					return redirect()->back()->with('errors_login', '* Tài khoản hoặc Mật khẩu không đúng hoặc chưa kích hoạt, hoặc bị khóa!!');
 				}
 			}
 			
