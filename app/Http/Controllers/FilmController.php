@@ -22,6 +22,8 @@ use App\FilmDirector;
 use App\FilmPerson;
 use App\FilmJob;
 use App\FilmPersonJob;
+use App\FilmCountry;
+use App\FilmDetailCountry;
 use App\Lib\FilmProcess\FilmProcess;
 use Input;
 use Auth;
@@ -162,7 +164,8 @@ class FilmController extends Controller {
 	//admin
 	public function getAdd(){
 		$film_job = FilmJob::all();
-		return view('admin.film.add', compact('film_job'));
+		$film_country = FilmCountry::all();
+		return view('admin.film.add', compact('film_job', 'film_country'));
 	}
 	public function postAdd(Request $request){
 		// if($request->has('film_relate_no')){
@@ -177,7 +180,7 @@ class FilmController extends Controller {
 		$film_detail->film_score_aw = $request->film_score_aw;
 		//film_type
 		$film_detail->film_type = (count($request->film_type) >= 1) ? implode(',', $request->film_type) : null;
-		$film_detail->film_country = (count($request->film_country) >= 1) ? implode(',', $request->film_country) : null;
+		// $film_detail->film_country = (count($request->film_country) >= 1) ? implode(',', $request->film_country) : null;
 		//$film_detail->film_director = $request->film_director;
 		//$film_detail->film_actor = $request->film_actor;
 		//date
@@ -200,25 +203,31 @@ class FilmController extends Controller {
 		$film_detail->film_poster_video = $request->film_poster_video;
 		$film_detail->film_key_words = $request->film_key_words;
 		$film_detail->save();
+		//add country
+		if(count($request->film_country_id) > 0){
+			$country = [];
+			foreach ($request->film_country_id as $key => $value) {
+				$country[$key] = ['film_id' => $film_detail->id, 'country_id' => $value];
+			}
+			$film_country = FilmDetailCountry::insert($country);
+		}
 		//add film actor
-		$actors = [];
-		$dk = count($request->actor_id);
-		$i = 0;
-		while($i < $dk){
-			$actors[$i] = ['film_id' => $film_detail->id, 'actor_id' => $request->actor_id[$i], 'actor_character' => $request->actor_character[$i]];
-			$i++;
+		if(count($request->actor_id) > 0){
+			$actors = [];
+			foreach ($request->actor_id as $key => $value) {
+				$actors[$key] = ['film_id' => $film_detail->id, 'actor_id' => $value, 'actor_character' => $request->actor_character[$key]];
+			}
+			$film_actor = FilmActor::insert($actors);
 		}
-		$film_actor = FilmActor::insert($actors);
 		//add film director
-		$directors = [];
-		$dk = count($request->director_id);
-		$i = 0;
-		while($i < $dk){
-			$directors[$i] = ['film_id' => $film_detail->id, 'director_id' => $request->director_id[$i]];
-			$i++;
+		if(count($request->director_id) > 0){
+			$directors = [];
+			foreach ($request->director_id as $key => $value) {
+				$directors[$key] = ['film_id' => $film_detail->id, 'director_id' => $value];
+			}
+			$film_director = FilmDirector::insert($directors);
 		}
-		$film_director = FilmDirector::insert($directors);
-		die();
+		// die();
 		//add film trailer
 		$film_trailer = new FilmTrailer();
 		$film_trailer->id = $film_detail->id;
@@ -290,7 +299,9 @@ class FilmController extends Controller {
 		$actors = FilmActor::where('film_id', $film_id)->with(['filmPerson' => function($query){
 			$query->select('id', 'person_name');
 		}])->get();
-		return view('admin.film.edit', compact('film_id', 'film_detail', 'film_list', 'film_trailer','film_job', 'directors', 'actors'));
+		$countries = FilmDetailCountry::where('film_id', $film_id)->get();
+		$film_country = FilmCountry::all();
+		return view('admin.film.edit', compact('film_id', 'film_detail', 'film_list', 'film_trailer','film_job', 'directors', 'actors', 'countries', 'film_country'));
 	}
 	public function postEdit($film_id, Request $request){
 		$film_detail = FilmDetail::find($film_id);
@@ -300,7 +311,8 @@ class FilmController extends Controller {
 		$film_detail->film_score_aw = $request->film_score_aw;
 		//film_type
 		$film_detail->film_type = implode(',', $request->film_type);
-		$film_detail->film_country = implode(',', $request->film_country);
+		//fix country -> table film_detail_countries
+		// $film_detail->film_country = implode(',', $request->film_country);
 		//fix change table person
 		// $film_detail->film_director = $request->film_director;
 		// $film_detail->film_actor = $request->film_actor;
@@ -329,6 +341,19 @@ class FilmController extends Controller {
 		$film_detail->film_poster_video = $request->film_poster_video;
 		$film_detail->film_key_words = $request->film_key_words;
 		$film_detail->save();
+		//country
+		//delete all
+		//add
+		FilmDetailCountry::where('film_id', $film_id)->delete();
+		//crate arr country
+		if(count($request->film_country_id) > 0){
+			$countries = [];
+			foreach ($request->film_country_id as $key => $val) {
+				array_push($countries, ['film_id' => $film_id, 'country_id' => $val]);
+			}
+			//add
+			FilmDetailCountry::insert($countries);
+		}
 		//person
 		//xoa all film director --> add lai
 		//delete all director from film_director
@@ -340,9 +365,7 @@ class FilmController extends Controller {
 				array_push($directors, ['film_id' => $film_id, 'director_id' => $key]);
 			}
 			//add
-			if(count($directors) > 0){
-				FilmDirector::insert($directors);
-			}
+			FilmDirector::insert($directors);
 		}
 		//xoa all film actor --> add lai
 		//delete all actor from film_actor
@@ -354,9 +377,7 @@ class FilmController extends Controller {
 				array_push($actors, ['film_id' => $film_id, 'actor_id' => $val, 'actor_character' => $request->actor_character[$key]]);
 			}
 			//add
-			if(count($actors) > 0){
-				FilmActor::insert($actors);
-			}
+			FilmActor::insert($actors);
 		}
 		// die();
 		//add film trailer
@@ -401,8 +422,10 @@ class FilmController extends Controller {
 		$film_list->film_name_vn = $request->film_name_vn;
 		$film_list->film_time = $request->film_time;
 		$film_list->film_years = $request->film_release_date_year;
-		$film_list->film_quality = '';
-		$film_list->film_language = implode(',', $request->film_language);
+		$film_list->film_quality = $request->film_quality;
+		if(count($request->film_language) > 0){
+			$film_list->film_language = implode(',', $request->film_language);
+		}
 		$film_list->film_thumbnail_small = $request->film_thumbnail_small;
 		//
 		$film_process = new FilmProcess();
@@ -424,7 +447,11 @@ class FilmController extends Controller {
 			function ($query){
 			$query->select('id', 'person_name', 'person_dir_name');
 		}])->get();
-		return view('admin.film.show', compact('film_detail', 'film_list', 'film_trailer', 'film_id', 'film_episodes', 'film_director', 'film_actor'));
+		$film_country = FilmDetailCountry::where('film_id', $film_id)->with(['filmCountry' => 
+			function ($query){
+			$query->select('id', 'country_name');
+		}])->get();
+		return view('admin.film.show', compact('film_detail', 'film_list', 'film_trailer', 'film_id', 'film_episodes', 'film_director', 'film_actor', 'film_country'));
 	}
 	public function postEditFilmTrailer($film_id, Request $request){
 		$film_trailer = FilmTrailer::find($film_id);
@@ -580,6 +607,7 @@ class FilmController extends Controller {
 		//
 		//case 1: tat ca deu null -> phim new
 		$films = null;
+		//ko name
 		if(empty($name)){
 			if($category == null && $type == null && $country == null && $year == null){
 				//get id episode
@@ -593,39 +621,89 @@ class FilmController extends Controller {
 
 			}
 			else{
+				//co value ko null
 				//truoc2010
 				if($year == 'truoc2010'){
 					$year = 2010;
-					$films = FilmDetail::where('film_category', 'LIKE', '%'.$category.'%')
+					//is country
+					if(!empty($country)){
+						$films = FilmDetail::where('film_category', 'LIKE', '%'.$category.'%')
 						->where('film_type', 'LIKE', '%'.$type.'%')
-						->where('film_country', 'LIKE', '%'.$country.'%')
+						->whereHas('filmDetailCountry', function($query) use($country){
+								$query->whereHas('filmCountry', function($query2) use($country){
+									$query2->where('country_alias', $country);
+								});
+							})
 						->whereHas('filmList', function($q) use($year){
 							$q->where('film_years', '<', $year);
 						})
 						->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+					}
+					//ko co country
+					else{
+						$films = FilmDetail::where('film_category', 'LIKE', '%'.$category.'%')
+						->where('film_type', 'LIKE', '%'.$type.'%')
+						->whereHas('filmList', function($q) use($year){
+							$q->where('film_years', '<', $year);
+						})
+						->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+					}
+					
 				}
 				else{
-					if(empty($year)){
-						$films = FilmDetail::where('film_category', 'LIKE', '%'.$category.'%')
-							->where('film_type', 'LIKE', '%'.$type.'%')
-							->where('film_country', 'LIKE', '%'.$country.'%')
-							
-							->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+					//is year
+					if(!empty($year)){
+						//is country
+						if(!empty($country)){
+							$films = FilmDetail::where('film_category', 'LIKE', '%'.$category.'%')
+								->where('film_type', 'LIKE', '%'.$type.'%')
+								->whereHas('filmList', function($q) use($year){
+									$q->where('film_years', $year);
+								})
+								->whereHas('filmDetailCountry', function($query) use($country){
+									$query->whereHas('filmCountry', function($query2) use($country){
+										$query2->where('country_alias', $country);
+									});
+								})
+								->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+						}
+						//ko country
+						else{
+							$films = FilmDetail::where('film_category', 'LIKE', '%'.$category.'%')
+								->where('film_type', 'LIKE', '%'.$type.'%')
+								->whereHas('filmList', function($q) use($year){
+									$q->where('film_years', $year);
+								})
+								->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+						}
 					}else{
-						//is year
-						$films = FilmDetail::where('film_category', 'LIKE', '%'.$category.'%')
-							->where('film_type', 'LIKE', '%'.$type.'%')
-							->where('film_country', 'LIKE', '%'.$country.'%')
-							->whereHas('filmList', function($q) use($year){
-								$q->where('film_years', $year);
-							})
-							->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+						//ko year
+						//is country
+						if(!empty($country)){
+							$films = FilmDetail::where('film_category', 'LIKE', '%'.$category.'%')
+								->where('film_type', 'LIKE', '%'.$type.'%')
+								->whereHas('filmDetailCountry', function($query) use($country){
+									$query->whereHas('filmCountry', function($query2) use($country){
+										$query2->where('country_alias', $country);
+									});
+								})
+								->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+						}
+						//ko country
+						else{
+							$films = FilmDetail::where('film_category', 'LIKE', '%'.$category.'%')
+								->where('film_type', 'LIKE', '%'.$type.'%')
+								->whereHas('filmList', function($q) use($year){
+									$q->where('film_years', $year);
+								})
+								->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+						}
 
 					}
 				}
 			}
 		}else{
-			//co name
+			//is name
 			//change - to space
 			$name = preg_replace('/[-]/', ' ', $name);
 			// var_dump($name);

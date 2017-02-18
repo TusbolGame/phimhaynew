@@ -174,14 +174,21 @@
                 </tr>
                 <tr>
                     <th>Quốc Gia</th>
-                    <td>{!! $film_detail->film_country !!}</td>
+                    <!-- <td>{!! $film_detail->film_country !!}</td> -->
+                    <td>
+                        <ul>
+                            @foreach ($film_country as $data)
+                            <li>{!! $data->filmCountry->country_name !!}</li>
+                            @endforeach
+                        </ul>
+                    </td>
                 </tr>
                 <tr>
                     <th>Đạo Diễn</th>
                     <td>
                         <ul>
                             @foreach ($film_director as $director)
-                            <li><a href="" title="">{!! $director->filmPerson->person_name !!}</a></li>
+                            <li><a href="{!! route('admin.person.getEdit', $director->filmPerson->id) !!}" title="">{!! $director->filmPerson->person_name !!}</a></li>
                             @endforeach
                         </ul>
                     </td>
@@ -191,7 +198,7 @@
                     <td>
                         <ul>
                             @foreach ($film_actor as $actor)
-                            <li><a href="" title="">{!! $actor->filmPerson->person_name !!} ({!! $actor->actor_character !!})</a></li>
+                            <li><a href="{!! route('admin.person.getEdit', $actor->filmPerson->id) !!}" title="">{!! $actor->filmPerson->person_name !!} ({!! $actor->actor_character !!})</a></li>
                             @endforeach
                         </ul>
                     </td>

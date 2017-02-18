@@ -41,7 +41,7 @@
             <div class="clearfix"></div>
             <div class="form-group">
                 <label>Nội Dung<span class="text-danger">*</span></label>
-                <textarea name="film_info" class="form-control enter-data-tinymce" placeholder="Nhập nội dung phim">{{ old('film_time') }}</textarea>
+                <textarea name="film_info" class="form-control enter-data-tinymce" placeholder="Nhập nội dung phim">{{ old('film_info') }}</textarea>
             </div>
             <div class="col-lg-6">
                  <div class="form-group">
@@ -183,7 +183,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-10">
+            <!-- <div class="col-lg-10">
                 <div class="form-group">
                     <label>Quốc Gia</label>
                     <div class="enter-data-ul">
@@ -201,6 +201,18 @@
                             <li><label><input type="checkbox" name="film_country[]" value="thai-lan">Phim Thái Lan</label></li>
                             <li><label><input type="checkbox" name="film_country[]" value="trung-quoc">Phim Trung Quốc</label></li>
                             <li><label><input type="checkbox" name="film_country[]" value="quoc-gia-khac">Phim QG khác</label></li>
+                        </ul>
+                    </div>
+                </div>
+            </div> -->
+            <div class="col-lg-10">
+                <div class="form-group">
+                    <label>Quốc Gia</label>
+                    <div class="enter-data-ul">
+                        <ul>
+                            @foreach ($film_country as $country)
+                            <li><label><input type="checkbox" name="film_country_id[]" value="{!! $country->id !!}" @if(old('film_country') == $country->id) selected="true"@endif>{!! $country->country_name !!}</label></li>
+                           @endforeach
                         </ul>
                     </div>
                 </div>

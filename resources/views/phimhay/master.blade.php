@@ -59,7 +59,7 @@
 		<!-- end pace -->
 		<!-- header -->
 		<div class="header">
-			@include('phimhay.include.header')
+			@include('phimhay.include.header', $film_country)
 		</div>
 		<!-- end header -->
 		<!-- content -->

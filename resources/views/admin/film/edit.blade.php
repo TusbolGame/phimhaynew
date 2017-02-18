@@ -168,31 +168,17 @@
                     <label>Quốc Gia</label>
                     <div class="enter-data-ul">
                         <?php 
-                            $data = explode(',', $film_detail->film_country);
-                            $film_country = array('anh'=>'', 'an-do'=>'', 'au-my' => '',
-                                                'dai-loan'=>'', 'han-quoc'=>'', 'hong-kong'=>'',
-                                                'my'=>'', 'nga' => '', 'nhat-ban'=>'', 'viet-nam'=>'', 
-                                                'thai-lan'=>'', 'trung-quoc'=>'',
-                                                'quoc-gia-khac'=>''
-                                                );
-                            foreach ($data as $country) {
-                                    $film_country[$country] = 'checked';
+                            $data_country = [];
+                            //create name var
+                            //check exixs
+                            foreach ($countries as $country) {
+                                    $data_country[$country->country_id] = '';
                                 }
                          ?>
                         <ul>
-                            <li><label><input type="checkbox" name="film_country[]" value="anh" {!! $film_country['anh'] !!}>Phim Anh</label></li>
-                            <li><label><input type="checkbox" name="film_country[]" value="an-do" {!! $film_country['an-do'] !!}>Phim Ấn Độ</label></li>
-                            <li><label><input type="checkbox" name="film_country[]" value="au-my" {!! $film_country['au-my'] !!}>Phim Âu-Mỹ</label></li>
-                            <li><label><input type="checkbox" name="film_country[]" value="dai-loan" {!! $film_country['dai-loan'] !!}>Phim Đài Loan</label></li>
-                            <li><label><input type="checkbox" name="film_country[]" value="han-quoc" {!! $film_country['han-quoc'] !!}>Phim Hàn Quốc</label></li>
-                            <li><label><input type="checkbox" name="film_country[]" value="hong-kong" {!! $film_country['hong-kong'] !!}>Phim Hồng Kông</label></li>
-                            <li><label><input type="checkbox" name="film_country[]" value="my"  {!! $film_country['my'] !!}>Phim Mỹ</li>
-                            <li><label><input type="checkbox" name="film_country[]" value="nga" {!! $film_country['nga'] !!}>Phim Nga</label></li>
-                            <li><label><input type="checkbox" name="film_country[]" value="nhat-ban" {!! $film_country['nhat-ban'] !!}>Phim Nhật</label></li>
-                            <li><label><input type="checkbox" name="film_country[]" value="viet-nam" {!! $film_country['viet-nam'] !!}>Phim Việt Nam</label></li>
-                            <li><label><input type="checkbox" name="film_country[]" value="thai-lan" {!! $film_country['thai-lan'] !!}>Phim Thái Lan</label></li>
-                            <li><label><input type="checkbox" name="film_country[]" value="trung-quoc" {!! $film_country['trung-quoc'] !!}>Phim Trung Quốc</label></li>
-                            <li><label><input type="checkbox" name="film_country[]" value="quoc-gia-khac" {!! $film_country['quoc-gia-khac'] !!}>Phim QG khác</label></li>
+                            @foreach ($film_country as $country)
+                            <li><label><input type="checkbox" name="film_country_id[]" value="{!! $country->id !!}" @if(isset($data_country[$country->id])) checked @endif>{!! $country->country_name !!}</label></li>
+                           @endforeach
                         </ul>
                     </div>
                 </div>

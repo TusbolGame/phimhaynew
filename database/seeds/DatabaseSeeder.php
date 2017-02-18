@@ -14,6 +14,7 @@ class DatabaseSeeder extends Seeder {
 	{
 		Model::unguard();
 		
+		// $this->call('FilmCountryDatabaseSeeder');
 		// $this->call('FilmJobDatabaseSeeder');
 		// $this->call('FilmSliderDatabaseSeeder');
 		// $this->call('FilmRelateDatabaseSeeder');

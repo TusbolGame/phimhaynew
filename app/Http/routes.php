@@ -70,11 +70,12 @@ Route::group(['prefix' => 'person'], function() {
     //ajax get list 
     Route::group(['prefix' => 'ajax'], function() {
         //director
-        Route::post('page-director', ['as' => 'personAjax.postPageDirector', 'uses' => 'PersonAjaxController@postPageDirector']);
+        Route::post('page-director', ['as' => 'personAjax.postPageDirector', 'uses' => 'FilmPersonAjaxController@postPageDirector']);
     });
     
     //Route::post('change-info', ['as' => 'user.postChangeInfo', 'uses' => 'UserController@postChangeInfo']);
 });
+
 //route captcha
 Route::group(['prefix' => 'captcha'], function() {
 	//captcha login
@@ -181,8 +182,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function(
         //delete
         Route::get('delete/{id}',['as'=>'admin.job.getDelete', 'uses'=>'FilmJobController@getDelete']);
     });
+    //call route('admin.country.???')
+    Route::resource('country', 'FilmCountryController', ['except' => ['show']]);
 });
-
 // phim
 Route::group(['prefix' => 'film'], function() {
     //list phim auto, or search

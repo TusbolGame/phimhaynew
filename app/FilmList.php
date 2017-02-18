@@ -14,4 +14,7 @@ class FilmList extends Model {
 	public function filmEpisode(){
 		return $this->hasMany('App\FilmEpisode', 'film_id', 'id');
 	}
+	public function filmDetailCountry(){
+		return $this->hasMany('App\FilmDetailCountry', 'film_id', 'id');
+	}
 }

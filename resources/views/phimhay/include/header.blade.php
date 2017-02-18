@@ -113,7 +113,7 @@
 			      		<li class="dropdown">
 				        	<a class="dropdown-toggle" data-toggle="dropdown" href="{!! url('film?category=le') !!}">PHIM LẺ
 				        	<span class="caret"></span></a>
-				        	<ul class="dropdown-menu">
+				        	<!-- <ul class="dropdown-menu">
 					          	<li><a href="{!! url('film?category=le&country=anh') !!}">Phim Anh</a></li>
 						        <li><a href="{!! url('film?category=le&country=an-do') !!}">Phim Ấn Độ</a></li>
 						        <li><a href="{!! url('film?category=le&country=au-my') !!}">Phim Âu-Mỹ</a></li>
@@ -127,12 +127,17 @@
 						        <li><a href="{!! url('film?category=le&country=thai-lan') !!}">Phim Thái Lan</a></li>
 						        <li><a href="{!! url('film?category=le&country=trung-quoc') !!}">Phim Trung Quốc</a></li>
 						        <li><a href="{!! url('film?category=le&country=quoc-gia-khac') !!}">Phim Quốc Gia Khác</a></li>
-					        </ul>
+					        </ul> -->
+					        <ul class="dropdown-menu">
+					        	@foreach($film_country as $data)
+					          	<li><a href="{!! url('film?category=le&country='.$data->country_alias) !!}">Phim {!! $data->country_name !!}</a></li>
+					          	@endforeach
+					         </ul>
 		      			</li>
 		      			<li class="dropdown">
 				        	<a class="dropdown-toggle" data-toggle="dropdown" href="#">PHIM BỘ
 				        	<span class="caret"></span></a>
-				        	<ul class="dropdown-menu">
+				        	<!-- <ul class="dropdown-menu">
 					          	<li><a href="{!! url('film?category=bo&country=anh') !!}">Phim Anh</a></li>
 								<li><a href="{!! url('film?category=bo&country=an-do') !!}') !!}">Phim Ấn Độ</a></li>
 								<li><a href="{!! url('film?category=bo&country=au-my') !!}">Phim Âu-Mỹ</a></li>
@@ -146,7 +151,12 @@
 						        <li><a href="{!! url('film?category=bo&country=thai-lan') !!}">Phim Thái Lan</a></li>
 						        <li><a href="{!! url('film?category=bo&country=trung-quoc') !!}">Phim Trung Quốc</a></li>
 						        <li><a href="{!! url('film?category=bo&country=quoc-gia-khac') !!}">Phim Quốc Gia Khác</a></li>
-					        </ul>
+					        </ul> -->
+					        <ul class="dropdown-menu">
+					        	@foreach($film_country as $data)
+					          	<li><a href="{!! url('film?category=bo&country='.$data->country_alias) !!}">Phim {!! $data->country_name !!}</a></li>
+					          	@endforeach
+					         </ul>
 		      			</li>
 		      			<li class="dropdown">
 				        	<a class="dropdown-toggle" data-toggle="dropdown" href="{!! url('film?category=hh') !!}">PHIM HOẠT HÌNH

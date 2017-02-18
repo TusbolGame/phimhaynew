@@ -5,7 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 class FilmDetailCountry extends Model {
 
 	//
-	protected $table = 'film_detail_contries';
+	protected $table = 'film_detail_countries';
 	protected $fillable = ['id', 'film_id', 'country_id'];
 	public $timestamps = false;
 

@@ -236,6 +236,9 @@ class FilmProcess
 	public function getFilmDirName($film_name_vn, $film_name_en, $film_years){
 		return $this->getFilmNameVnEnNoUtf8($this->getFilmNameVnEn($film_name_vn, $film_name_en)).'-'.$film_years;
 	}
+	public function getNameAlias($name){
+		return $this->getFilmNameVnEnNoUtf8($name);
+	}
 	public function getFilmPersonDirName($person_name){
 		return $this->getFilmNameVnEnNoUtf8($person_name);
 	}
