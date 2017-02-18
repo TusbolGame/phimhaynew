@@ -46,7 +46,7 @@
 			</div>
 			<div class="form-group">
 				<select name="country" class="form-control">
-					<option value="">Quốc Gia</option>
+					<!-- <option value="">Quốc Gia</option>
 					<option value="anh" @if ($country == 'anh') selected @endif>Anh</option>
 					<option value="an-do" @if ($country == 'an-do') selected @endif>Ấn Độ</option>
 					<option value="an-do" @if ($country == 'au-my') selected @endif>Âu-Mỹ</option>
@@ -58,7 +58,11 @@
 					<option value="viet-nam" @if ($country == 'viet-nam') selected @endif>Việt Nam</option>
 					<option value="thai-lan" @if ($country == 'thai-lan') selected @endif>Thái Lan</option>
 					<option value="trung-quoc" @if ($country == 'trung-quoc') selected @endif>Trung Quốc</option>
-					<option value="quoc-gia-khac" @if ($country == 'quoc-gia-khac') selected @endif>Quốc Gia Khác</option>
+					<option value="quoc-gia-khac" @if ($country == 'quoc-gia-khac') selected @endif>Quốc Gia Khác</option> -->
+					<option value="">Quốc Gia</option>
+					@foreach($film_country as $data)
+					<option value="{!! $data->country_alias !!}" @if ($country == $data->country_alias) selected @endif>{!! $data->country_name !!}</option>
+					@endforeach
 				</select>
 			</div>
 			<div class="form-group">
