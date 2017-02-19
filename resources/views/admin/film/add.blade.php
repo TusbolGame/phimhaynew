@@ -157,7 +157,7 @@
                 <div class="form-group">
                     <label>Thể Loại<span class="text-danger">*</span></label>
                     <div class="enter-data-ul">
-                        <ul>
+                        <!-- <ul>
                             <li><label><input type="checkbox" name="film_type[]" value="chien-tranh">Phim chiến tranh</label></li>
                             <li><label><input type="checkbox" name="film_type[]" value="co-trang">Phim cổ trang</label></li>
                             <li><label><input type="checkbox" name="film_type[]" value="gia-tuong">Phim giả tưởng</label></li>
@@ -179,6 +179,11 @@
                             <li><label><input type="checkbox" name="film_type[]" value="vien-tuong">Phim viễn tưởng</label></label></li>
                             <li><label><input type="checkbox" name="film_type[]" value="zombie">Phim Zombie</label></li>   
                             
+                        </ul> -->
+                        <ul>
+                            @foreach($film_type as $data)
+                            <li><label><input type="checkbox" name="film_type_id[]" value="{!! $data->id !!}">Phim {!! $data->type_name !!}</label></li>
+                            @endforeach
                         </ul>
                     </div>
                 </div>

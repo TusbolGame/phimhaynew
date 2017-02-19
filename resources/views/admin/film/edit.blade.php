@@ -123,42 +123,18 @@
                 <div class="form-group">
                     <label>Thể Loại<span class="text-danger">*</span></label>
                     <div class="enter-data-ul">
-                        <ul>
-                            <?php 
-                                $data = explode(',', $film_detail->film_type);
-                                $film_type = array(
-                                    'chien-tranh'=>'', 'co-trang'=>'', 'hai-huoc'=>'',
-                                    'hanh-dong'=>'', 'hinh-su'=>'', 'kinh-di'=>'', 
-                                    'hoi-hop-gay-can'=>'',
-                                    'phieu-luu'=>'', 'vo-thuat'=>'', 'vien-tuong'=>'',
-                                    'tam-ly'=>'', 'tinh-cam'=>'', 'tai-lieu'=>'',
-                                    'than-thoai'=>'', 'trinh-tham'=>'', 'gia-tuong'=>'', 'hoc-duong'=>'', 'phep-thuat'=>'', 'sieu-nhien'=>'', 'zombie' => ''
-                                    );
-                                foreach ($data as $type) {
-                                    $film_type[$type] = 'checked';
+                        <?php 
+                            $data_type = [];
+                            //create name var
+                            //check exixs
+                            foreach ($film_detail_type as $type) {
+                                    $data_type[$type->type_id] = '';
                                 }
-                             ?>
-                            <li><label><input type="checkbox" name="film_type[]" value="chien-tranh" {!! $film_type['chien-tranh'] !!}>Phim chiến tranh</label></li>
-                            <li><label><input type="checkbox" name="film_type[]" value="co-trang" {!! $film_type['co-trang'] !!}>Phim cổ trang</label></li>
-                            <li><label><input type="checkbox" name="film_type[]" value="gia-tuong" {!! $film_type['gia-tuong'] !!}>Phim giả tưởng</label></li>
-                            <li><label><input type="checkbox" name="film_type[]" value="hai-huoc" {!! $film_type['hai-huoc'] !!}>Phim hài hước</label></li>
-                            <li><label><input type="checkbox" name="film_type[]" value="hanh-dong" {!! $film_type['hanh-dong'] !!}>Phim hành động</label></li>
-                            <li><label><input type="checkbox" name="film_type[]" value="hinh-sự" {!! $film_type['hinh-su'] !!}>Phim hình sự</label></label></li>
-                            <li><label><input type="checkbox" name="film_type[]" value="hoc-duong" {!! $film_type['hoc-duong'] !!}>Phim học đường</label></li>
-                            <li><label><input type="checkbox" name="film_type[]" value="kinh-di" {!! $film_type['kinh-di'] !!}>Phim kinh dị</label></label></li>
-                            <li><label><input type="checkbox" name="film_type[]" value="hoi-hop-gay-can" {!! $film_type['hoi-hop-gay-can'] !!}>Phim hồi hộp gây cấn</label></label></li>
-                            <li><label><input type="checkbox" name="film_type[]" value="phep-thuat" {!! $film_type['phep-thuat'] !!}>Phim phép thuật</label></li>
-                            <li><label><input type="checkbox" name="film_type[]" value="phieu-luu" {!! $film_type['phieu-luu'] !!}>Phim phiêu lưu</label></label></li>
-                            <li><label><input type="checkbox" name="film_type[]" value="sieu-nhien" {!! $film_type['sieu-nhien'] !!}>Phim siêu nhiên</label></li>
-                            <li><label><input type="checkbox" name="film_type[]" value="tam-ly" {!! $film_type['tam-ly'] !!}>Phim tâm lý</label></label></li>
-                            <li><label><input type="checkbox" name="film_type[]" value="tinh-cam" {!! $film_type['tinh-cam'] !!}>Phim tình cảm</label></li>
-                            <li><label><input type="checkbox" name="film_type[]" value="tai-lieu" {!! $film_type['tai-lieu'] !!}>Phim tài liệu</label></li>
-                            <li><label><input type="checkbox" name="film_type[]" value="than-thoai" {!! $film_type['than-thoai'] !!}>Phim thần thoại</label></li>
-                            <li><label><input type="checkbox" name="film_type[]" value="trinh-tham" {!! $film_type['trinh-tham'] !!}>Phim trinh thám</label></li>
-                            <li><label><input type="checkbox" name="film_type[]" value="vo-thuat" {!! $film_type['vo-thuat'] !!}>Phim võ thuật</label></label></li>
-                            <li><label><input type="checkbox" name="film_type[]" value="vien-tuong" {!! $film_type['vien-tuong'] !!}>Phim viễn tưởng</label></label></li>
-                            <li><label><input type="checkbox" name="film_type[]" value="zombie" {!! $film_type['zombie'] !!}>Phim Zombie</label></li>   
-                            
+                         ?>
+                        <ul>
+                            @foreach ($film_type as $type)
+                            <li><label><input type="checkbox" name="film_type_id[]" value="{!! $type->id !!}" @if(isset($data_type[$type->id])) checked @endif>{!! $type->type_name !!}</label></li>
+                           @endforeach
                         </ul>
                     </div>
                 </div>
@@ -171,7 +147,7 @@
                             $data_country = [];
                             //create name var
                             //check exixs
-                            foreach ($countries as $country) {
+                            foreach ($film_detail_country as $country) {
                                     $data_country[$country->country_id] = '';
                                 }
                          ?>

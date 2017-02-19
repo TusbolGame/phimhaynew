@@ -20,6 +20,9 @@ class FilmDetail extends Model {
 	public function filmDetailCountry(){
 		return $this->hasMany('App\FilmDetailCountry', 'film_id', 'id');
 	}
+	public function filmDetailType(){
+		return $this->hasMany('App\FilmDetailType', 'film_id', 'id');
+	}
 	public function filmRelate(){
 		return $this->belongsTo('App\FilmRelate', 'film_relate_id', 'id');
 	}

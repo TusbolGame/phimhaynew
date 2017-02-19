@@ -14,6 +14,7 @@ class DatabaseSeeder extends Seeder {
 	{
 		Model::unguard();
 		
+		// $this->call('FilmTypeDatabaseSeeder');
 		// $this->call('FilmCountryDatabaseSeeder');
 		// $this->call('FilmJobDatabaseSeeder');
 		// $this->call('FilmSliderDatabaseSeeder');
@@ -121,6 +122,41 @@ class FilmCountryDatabaseSeeder extends Seeder {
 			['country_name' => 'Thái Lan', 'country_alias' => 'thai-lan'],
 			['country_name' => 'Trung Quốc', 'country_alias' => 'trung-quoc'],
 			['country_name' => 'Quốc Gia Khác', 'country_alias' => 'quoc-gia-khac']
+			]);
+	}
+
+}
+class FilmTypeDatabaseSeeder extends Seeder {
+
+	/**
+	 * Run the database seeds.
+	 *
+	 * @return void
+	 */
+	public function run()
+	{
+		DB::table('film_types')->insert([
+			//1
+			['type_name' => 'chiến trang', 'type_alias' => 'chien-tranh'],
+			['type_name' => 'cổ trang', 'type_alias' => 'co-trang'],
+			['type_name' => 'giả tưởng', 'type_alias' => 'gia-tuong'],
+			['type_name' => 'hài hước', 'type_alias' => 'hai-huoc'],
+			['type_name' => 'hành động', 'type_alias' => 'hanh-dong'],
+			['type_name' => 'học đường', 'type_alias' => 'hoc-duong'],			
+			['type_name' => 'hồi hộp gây cấn', 'type_alias' => 'hoi-hop-gay-can'],
+			['type_name' => 'kinh dị', 'type_alias' => 'kinh-di'],
+			['type_name' => 'phép thuật', 'type_alias' => 'phep-thuat'],
+			['type_name' => 'phiêu lưu', 'type_alias' => 'phieu-luu'],
+			['type_name' => 'siêu nhiên', 'type_alias' => 'sieu-nhien'],
+			['type_name' => 'tài liệu', 'type_alias' => 'tai-lieu'],
+			['type_name' => 'tâm lý', 'type_alias' => 'tam-ly'],
+			['type_name' => 'thần thoại', 'type_alias' => 'than-thoai'],
+			['type_name' => 'tình cảm', 'type_alias' => 'tinh-cam'],
+			['type_name' => 'trinh thám', 'type_alias' => 'trinh-tham'],
+			['type_name' => 'viễn tưởng', 'type_alias' => 'vien-tuong'],
+			['type_name' => 'võ thuật', 'type_alias' => 'vo-thuat'],
+			['type_name' => 'zombie', 'type_alias' => 'zombie']
+			
 			]);
 	}
 

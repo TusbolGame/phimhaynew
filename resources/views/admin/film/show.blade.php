@@ -170,14 +170,21 @@
                 </tr>
                 <tr>
                     <th>Thể Loại</th>
-                    <td>{!! $film_detail->film_type !!}</td>
+                    <!-- <td>{!! $film_detail->film_type !!}</td> -->
+                    <td>
+                        <ul>
+                            @foreach ($film_detail_type as $data)
+                            <li>{!! $data->filmType->type_name !!}</li>
+                            @endforeach
+                        </ul>
+                    </td>
                 </tr>
                 <tr>
                     <th>Quốc Gia</th>
                     <!-- <td>{!! $film_detail->film_country !!}</td> -->
                     <td>
                         <ul>
-                            @foreach ($film_country as $data)
+                            @foreach ($film_detail_country as $data)
                             <li>{!! $data->filmCountry->country_name !!}</li>
                             @endforeach
                         </ul>

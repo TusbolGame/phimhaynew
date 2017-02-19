@@ -5,6 +5,7 @@ use Illuminate\Support\ServiceProvider;
 use App\PhimHayConfig;
 use App\FilmList;
 use App\FilmCountry;
+use App\FilmType;
 use App\Lib\FilmProcess\FilmProcess;
 use DB;
 class PhimHayConfigServiceProvider extends ServiceProvider {
@@ -36,9 +37,11 @@ class PhimHayConfigServiceProvider extends ServiceProvider {
 		// var_dump($film_hots['hh'][1]->filmDetail->film_info);
 		// die();
 		$film_country = FilmCountry::all();
+		$film_type = FilmType::all();
 		view()->share('film_hots', $film_hots);
 		view()->share('film_process', $film_process);
 		view()->share('film_country', $film_country);
+		view()->share('film_type', $film_type);
 		// view()->composer(['phimhay.master', 'phimhay.home'], function($view){
 		// 	$view->with(['phim_hay_config' => $phim_hay_config]);
 		// });

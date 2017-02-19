@@ -154,13 +154,25 @@
                             <!-- /.nav-second-level -->
                         </li>
                         <li>
-                            <a href="#"><i class="glyphicon glyphicon-tree-deciduous"></i> Film Country<span class="fa arrow"></span></a>
+                            <a href="#"><i class="glyphicon glyphicon-globe"></i> Film Country<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
                                     <a href="{!! route('admin.country.index') !!}">List Country</a>
                                 </li>
                                 <li>
                                     <a href="{!! route('admin.country.create') !!}">Add Country</a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                        <li>
+                            <a href="#"><i class="glyphicon glyphicon-leaf"></i> Film Type<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="{!! route('admin.type.index') !!}">List Type</a>
+                                </li>
+                                <li>
+                                    <a href="{!! route('admin.type.create') !!}">Add Type</a>
                                 </li>
                             </ul>
                             <!-- /.nav-second-level -->

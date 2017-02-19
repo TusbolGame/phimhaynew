@@ -87,7 +87,7 @@
 			      		<li class="dropdown">
 				        	<a class="dropdown-toggle" data-toggle="dropdown" href="{!! url('film') !!}">THỂ LOẠI
 				        	<span class="caret"></span></a>
-				        	<ul class="dropdown-menu">
+				        	<!-- <ul class="dropdown-menu">
 					          	<li><a href="{!! url('film?type=chien-tranh') !!}">Phim Chiến tranh</a></li>
 								<li><a href="{!! url('film?type=co-trang') !!}">Phim Cổ trang</a></li>
 								<li><a href="{!! url('film?type=gia-tuong') !!}">Phim Giả tưởng</a></li>
@@ -108,7 +108,12 @@
 						        <li><a href="{!! url('film?type=than-thoai') !!}">Phim Thần thoại</a></li>
 						        <li><a href="{!! url('film?type=trinh-tham') !!}">Phim Trinh thám</a></li>
 						        <li><a href="{!! url('film?type=zombie') !!}">Phim Zombie</a></li>
-					        </ul>
+					        </ul> -->
+					        <ul class="dropdown-menu">
+					        	@foreach($film_type as $data)
+					          	<li><a href="{!! url('film?type='.$data->type_alias) !!}">Phim {!! $data->type_name !!}</a></li>
+					          	@endforeach
+					         </ul>
 		      			</li>
 			      		<li class="dropdown">
 				        	<a class="dropdown-toggle" data-toggle="dropdown" href="{!! url('film?category=le') !!}">PHIM LẺ
@@ -161,7 +166,7 @@
 		      			<li class="dropdown">
 				        	<a class="dropdown-toggle" data-toggle="dropdown" href="{!! url('film?category=hh') !!}">PHIM HOẠT HÌNH
 				        	<span class="caret"></span></a>
-				        	<ul class="dropdown-menu">
+				        	<!-- <ul class="dropdown-menu">
 					          	<li><a href="{!! url('film?category=hh&type=gia-tuong') !!}">Phim Giả tưởng</a></li>
 						        <li><a href="{!! url('film?category=hh&type=hanh-dong') !!}">Phim Hành động </a></li>
 						        <li><a href="{!! url('film?category=hh&type=hai-huoc') !!}">Phim Hài hước</a></li>
@@ -173,6 +178,11 @@
 						        <li><a href="{!! url('film?category=hh&type=sieu-nhien') !!}">Phim Siêu nhiên</a></li>
 						        <li><a href="{!! url('film?category=hh&type=tinh-cam') !!}">Phim Tình cảm</a></li>
 						        <li><a href="{!! url('film?category=hh&type=vo-thuat') !!}">Phim Võ thuật</a></li>
+					        </ul> -->
+					        <ul class="dropdown-menu">
+					        	@foreach($film_type as $data)
+					          	<li><a href="{!! route('film.getSearch') !!}?category=hh&type={!! $data->type_alias !!}">Phim {!! $data->type_name !!}</a></li>
+					          	@endforeach
 					        </ul>
 		      			</li>
 

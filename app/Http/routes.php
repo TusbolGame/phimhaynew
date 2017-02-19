@@ -186,6 +186,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function(
     });
     //call route('admin.country.???')
     Route::resource('country', 'FilmCountryController', ['except' => ['show']]);
+    Route::resource('type', 'FilmTypeController', ['except' => ['show']]);
 });
 // phim
 Route::group(['prefix' => 'film'], function() {
