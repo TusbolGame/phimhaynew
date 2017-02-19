@@ -25,6 +25,8 @@ use App\FilmPersonJob;
 use App\FilmCountry;
 use App\FilmDetailCountry;
 use App\Lib\FilmProcess\FilmProcess;
+use App\Lib\CaptchaImages\CaptchaSessionDownloadFilm;
+use App\Lib\SessionTimeouts\SessionDownloadFilm;
 use Input;
 use Auth;
 class FilmController extends Controller {
@@ -716,6 +718,78 @@ class FilmController extends Controller {
 		$films->setPath(route('film.getSearch'));
 		// dump($films);
 		return view('phimhay.film-search', compact('films', 'category', 'type', 'country', 'year', 'name'));
+	}
+	//
+	public function getFilmDownloadCaptcha($film_dir, $film_id, Request $request){
+		$film_list =  FilmList::find($film_id);
+		//check film
+		if(count($film_list) == 0){
+			return redirect()->route('404');
+		}
+		else if(count($film_list) == 1 && $film_list->film_dir_name != $film_dir){
+			return redirect()->route('404');
+		}
+		//exist session  ->film-download
+		$session_download_film = new SessionDownloadFilm($film_id);
+		if($session_download_film->checkSessionUses()){
+			return redirect()->route('film.getFilmDownload', [$film_dir, $film_id]);
+		}
+		//captcha auto
+		return view('phimhay.film-download-captcha', compact('film_list'));
+	}
+	public function getFilmDownload($film_dir, $film_id, Request $request){
+		// var_dump($request->captcha_download_film);
+		// var_dump($request->session()->all());
+		// if($request->method('post') && $request->captcha_download_film != ''){
+		// 	$captcha_download_film = new CaptchaSessionDownloadFilm();
+		// 	$captcha_download_film->createCheckCaptchaSessionUses($request->captcha_download_film);
+		// 	//check captcha
+		// 	if($captcha_download_film->checkCaptchaSessionUses()){
+		// 		echo 'ggg';
+		// 	}
+		// 	echo 'ff';
+		// }
+		// die();
+		//
+		$film_list =  FilmList::find($film_id);
+		//check film
+		if(count($film_list) == 0){
+			return redirect()->route('404');
+		}
+		else if(count($film_list) == 1 && $film_list->film_dir_name != $film_dir){
+			return redirect()->route('404');
+		}
+		$session_download_film = new SessionDownloadFilm($film_id);
+		//check
+		if($session_download_film->checkSessionUses()){
+			// ton tai
+			$film_episode = FilmEpisode::where('film_id', $film_id)->where('film_link_number', 1)->paginate(5);
+			$film_episode->setPath(route('film.getFilmDownload', [$film_dir, $film_id]));
+			return view('phimhay.film-download', compact('film_episode', 'film_list'));
+			
+		}
+		//
+		if($request->method('post') && $request->captcha_download_film != ''){
+			$captcha_download_film = new CaptchaSessionDownloadFilm();
+			$captcha_download_film->createCheckCaptchaSessionUses($request->captcha_download_film);
+			//check captcha
+			if($captcha_download_film->checkCaptchaSessionUses()){
+				//forget
+				$captcha_download_film->forgetCaptchaSessionUses();
+				//session film_id
+				$session_download_film->forgetSessionUses();
+				$session_download_film->createSessionUses();
+				//page 10
+				$film_episode = FilmEpisode::where('film_id', $film_id)->where('film_link_number', 1)->paginate(20);
+				$film_episode->setPath(route('film.getFilmDownload', [$film_dir, $film_id]));
+				return view('phimhay.film-download', compact('film_episode', 'film_list'));
+			}else{
+				return redirect()->back()->withErrors('Sai mã bảo vệ hoặc hết thời hạn!');
+			}
+		}
+		//ko ton tai session
+		// return redirect()->route('film.getFilmDownloadCaptcha', [$film_dir, $film_id])->withErrors('Lỗi! Hết thời gian timeout!');
+		
 	}
 	//
 	public function getSearchAdmin(){

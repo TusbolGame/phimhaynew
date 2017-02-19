@@ -1120,3 +1120,29 @@ div.vote a{
 .list-film-person{
     min-height: 300px;
 }
+
+
+/* captcha */
+.captcha{
+    padding: 3px;
+}
+.captcha img{
+    width: 120px;
+    height: 30px;
+}
+.captcha span{
+    display: inline-block;
+}
+.captcha-download-film{
+    display: inline-block;
+}
+.captcha-download-film span{
+    background-color: white;
+    transition: 0.3s;
+    margin-left: 3px;
+    margin-right: 3px;
+}
+.captcha-download-film span:hover{
+    color: #0082bb;
+    background-color: #faebd7;
+}

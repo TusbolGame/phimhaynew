@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Lib\CaptchaImages\CaptchaSessionLoginUser;
 use App\Lib\CaptchaImages\CaptchaSessionRegisterUser;
 use App\Lib\CaptchaImages\CaptchaSessionRecoverUser;
+use App\Lib\CaptchaImages\CaptchaSessionDownloadFilm;
 class CaptchaController extends Controller {
 
 	public function getCaptchaLoginUser($id){
@@ -24,5 +25,10 @@ class CaptchaController extends Controller {
 		$captcha_recover = new CaptchaSessionRecoverUser();
 		$captcha_recover->forgetCaptchaSessionUses();
 		$captcha_recover->createAndGetCaptchaSessionUses();
+	}
+	public function getCaptchaDownloadFilm($id){
+		$captcha_download = new CaptchaSessionDownloadFilm();
+		$captcha_download->forgetCaptchaSessionUses();
+		$captcha_download->createAndGetCaptchaSessionUses();
 	}
 }

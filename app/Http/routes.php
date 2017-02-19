@@ -84,6 +84,8 @@ Route::group(['prefix' => 'captcha'], function() {
 	Route::get('register/{id}', ['as'=>'captcha.getCaptchaRegisterUser', 'uses'=>'CaptchaController@getCaptchaRegisterUser']);
     //captcha recover
     Route::get('recover/{id}', ['as'=>'captcha.getCaptchaRecoverUser', 'uses'=>'CaptchaController@getCaptchaRecoverUser']);
+    //captcha download
+    Route::get('download/{id}', ['as'=>'captcha.getCaptchaDownloadFilm', 'uses'=>'CaptchaController@getCaptchaDownloadFilm']);
 });
 //test
 Route::get('test', 'TestController@getTest');
@@ -188,7 +190,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function(
 // phim
 Route::group(['prefix' => 'film'], function() {
     //list phim auto, or search
-    Route::get('/', ['as' => 'film.getSearch', 'uses' => 'FilmController@getSearch']); 
+    Route::get('/', ['as' => 'film.getSearch', 'uses' => 'FilmController@getSearch']);
     //film info
     Route::get('{film_dir}/{film_id}', ['as' => 'film.getFilm', 'uses' => 'FilmController@getFilmInfo']);
     //ajax processing film
@@ -209,7 +211,13 @@ Route::group(['prefix' => 'film'], function() {
 //xem phim
 // Route::get('watch/{film_dir}/{film_id}', ['as' => 'film.getFilmWatch', 'uses' => 'FilmController@getFilmWatch']);
 Route::get('watch/{film_dir}/{film_id}/{id}', ['as' => 'film.getFilmWatch', 'uses' => 'FilmController@getFilmWatch']);
-Route::get('google', function(){
-    $analyticsData = LaravelAnalytics::getMostVisitedPages(365, 20);
-    dd($analyticsData);
+// Route::get('google', function(){
+//     $analyticsData = LaravelAnalytics::getMostVisitedPages(365, 20);
+//     dd($analyticsData);
+// });
+Route::group(['prefix' => 'download'], function() {
+    //
+    Route::get('captcha/{film_dir}/{film_id}', ['as' => 'film.getFilmDownloadCaptcha', 'uses' => 'FilmController@getFilmDownloadCaptcha']);
+    Route::match(['get', 'post'],'{film_dir}/{film_id}', ['as' => 'film.getFilmDownload', 'uses' => 'FilmController@getFilmDownload']);
 });
+

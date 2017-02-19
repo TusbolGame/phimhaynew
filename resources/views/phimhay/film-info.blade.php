@@ -28,7 +28,7 @@
 				<div class="film-thumbnail">
 					<img src="{!! $film_detail->film_thumbnail_big !!}" alt="Error Image Thumnail Small">
 					<ul>
-						<li><a class="btn btn-warning" href="dowload.php" title="Download">Dowload</a></li>
+						<li><a class="btn btn-warning" href="{!! route('film.getFilmDownloadCaptcha', [$film_list->film_dir_name, $film_list->id]) !!}" title="Download">Dowload</a></li>
 						<li><a class="btn btn-success" href="{!! route('film.getFilmWatch', [$film_list->film_dir_name, $film_list->id, $film_episode_id]) !!}" title="Xem phim">Xem phim</a></li>
 					</ul>
 					<!-- film tick -->
