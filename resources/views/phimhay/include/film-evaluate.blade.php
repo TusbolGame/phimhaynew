@@ -150,10 +150,12 @@
 							//$('.vote a span').eq(data['evaluate_film_vote']).addClass('vote-default');
 							//set vote count
 							$('span.movie-evaluate-vote-count').text(parseInt($('span.movie-evaluate-vote-count').text())+1);
+							//unset event click
+
 	                	} else if(result['timeout'] == 0){
 	                		//het timeout, ko dc evaluate
 	                		//show modal
-
+	                		$('div.vote a').unbind();
 	                	}
 	                },
 	                error : function (){

@@ -65,7 +65,15 @@
 							<br>
 							<dt>Thể loại:</dt>
 							<dd class="film-type">
-								{!! $film_process->xulyGetFilmType($film_detail->film_type, $film_detail->film_category) !!}
+								<!-- {-- $film_process->xulyGetFilmType($film_detail->film_type, $film_detail->film_category) --} -->
+								<ul>
+									<!-- thieu category -->
+									@foreach($film_detail_type as $type)
+									<li>
+										<a href="{!! route('film.getSearch') !!}?type={!! $type->filmType->type_alias !!}" title="{!! $type->filmType->type_name !!}">{!! $type->filmType->type_name !!}</a>
+									</li>
+									@endforeach
+								</ul>
 							</dd>
 							<br>
 							<dt>Thời lượng:</dt>
@@ -126,8 +134,6 @@
 		<div class="film-content film-detail-border">
 			<h4 class="film-title-box"><span class="glyphicon glyphicon-heart"></span> NỘI DUNG PHIM</h4>
 			<div class="film-content-info">
-				<!-- <p>Đại gia tộc trừ tà diệt ma Tsuchimikado đã bước vào thời kì hoàng kim bậc nhất, danh tiếng vang xa khắp bốn bể dưới triều đại của Tsuchimikado Yako. Vị pháp sư kì tài ngàn năm hiếm có này đã khiến ba cõi thần người và âm phải khiếp sợ. Thế nhưng, trong một sai lầm, khiến cho phong ấn lối vào địa ngục bị phá vỡ, hàng vạn linh hồn ma quỷ trốn thoát và gây náo động khắp Tokyo. Kể từ đó, danh tiếng của gia tộc Tsuchimikado cũng tàn theo mây khói còn Yako thì ôm hận mà chết.</p>
-				<img src="https://drive.google.com/uc?export=download&id=0B18baix_ssU1UmF1cVFLQl9mWWs" alt=""> -->
 				{!! $film_detail->film_info !!}
 			</div>
 		</div>
@@ -135,7 +141,6 @@
 			<h4 class="film-title-box"><span class="glyphicon glyphicon-flag"></span> TỪ KHÓA</h4>
 			<div class="list-key-words">
 				<ul>
-					<!-- <li><a href="https://www.localhost/phimhay/search/?key=tokyo+ravens" title="tokyo ravens">tokyo ravens</a></li> -->
 					{!! $film_process->xulyGetFilmKeyWords($film_detail->film_key_words) !!}
 				</ul>
 			</div>
@@ -157,7 +162,7 @@
 				</div>
 				<!-- comment local -->
 				<div class="film-comment-local">
-					@include('phimhay.include.film-comment-local', [$film_list->id, $film_comments])
+					@include('phimhay.include.film-comment-local', [$film_list->id, $film_comments, $film_comment_local_count])
 				</div>
 			</div>
 			

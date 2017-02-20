@@ -88,6 +88,7 @@ class FilmController extends Controller {
 				}
 			}
 			//comment
+			$film_comment_local_count = FilmCommentLocal::where('film_id', $film_id)->count();
 			$film_comments = FilmCommentLocal::where('film_id', $film_id)->orderBy('id', 'DESC')->take(10)->with('user')->get();
 			//director
 			$directors = FilmDirector::where('film_id', $film_id)->with(['filmPerson' => function ($query){
@@ -96,7 +97,10 @@ class FilmController extends Controller {
 			$actors = FilmActor::where('film_id', $film_id)->with(['filmPerson' => function ($query){
 				$query->select('id', 'person_name', 'person_image', 'person_dir_name');
 			}])->get();
-			return view('phimhay.film-info', compact('film_list', 'film_detail', 'film_trailer', 'ticked', 'film_episode_id', 'film_relates', 'film_relate_adds', 'film_comments', 'directors', 'actors'));
+			$film_detail_type = FilmDetailType::where('film_id', $film_id)->with(['filmType' => function ($query){
+				$query->select('id', 'type_name', 'type_alias');
+			}])->get();
+			return view('phimhay.film-info', compact('film_list', 'film_detail', 'film_trailer', 'ticked', 'film_episode_id', 'film_relates', 'film_relate_adds', 'film_comments', 'directors', 'actors', 'film_detail_type', 'film_comment_local_count'));
 		}
 		//not found
 		return redirect()->route('404');
@@ -159,7 +163,10 @@ class FilmController extends Controller {
 					$film_relate_adds = FilmDetail::where('film_type', 'LIKE', '%'.$type_random.'%')->where('id', '!=', $film_id)->where('film_relate_id', '!=', $film_detail->film_relate_id)->take($relate_max - count($film_relates))->get();
 				}
 			}
-			return view('phimhay.film-watch', compact('film_list', 'film_detail', 'ticked', 'film_episode_list', 'film_episode_watch', 'film_relates', 'film_relate_adds'));
+			//comment
+			$film_comment_local_count = FilmCommentLocal::where('film_id', $film_id)->count();
+			$film_comments = FilmCommentLocal::where('film_id', $film_id)->orderBy('id', 'DESC')->take(10)->with('user')->get();
+			return view('phimhay.film-watch', compact('film_list', 'film_detail', 'ticked', 'film_episode_list', 'film_episode_watch', 'film_relates', 'film_relate_adds', 'film_comments', 'film_comment_local_count'));
 		}
 		//not found
 		return redirect()->route('404');
@@ -864,19 +871,6 @@ class FilmController extends Controller {
 		return view('phimhay.film-download-captcha', compact('film_list'));
 	}
 	public function getFilmDownload($film_dir, $film_id, Request $request){
-		// var_dump($request->captcha_download_film);
-		// var_dump($request->session()->all());
-		// if($request->method('post') && $request->captcha_download_film != ''){
-		// 	$captcha_download_film = new CaptchaSessionDownloadFilm();
-		// 	$captcha_download_film->createCheckCaptchaSessionUses($request->captcha_download_film);
-		// 	//check captcha
-		// 	if($captcha_download_film->checkCaptchaSessionUses()){
-		// 		echo 'ggg';
-		// 	}
-		// 	echo 'ff';
-		// }
-		// die();
-		//
 		$film_list =  FilmList::find($film_id);
 		//check film
 		if(count($film_list) == 0){

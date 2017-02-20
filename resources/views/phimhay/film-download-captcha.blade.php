@@ -10,7 +10,7 @@
 @section('content')
 	<div class="film-background-border">
 		<h3 class="film-new-title">Download</h3>
-		<h4 class="bg-success" style="padding: 7px;">Tên phim</h4>
+		<h4 class="bg-success" style="padding: 7px;">{!! $film_process->getFilmNameVnEn($film_list->film_name_vn, $film_list->film_name_en) !!}</h4>
 		@include('phimhay.message.errors')
 		<div>
 			<form class="form-inline" action="{!! route('film.getFilmDownload',[$film_list->film_dir_name, $film_list->id]) !!}" method="post">

@@ -966,39 +966,41 @@ div.vote a{
 .film-watch-video{
     
 }
-.film-watch-option ul{
+.film-watch-option>ul{
     list-style: none;
-    overflow: hidden;
+    /* overflow: hidden; */
+    height: auto;
+    min-height: 52px;
     padding: 8px;
 }
-.film-watch-option ul li{
+.film-watch-option>ul>li{
     float: left;
     margin-right: 15px;
     padding: 3px;
     transition: 0.3s;
 }
-.film-watch-option ul li a>span{
+.film-watch-option>ul>li>a>span{
     margin-right: 3px;
 }
-.film-watch-option ul li a{
+.film-watch-option>ul>li>a, .film-watch-option>ul>li>div>a{
     text-decoration: none;
     color: #ddd;
     font-size: 14px;
     line-height: 30px;
 }
-.film-watch-option ul li a .film-tick{
+.film-watch-option .film-tick{
     position: relative;
     padding: 0px;
     background-color: inherit;
     border-radius: 0px;
 }
-.film-watch-option ul li a .tick-content{
+.film-watch-option>ul>li>a .tick-content{
     padding: 0px;
 }
-.film-watch-option ul li:hover{
+.film-watch-option>ul>li:hover{
     background-color: #696969;
 }
-.film-watch-option ul li:hover a>span{
+.film-watch-option>ul>li:hover a>span{
     color: aqua;
 }
 .film-watch-source-list{

@@ -55,7 +55,34 @@
 					@include('phimhay.include.film-tick', ['ticked' => $ticked])
 					<!-- end film tick -->
 				</a></li>
-				<li><a href="" title=""><span class="glyphicon glyphicon-save"></span>Tải phim</a></li>
+				<li>
+					<div class="dropdown">
+					  	<a class="dropdown-toggle" id="drop4" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">
+					  	<span class="glyphicon glyphicon-save"></span>
+					    Download
+					    	<span class="caret"></span>
+					  	</a>
+					  	<ul class="dropdown-menu">
+					  	@if($film_episode_watch->film_src_name != 'youtube')
+					  		@if(!empty($film_episode_watch->film_src_360p))
+						    <li><a href="{!! $film_episode_watch->film_src_360p !!}" download="true" target="_blank">360p</a></li>
+						    @endif
+						    @if(!empty($film_episode_watch->film_src_480p))
+						    <li><a href="{!! $film_episode_watch->film_src_480p !!}" download="true" target="_blank">480p</a></li>
+						    @endif
+						    @if(!empty($film_episode_watch->film_src_720p))
+						    <li><a href="{!! $film_episode_watch->film_src_720p !!}" download="true" target="_blank">720p</a></li>
+						    @endif
+						    @if(!empty($film_episode_watch->film_src_1080p))
+						    <li><a href="{!! $film_episode_watch->film_src_1080p !!}" download="true" target="_blank">1080p</a></li>
+						    @endif
+						    @if(!empty($film_episode_watch->film_src_2160p))
+						    <li><a href="{!! $film_episode_watch->film_src_2160p !!}" download="true" target="_blank">2160p</a></li>
+						    @endif
+						@endif
+					  	</ul>
+					</div>
+				</li>
 				<li><a href="" title=""><span class="glyphicon glyphicon-wrench"></span>Báo lỗi phim</a></li>
 			</ul>
 		</div>
@@ -65,6 +92,7 @@
 				<img src="{!! $film_detail->film_poster_video !!}" class="img-responsive" alt="">
 			</div>
 		@endif
+		<div class="clearfix"></div>
 		<!-- film evaluate -->
 		@include('phimhay.include.film-evaluate', ['film_id' => $film_list->id, 'film_vote' => $film_list->film_vote, 'film_vote_count' => $film_list->film_vote_count])
 		<!-- end film evaluate -->
@@ -127,43 +155,9 @@
 				</div>
 				<!-- comment local -->
 				<div class="film-comment-local">
-					<div class="comment-local-total">
-						<span>1</span>
-						<span>Bình luận</span>
-					</div>
-					<div class="comment-form">
-						<div class="comment-avata col-sm-1">
-							<img src="https://www.localhost/phimhay/photos/icon-user-default.jpg" alt="">
-						</div>
-						<div class="comment-form-content col-sm-11">
-							<form action="" method="POST" accept-charset="utf-8">
-								<input type="hidden" name="_token" value="{!! csrf_token() !!}">
-								<input type="hidden" name="" value="">
-								<div class="form-group">
-									<textarea name="" class="form-control" placeholder="Bình luận"></textarea>
-								</div>
-								<div class="form-group">
-									<input type="button" name="" class="btn btn-primary" value="Bình luận">
-								</div>
-								<p class="comment-check">AAA</p>
-							</form>
-						</div>
-					</div>
-					<div class="clearfix"></div>
-					<div class="comment-list">
-						<ul>
-							<li>
-								<div class="comment-avata col-sm-1">
-									<img src="https://www.localhost/phimhay/photos/icon-user-default.jpg" alt="">
-								</div>
-								<div class="comment-user-info col-sm-11">
-									<input type="hidden" name="comment_parent" value="1">
-									<span class="comment-username">Admin</span>
-									<span class="comment-content">Comm</span>
-									<span class="comment-time">12h</span>
-								</div>
-							</li>
-						</ul>
+					<!-- comment local -->
+					<div class="film-comment-local">
+						@include('phimhay.include.film-comment-local', [$film_list->id, $film_comments, $film_comment_local_count])
 					</div>
 				</div>
 			</div>
