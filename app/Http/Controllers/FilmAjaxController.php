@@ -12,6 +12,7 @@ use App\FilmCommentLocal;
 use App\FilmPerson;
 use App\FilmPersonJob;
 use App\Lib\FilmProcess\FilmProcess;
+use App\User;
 use Auth;
 use Cookie;
 use DB;
@@ -49,9 +50,27 @@ class FilmAjaxController extends Controller {
 		}
 		if (Request::ajax())
 		{
-		    //acept danh gia timeout cookie 2h default
+		    //6lan lien tiep tren 1bo - cookie 30p
 		    $film_id = (int)Request::get('film_id');
 		    // check... security.. chua lam
+		    if(Request::cookie('film_tick_'.$film_id)){
+		    	// $result['content'] = Request::cookie('film_tick_'.$film_id);
+			    	// return response()->json($result);
+			    if(Request::cookie('film_tick_'.$film_id) > 8){
+			    	$user = User::find(Auth::user()->id);
+			    	//khoa account
+			    	$user->blocked = 1;
+			    	$user->save();
+			    	Auth::logout();
+			    	$result['content'] = 'Spam! Tài khoản đã bị khóa!';
+			    	return response()->json($result);
+			    }
+		    	if(Request::cookie('film_tick_'.$film_id) > 6){
+			    	$result['content'] = 'Spam! Bạn đã đánh dấu phim quá nhiều lần, nếu bạn còn Spam sẽ bị khóa tài khoản. Cảm ơn!';
+			    	return response()->json($result)->withCookie(cookie('film_tick_'.$film_id,(int)Request::cookie('film_tick_'.$film_id) + 1 , 30));
+			    }
+			    
+		    }
 		    $film_user_diff =  FilmUserDiff::find(Auth::user()->id);
 		    if(count($film_user_diff) == 1){
 		    	
@@ -68,15 +87,17 @@ class FilmAjaxController extends Controller {
 		    				unset($data[0]);
 		    			}
 		    			$data[$film_id] = 1;
-		    			//$result['aaa'] = json_encode($data);
 		    			$film_user_diff->film_ticked = json_encode($data);
 		    			$film_user_diff->save();
-
 		    			$result['status'] = 1;
-		    			$result['aaa'] = $data[$film_id];
 		    			$result['content'] = 'success_add_tick';
-		    			
-		    			return response()->json($result);
+		    			if(!Request::cookie('film_tick_'.$film_id)){
+				    		return response()->json($result)->withCookie(cookie('film_tick_'.$film_id, 1, 30));
+				    	}
+				    	else{
+				    		//ton tai cookie
+				    		return response()->json($result)->withCookie(cookie('film_tick_'.$film_id,(int)Request::cookie('film_tick_'.$film_id) + 1 , 30));
+				    	}
 		    		}
 		    	}		    	
 		    	//check remove
@@ -90,15 +111,22 @@ class FilmAjaxController extends Controller {
 		    			$result['status'] = 1;
 		    			$result['content'] = 'success_remove_tick';
 		    			$film_user_diff->save();
-		    			return response()->json($result);
+		    			// return response()->json($result);
+		    			//check exists cookie
+				    	if(!Request::cookie('film_tick_'.$film_id)){
+				    		return response()->json($result)->withCookie(cookie('film_tick_'.$film_id, 1, 30));
+				    	}
+				    	else{
+				    		//ton tai cookie
+				    		return response()->json($result)->withCookie(cookie('film_tick_'.$film_id,(int)Request::cookie('film_tick_'.$film_id) + 1 , 30));
+				    	}
 		    		}
 			    	
 		    	}
-		    	//security chua lam
 		    	$result['content'] = 'not_success';
 				return response()->json($result);
 		    }
-		    $result['content'] = 'not_film_id';
+		    $result['content'] = 'Lỗi';
 			return response()->json($result);
 		}
 		$result['content'] = 'not_ajax';
@@ -118,7 +146,7 @@ class FilmAjaxController extends Controller {
 		{
 		    //acept danh gia timeout cookie 2h default
 		    $film_id = (int)Request::get('film_id');
-		    if(Request::cookie('film_tick_'.$film_id)){
+		    if(Request::cookie('film_evaluate_'.$film_id)){
 		    	$result['content'] = 'Bạn đã đánh giá rồi';
 		    	return response()->json($result);
 		    }
@@ -132,13 +160,13 @@ class FilmAjaxController extends Controller {
 		    	$result['status'] = 1;
 		    	$result['content'] = 'success_vote';
 		    	//check exists cookie
-		    	if(!Request::cookie('film_tick_'.$film_id)){
+		    	if(!Request::cookie('film_evaluate_'.$film_id)){
 		    		//ko co cookie, add cookie, 2h
-		    		return response()->json($result)->withCookie(cookie('film_tick_'.$film_id, 1, 180));
+		    		return response()->json($result)->withCookie(cookie('film_evaluate_'.$film_id, 1, 180));
 		    	}
 				return response()->json($result);
 		    }
-		    $result['content'] = 'not_film_id';
+		    $result['content'] = 'Lỗi';
 			return response()->json($result);
 		}
 		$result['content'] = 'not_ajax';

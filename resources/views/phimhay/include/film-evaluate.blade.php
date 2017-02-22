@@ -151,7 +151,7 @@
 							//set vote count
 							$('span.movie-evaluate-vote-count').text(parseInt($('span.movie-evaluate-vote-count').text())+1);
 							//
-							$('.modal-alert-success-content').text('Đã dánh giá phim');
+							$('.modal-alert-success-content').text('Đã đánh giá phim');
 	                		$('.modal-alert-success').modal('show');
 							//unset event click
 							$('div.vote a').unbind();

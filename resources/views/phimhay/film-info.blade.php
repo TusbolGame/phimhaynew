@@ -7,7 +7,8 @@
 	<link rel="stylesheet" type="text/css" href="{!! asset('public/slick-1.6.0/slick-theme.css') !!}">
 @stop
 @section('js')
-	
+	<script src="{!! asset('public/jquery/jquery-migrate-1.2.1.min.js') !!}" type="text/javascript"></script>
+	<script src="{!! asset('public/slick-1.6.0/slick.min.js') !!}" type="text/javascript"></script>
 @stop
 @section('film-dir')
 	<div class="film-dir">
@@ -112,24 +113,35 @@
 		@if(count($actors) > 0)
 		<div class="film-actor film-detail-border">
 			<h4 class="film-title-box"><span class="glyphicon glyphicon-user"></span> DIỄN VIÊN</h4>
-			<div class="film-actor-list">
-				<ol>
-					@foreach($actors as $actor)
-					<li>
-						<a href="{!! route('person.getProfile', [$actor->filmPerson->person_dir_name, $actor->filmPerson->id]) !!}" title="{!! $actor->filmPerson->person_name !!} ({!! $actor->actor_character !!})">
-							<div class="film-actor-img">
-								<img src="{!! $actor->filmPerson->person_image !!}" alt="Error">
-							</div>
-							<div class="film-actor-name">
-								<span class="film-actor-name-1">{!! $actor->filmPerson->person_name !!}</span>
-								<span class="film-actor-name-2">{!! $actor->actor_character !!}</span>
-							</div>
-						</a>
-					</li>
-					@endforeach
-				</ol>
-			</div>
+			<div class="slider filtering slick-slider filtering-film-actor">
+			@if (count($actors) > 0)
+				@foreach($actors as $actor)
+		  		<div class="film-actor-item">
+		  			<a href="{!! route('person.getProfile', [$actor->filmPerson->person_dir_name, $actor->filmPerson->id]) !!}" title="{!! $actor->filmPerson->person_name !!} ({!! $actor->actor_character !!})">
+						<div class="film-actor-img">
+							<img src="{!! $actor->filmPerson->person_image !!}" alt="Error">
+						</div>
+						<div class="film-actor-name">
+							<span class="film-actor-name-1">{!! $actor->filmPerson->person_name !!}</span>
+							<span class="film-actor-name-2">{!! $actor->actor_character !!}</span>
+						</div>
+					</a>
+		  		</div>
+		  		@endforeach
+		  	@endif
+		  	</div>
 		</div>
+		<script>
+		$(document).ready(function(){
+
+
+			$('.filtering-film-actor').slick({
+		  slidesToShow: 7,
+		  slidesToScroll: 7,
+		  variableWidth: false
+		});
+		});
+		</script>
 		@endif
 		<div class="film-trailer film-detail-border">
 			<h4 class="film-title-box"><span class="glyphicon glyphicon-film"></span> TRAILER</h4>

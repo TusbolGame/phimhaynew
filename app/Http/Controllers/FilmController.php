@@ -76,25 +76,45 @@ class FilmController extends Controller {
 			$relate_max = 12;
 			$film_relates = null;
 			$film_relate_adds = null;
-			if($film_detail->film_relate_id == 1){
-
-				//random type
-				$data_type = explode(',', $film_detail->film_type);
-				//ran
+			$film_detail_type = FilmDetailType::where('film_id', $film_id)->get();
+			$data_type = [];
+			foreach ($film_detail_type as $data) {
+				array_push($data_type, $data->type_id);
+			}
+			//random type
+			$type_random = 5;
+			if(count($data_type) > 0){
 				$type_random = $data_type[random_int(0, count($data_type)-1)];
-				//var_dump($type_random);
-				$film_relates = FilmDetail::where('film_type', 'LIKE', '%'.$type_random.'%')->where('id', '!=', $film_id)->with('filmList')->take($relate_max)->get();
-				//dump($film_relates);
+			}			
+			if($film_detail->film_relate_id == 1){
 				
+				if(count($film_detail_type) > 0){
+					
+					$film_relates = FilmDetail::where('id', '!=', $film_id)
+					->whereHas('filmDetailType', function($query) use($type_random){
+						$query->where('type_id', $type_random);
+					})->select('id')->orderByRaw('RAND()')->take($relate_max)->with('filmList')->get();
+					// dump($film_relates);die();
+				}else{
+					//ko co type
+					$film_relates = FilmDetail::where('id', '!=', $film_id)
+					->select('id')->orderByRaw('RAND()')->take($relate_max)->with('filmList')->get();
+				}		
 			}else{
 				//maximum 12
-				$film_relates = FilmDetail::where('film_relate_id', $film_detail->film_relate_id)->where('id', '!=', $film_id)->with('filmList')->take($relate_max)->get();
+				//is relate
+				$relate_id = $film_detail->film_relate_id;
+				$film_relates = FilmDetail::where('id', '!=', $film_id)
+					->whereHas('filmDetail', function($query) use($relate_id){
+						$query->where('film_relate_id', $relate_id);
+					})
+					->select('id')->orderByRaw('RAND()')->take($relate_max)->with('filmList')->get();
 				if(count($film_relates) < $relate_max){
 					//random type
-					$data_type = explode(',', $film_detail->film_type);
-					//ran
-					$type_random = $data_type[random_int(0, count($data_type)-1)];
-					$film_relate_adds = FilmDetail::where('film_type', 'LIKE', '%'.$type_random.'%')->where('id', '!=', $film_id)->where('film_relate_id', '!=', $film_detail->film_relate_id)->with('filmList')->take($relate_max - count($film_relates))->get();
+					$film_relate_adds = FilmDetail::where('id', '!=', $film_id)
+					->whereHas('filmDetailType', function($query) use($type_random){
+						$query->where('type_id', $type_random);
+					})->select('id')->orderByRaw('RAND()')->take($relate_max)->with('filmList')->get();
 				}
 			}
 			// var_dump($film_episode);die();

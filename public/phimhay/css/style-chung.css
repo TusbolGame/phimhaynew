@@ -813,7 +813,7 @@ div.vote a{
     height: 100%;
 }
 .film-actor-name{
-
+    font-size: 12px;
 }
 .film-actor-name span{
     display: block;
@@ -829,6 +829,14 @@ div.vote a{
     font-size: x-small;
     padding-top: 2px;
 }
+.filtering-film-actor{
+    margin-left: 15px;
+    margin-right: 15px;
+}
+.film-actor-item a{
+    text-decoration: none;
+}
+
 .film-trailer{
     min-height: 270px;
 }

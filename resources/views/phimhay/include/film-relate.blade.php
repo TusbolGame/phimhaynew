@@ -2,7 +2,7 @@
 <div class="film-relate film-background-border">
 	<h4 class="film-title-box"><span class="glyphicon glyphicon-thumbs-up"></span>PHIM LIÊN QUAN</h4>
 	<div class="film-relate-list">
-		<div class="slider filtering slick-slider">
+		<div class="slider filtering slick-slider filtering-film-relate">
 		@if (count($film_relates) > 0)
 			@foreach ($film_relates as $relate)
 	  		<div>
@@ -43,15 +43,14 @@
 	</div>
 	
 </div>
-<script src="{!! asset('public/jquery/jquery-migrate-1.2.1.min.js') !!}" type="text/javascript"></script>
-<script src="{!! asset('public/slick-1.6.0/slick.min.js') !!}" type="text/javascript"></script>
+
 <script>
 $(document).ready(function(){
 
 
-	$('.filtering').slick({
+	$('.filtering-film-relate').slick({
   slidesToShow: 4,
-  slidesToScroll: 4,
+  slidesToScroll: 1,
   variableWidth: false
 });
 

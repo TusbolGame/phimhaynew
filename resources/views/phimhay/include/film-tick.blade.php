@@ -66,18 +66,19 @@ $(document).ready(function(){
 	            		//chua login
 	            		//show modal
 	            		$('.modal-alert-not-login').modal('show');
-	            	}else if(result['status'] == 1 && result['timeout'] == 1){
+	            	}else if(result['status'] == 1){
 	            		//
+	            		$('.modal-alert-success-content').text('Đã bỏ đánh dấu');
+	                	$('.modal-alert-success').modal('show');
 	            		$tick.removeClass('icon-is-tick');
 						$tick.removeClass('glyphicon-minus');
 						$tick.addClass('icon-no-tick');
 						$tick.addClass('glyphicon-plus');
 						//change Bỏ đánh dấu to Đánh dấu
 						$tick_content.text('Đánh dấu');
-	            	} else if(result['timeout'] == 0){
-	            		//het timeout, ko dc evaluate
-	            		//show modal
-
+	            	}else if(result['status'] == 0){
+	            		$('.modal-alert-error-content').text(result['content']);
+	                	$('.modal-alert-error').modal('show');
 	            	}
 	            },
 	            error : function (){
@@ -110,7 +111,7 @@ $(document).ready(function(){
 	            		//chua login
 	            		//show modal
 	            		$('.modal-alert-not-login').modal('show');
-	            	}else if(result['status'] == 1 && result['timeout'] == 1){
+	            	}else if(result['status'] == 1){
 	            		//
 	            		$tick.removeClass('icon-no-tick');
 						$tick.removeClass('glyphicon-plus');
@@ -119,10 +120,9 @@ $(document).ready(function(){
 						//change Đánh dấu to Bỏ đánh dấu
 						$tick_content.text('Bỏ đánh dấu');
 						$('.modal-alert-success-add-tick').modal('show');
-	            	} else if(result['timeout'] == 0){
-	            		//het timeout, ko dc evaluate
-	            		//show modal
-
+	            	}else if(result['status'] == 0){
+	            		$('.modal-alert-error-content').text(result['content']);
+	                	$('.modal-alert-error').modal('show');
 	            	}
 	            },
 	            error : function (){
