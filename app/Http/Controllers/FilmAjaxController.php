@@ -119,7 +119,7 @@ class FilmAjaxController extends Controller {
 		    //acept danh gia timeout cookie 2h default
 		    $film_id = (int)Request::get('film_id');
 		    if(Request::cookie('film_tick_'.$film_id)){
-		    	$result['timeout'] = 0;
+		    	$result['content'] = 'Bạn đã đánh giá rồi';
 		    	return response()->json($result);
 		    }
 		    $film_list =  FilmList::find($film_id);
@@ -133,7 +133,7 @@ class FilmAjaxController extends Controller {
 		    	$result['content'] = 'success_vote';
 		    	//check exists cookie
 		    	if(!Request::cookie('film_tick_'.$film_id)){
-		    		//ko co cookie, add cookie
+		    		//ko co cookie, add cookie, 2h
 		    		return response()->json($result)->withCookie(cookie('film_tick_'.$film_id, 1, 180));
 		    	}
 				return response()->json($result);

@@ -14,6 +14,8 @@
 //Route::get('/', 'WelcomeController@index');
 
 //Route::get('home', 'HomeController@index');
+Route::get('test', 'FilmController@getTest');
+
 Route::get('/', ['as' => 'home', 'uses' => 'PhimHayController@home']);
 
 Route::controllers([
@@ -87,11 +89,7 @@ Route::group(['prefix' => 'captcha'], function() {
     //captcha download
     Route::get('download/{id}', ['as'=>'captcha.getCaptchaDownloadFilm', 'uses'=>'CaptchaController@getCaptchaDownloadFilm']);
 });
-//test
-Route::get('test', 'TestController@getTest');
-// Route::get('test', function (){
-//     // $aa = new App\Lib\GetLinkVideo\GetLinkVideo();
-// });
+
 //admin
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function() {
     Route::get('/', function(){

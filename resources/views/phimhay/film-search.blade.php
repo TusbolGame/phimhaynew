@@ -11,13 +11,19 @@
 	<div class="film-filter">
 		<form class="form-inline" action="" method="get" accept-charset="utf-8">
 			<!-- <input type="hidden" name="_token" value="{!! csrf_token() !!}"> -->
+			<!-- <label>Sắp xếp</label> -->
 			<div class="form-group">
-				<label>Sắp xếp</label>
+				<select name="kind" class="form-control">
+					<option value="">Phim</option>
+					<option value="truyen" @if ($kind == 'truyen') selected @endif>Phim Truyện</option>
+					<option value="hoat-hinh" @if ($kind == 'hoat-hinh') selected @endif>Hoạt Hình</option>
+				</select>
+			</div>
+			<div class="form-group">
 				<select name="category" class="form-control">
 					<option value="">Loại</option>
 					<option value="le" @if ($category == 'le') selected @endif>Phim Lẻ</option>
 					<option value="bo" @if ($category == 'bo') selected @endif>Phim Bộ</option>
-					<option value="hh" @if ($category == 'hh') selected @endif>Phim Hoạt Hình</option>
 				</select>
 			</div>
 			<div class="form-group">
@@ -46,19 +52,6 @@
 			</div>
 			<div class="form-group">
 				<select name="country" class="form-control">
-					<!-- <option value="">Quốc Gia</option>
-					<option value="anh" @if ($country == 'anh') selected @endif>Anh</option>
-					<option value="an-do" @if ($country == 'an-do') selected @endif>Ấn Độ</option>
-					<option value="an-do" @if ($country == 'au-my') selected @endif>Âu-Mỹ</option>
-					<option value="dai-loan" @if ($country == 'dai-loan') selected @endif>Đài Loan</option>
-					<option value="hong-kong" @if ($country == 'hong-kong') selected @endif>Hồng Kông</option>
-					<option value="my" @if ($country == 'my') selected @endif>Mỹ</option>
-					<option value="nga" @if ($country == 'nga') selected @endif>Nga</option>
-					<option value="nhat-ban" @if ($country == 'nhat-ban') selected @endif>Nhật Bản</option>
-					<option value="viet-nam" @if ($country == 'viet-nam') selected @endif>Việt Nam</option>
-					<option value="thai-lan" @if ($country == 'thai-lan') selected @endif>Thái Lan</option>
-					<option value="trung-quoc" @if ($country == 'trung-quoc') selected @endif>Trung Quốc</option>
-					<option value="quoc-gia-khac" @if ($country == 'quoc-gia-khac') selected @endif>Quốc Gia Khác</option> -->
 					<option value="">Quốc Gia</option>
 					@foreach($film_country as $data)
 					<option value="{!! $data->country_alias !!}" @if ($country == $data->country_alias) selected @endif>{!! $data->country_name !!}</option>

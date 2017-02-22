@@ -13,7 +13,7 @@
 		<h4 class="bg-success" style="padding: 7px;">{!! $film_process->getFilmNameVnEn($film_list->film_name_vn, $film_list->film_name_en) !!}</h4>
 		<div>
 			<table class="table bg-info">
-				@if($film_list->filmDetail->film_category == 'le' || $film_list->filmDetail->film_category == 'hhle')
+				@if($film_list->film_category == 'le' || $film_list->film_category == 'hhle')
 					<thead>
 						<tr>
 							<th>Source</th>

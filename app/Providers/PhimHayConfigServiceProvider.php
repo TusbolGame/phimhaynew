@@ -21,27 +21,25 @@ class PhimHayConfigServiceProvider extends ServiceProvider {
 		view()->share('phim_hay_config', $phim_hay_config);
 		$film_process = new FilmProcess();
 		$film_hots = [];
-		// $film_hots['hh'] = FilmList::orderBy('film_viewed', 'DESC')->take(6)->with(array('filmDetail'))->get();
-
 		$film_hots['hh'] = FilmList::whereHas('filmDetail', function($query){
-			$query->select('id')->where('film_category', 'LIKE', 'hh%');
+			$query->select('id')->where('film_kind', 'hoat-hinh');
 		})->orderBy('film_viewed', 'DESC')->take(6)->get();
-		$film_hots['le'] = FilmList::whereHas('filmDetail', function($query){
-			$query->select('id')->where('film_category', 'le');
+		//truyen - le
+		$film_hots['le'] = FilmList::where('film_category', 'le')
+		->whereHas('filmDetail', function($query){
+			$query->select('id')->where('film_kind', 'truyen');
 		})->orderBy('film_viewed', 'DESC')->take(6)->get();
-		$film_hots['bo'] = FilmList::whereHas('filmDetail', function($query){
-			$query->select('id')->where('film_category', 'bo');
+		$film_hots['bo'] = FilmList::where('film_category', 'bo')
+		->whereHas('filmDetail', function($query){
+			$query->select('id')->where('film_kind', 'truyen');
 		})->orderBy('film_viewed', 'DESC')->take(6)->get();
-		
-		// dump($film_hots['hh']);
-		// var_dump($film_hots['hh'][1]->filmDetail->film_info);
-		// die();
 		$film_country = FilmCountry::all();
 		$film_type = FilmType::all();
 		view()->share('film_hots', $film_hots);
 		view()->share('film_process', $film_process);
 		view()->share('film_country', $film_country);
 		view()->share('film_type', $film_type);
+		//fix chi dung 1 so view
 		// view()->composer(['phimhay.master', 'phimhay.home'], function($view){
 		// 	$view->with(['phim_hay_config' => $phim_hay_config]);
 		// });

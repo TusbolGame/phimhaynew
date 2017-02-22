@@ -15,14 +15,10 @@ class CreateFilmDetailsTable extends Migration {
 		Schema::create('film_details', function(Blueprint $table)
 		{
 			$table->increments('id');
-			$table->char('film_category', 4)->default('le'); //le, bo, hhle, hhbo
+			$table->char('film_kind', 10)->default('truyen');//truyen, hoat-hinh
 			$table->text('film_info')->nullable();
 			$table->float('film_score_imdb')->nullable();
 			$table->integer('film_score_aw')->nullable();
-			$table->string('film_type')->nullable();
-			$table->string('film_country')->nullable();
-			$table->string('film_director')->nullable();
-			$table->string('film_actor')->nullable();
 			$table->char('film_release_date', 10)->nullable(); //20-02-1000
 			$table->string('film_production_company')->nullable();
 			$table->integer('film_relate_id')->unsigned()->default(0);//get table film_relates, phim lien quan, 0 - ko co phim lien quan

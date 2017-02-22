@@ -15,7 +15,7 @@
 						<span class="film-title-en">{!! $film_process->getFilmNameEn($hot->film_name_vn, $hot->film_name_en) !!}</span>
 						<span class="film-title-view">Luot xem: {!! $hot->film_viewed !!}</span>
 						<span class="film-title-rate-vote rate-vote rate-vote-{!! $hot->film_vote !!}"></span>
-						<span class="film-title-time">{!! $film_process->xulyGetFilmTime($hot->film_time, $hot->filmDetail->film_category) !!}</span>
+						<span class="film-title-time">{!! $film_process->xulyGetFilmTime($hot->film_time, $hot->film_category) !!}</span>
 					</div>
 				</a>
 			</li>
@@ -39,7 +39,7 @@
 						<span class="film-title-en">{!! $film_process->getFilmNameEn($hot->film_name_vn, $hot->film_name_en) !!}</span>
 						<span class="film-title-view">Luot xem: {!! $hot->film_viewed !!}</span>
 						<span class="film-title-rate-vote rate-vote rate-vote-{!! $hot->film_vote !!}"></span>
-						<span class="film-title-time">{!! $film_process->xulyGetFilmTime($hot->film_time, 'le') !!}</span>
+						<span class="film-title-time">{!! $film_process->xulyGetFilmTime($hot->film_time, $hot->film_category) !!}</span>
 					</div>
 				</a>
 			</li>
@@ -63,7 +63,7 @@
 						<span class="film-title-en">{!! $film_process->getFilmNameEn($hot->film_name_vn, $hot->film_name_en) !!}</span>
 						<span class="film-title-view">Luot xem: {!! $hot->film_viewed !!}</span>
 						<span class="film-title-rate-vote rate-vote rate-vote-{!! $hot->film_vote !!}"></span>
-						<span class="film-title-time">{!! $film_process->xulyGetFilmTime($hot->film_time, 'bo') !!}</span>
+						<span class="film-title-time">{!! $film_process->xulyGetFilmTime($hot->film_time, $hot->film_category) !!}</span>
 					</div>
 				</a>
 			</li>

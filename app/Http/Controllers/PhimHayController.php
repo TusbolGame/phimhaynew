@@ -13,6 +13,7 @@ use Session;
 use DB;
 use App\FilmList;
 use App\FilmSlider;
+use App\FilmEpisode;
 use App\Lib\FilmProcess\FilmProcess;
 
 class PhimHayController extends Controller {
@@ -20,37 +21,30 @@ class PhimHayController extends Controller {
 	//
 	public function home(){
 		$film_news = [];
-		// $film_news['hh'] = FilmList::distinct()
-		// 	->whereHas('filmDetail', function($query){
-		// 		$query->where('film_category', 'LIKE', 'hh%');
-		// 	})
-		// 	->whereIn('id', function($query2){
-		// 		$query2->from('film_episodes')
-		// 		->select('id');
-		// 	})
-		// 	->orderBy('id', 'DESC')->take(15)->toSql();
-		//chua fix dc cho la category nao cua episode???loi cho sap xep truoc
-		$film_news['hh'] = FilmList::distinct()
+		//da fix
+		$film_news['hh'] = FilmEpisode::orderBy('id', 'DESC')
+			->groupBy('film_id')->take(15)
 			->whereHas('filmDetail', function($query){
-				$query->where('film_category', 'LIKE', 'hh%');
+				$query->distinct()->where('film_kind', 'hoat-hinh');
 			})
-			->whereHas('filmEpisode', function($query2){
-				$query2->distinct()->orderBy('id', 'DESC');
-			})
-			->take(15)->get();
+			->select('film_id')->with('filmList')->get();
 		// dump($film_news['hh']); die();
-		$film_news['le'] = FilmList::distinct()->whereHas('filmDetail', function($query){
-				$query->select('id')->where('film_category', 'le');
+		$film_news['le'] = FilmEpisode::orderBy('id', 'DESC')
+			->groupBy('film_id')->take(15)
+			->whereHas('filmDetail', function($query){
+				$query->distinct()->where('film_kind', 'truyen')->whereHas('filmList', function($query2){
+					$query2->where('film_category', 'le');
+				});
 			})
-			->whereIn('id', function($query2){
-				$query2->from('film_episodes')
-				->select('id');
+			->select('film_id')->with('filmList')->get();
+		$film_news['bo'] = FilmEpisode::orderBy('id', 'DESC')
+			->groupBy('film_id')->take(15)
+			->whereHas('filmDetail', function($query){
+				$query->distinct()->where('film_kind', 'truyen')->whereHas('filmList', function($query2){
+					$query2->where('film_category', 'bo');
+				});
 			})
-			->orderBy('id', 'DESC')->take(15)->get();
-		$film_news['bo'] = FilmList::distinct()->whereHas('filmDetail', function($query){
-				$query->select('id')->where('film_category', 'bo');
-			})
-			->orderBy('id', 'DESC')->take(15)->get();
+			->select('film_id')->with('filmList')->get();
 		//slider
 		$film_sliders = FilmSlider::all();
 		return view('phimhay.home', compact('film_news', 'film_sliders'));

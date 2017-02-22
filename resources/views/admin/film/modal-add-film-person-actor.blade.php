@@ -243,7 +243,7 @@
                             var data = {
                                 //token
                                 _token : $('form.form-add-film').children('input[name="_token"]').val(),
-                                search_film_director : $('.search-film-director').val()
+                                person_name : $('.search-film-director').val()
                             };
                             $.ajax({
                                 type : 'POST',
@@ -279,7 +279,7 @@
                             var data = {
                                 //token
                                 _token : $('form.form-add-film').children('input[name="_token"]').val(),
-                                search_film_director : $('.search-film-actor').val()
+                                person_name : $('.search-film-actor').val()
                             };
                             $.ajax({
                                 type : 'POST',

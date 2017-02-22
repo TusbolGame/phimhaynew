@@ -65,9 +65,15 @@
 							<br>
 							<dt>Thể loại:</dt>
 							<dd class="film-type">
-								<!-- {-- $film_process->xulyGetFilmType($film_detail->film_type, $film_detail->film_category) --} -->
 								<ul>
-									<!-- thieu category -->
+									<!-- kind -->
+									<li>
+										<a href="{!! route('film.getSearch') !!}?type={!! $film_detail->film_kind !!}" title="Phim {!! $film_process->xylyGetFilmKind($film_detail->film_kind) !!}">Phim {!! $film_process->xylyGetFilmKind($film_detail->film_kind) !!}</a>
+									</li>
+									<!-- category -->
+									<li>
+										<a href="{!! route('film.getSearch') !!}?type={!! $film_list->film_category !!}" title="Phim {!! $film_process->xylyGetFilmcategory($film_list->film_category) !!}">Phim {!! $film_process->xylyGetFilmCategory($film_list->film_category) !!}</a>
+									</li>
 									@foreach($film_detail_type as $type)
 									<li>
 										<a href="{!! route('film.getSearch') !!}?type={!! $type->filmType->type_alias !!}" title="{!! $type->filmType->type_name !!}">{!! $type->filmType->type_name !!}</a>
@@ -77,7 +83,7 @@
 							</dd>
 							<br>
 							<dt>Thời lượng:</dt>
-							<dd>{!! $film_process->xulyGetFilmTime($film_detail->film_time, $film_detail->film_category) !!}</dd>
+							<dd>{!! $film_process->xulyGetFilmTime($film_list->film_time, $film_list->film_category) !!}</dd>
 							<br>
 							<dt>Chất lượng:</dt>
 							<dd class="film-quality">{!! $film_process->xulyGetFilmQuality($film_list->film_quality) !!}</dd>
@@ -169,7 +175,8 @@
 		</div>
 	</div>
 	<!-- end film commnet -->
-	
+	@include('phimhay.include.modal-message-error')
+	@include('phimhay.include.modal-message-success')
 	<script>
 		$(document).ready(function () {
 			//fix active onclick

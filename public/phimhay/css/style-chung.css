@@ -123,6 +123,9 @@ div.vote a{
 .rate-vote-0{
     background-position: -4px -202px;
 }
+.cursor-default{
+    cursor: context-menu;
+}
 /*end style rate vote*/
 
 #wapper{
@@ -1103,7 +1106,9 @@ div.vote a{
 }
 /* film search */
 .film-filter{
-    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 10px 5px;
     background-color: rgba(235, 235, 235, 0.72);
     border-radius: 3px;
 }

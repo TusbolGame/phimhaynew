@@ -1,7 +1,7 @@
 @extends('admin.master')
 @section('header')
 <div class="col-lg-12">
-    <h1 class="page-header bg-primary">Slider
+    <h1 class="page-header bg-primary">Person
         <small>Add</small>
     </h1>
 </div>
@@ -15,19 +15,19 @@
         <div class="col-lg-8">
             <div class="form-group">
               <label>Tên nhân vật</label>
-              <input type="text" class="form-control" name="person_name" placeholder="Nhập tên nhân vật" required="true" value="{!! old('person_name') !!}">
+              <input type="text" class="form-control" name="person_name" placeholder="Nhập tên nhân vật" required="true" value="{!! old('person_name') !!}" autocomplete="off">
             </div>
             <div class="form-group">
               <label>Tên nhân vật (đầy đủ)</label>
-              <input type="text" class="form-control" name="person_full_name" placeholder="Nhập tên nhân vật (đầy đủ)" value="{!! old('person_full_name') !!}">
+              <input type="text" class="form-control" name="person_full_name" placeholder="Nhập tên nhân vật (đầy đủ)" value="{!! old('person_full_name') !!}" autocomplete="off">
             </div>
             <div class="form-group">
               <label>Tên khai sinh</label>
-              <input type="text" class="form-control" name="person_birth_name" placeholder="Nhập tên khai sinh" value="{!! old('person_birth_name') !!}">
+              <input type="text" class="form-control" name="person_birth_name" placeholder="Nhập tên khai sinh" value="{!! old('person_birth_name') !!}" autocomplete="off">
             </div>
             <div class="form-group">
               <label>Tên biệt hiệu</label>
-              <input type="text" class="form-control" name="person_nick_name" placeholder="Nhập tên biệt hiệu" value="{!! old('person_nick_name') !!}">
+              <input type="text" class="form-control" name="person_nick_name" placeholder="Nhập tên biệt hiệu" value="{!! old('person_nick_name') !!}" autocomplete="off">
             </div>
             <div class="form-group">
               <label>Ngày sinh, địa điểm</label>
@@ -49,7 +49,7 @@
             </div>
             <div class="form-group">
               <label>Chiều cao</label>
-              <input type="text" class="form-control" name="person_height" placeholder="Nhập chiều cao" value="{!! old('person_height') !!}">
+              <input type="text" class="form-control" name="person_height" placeholder="Nhập chiều cao" value="{!! old('person_height') !!}" autocomplete="off">
             </div>
             <div class="form-group">
               <label>Thông tin</label>

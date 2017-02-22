@@ -161,6 +161,7 @@ class FilmTypeDatabaseSeeder extends Seeder {
 	}
 
 }
+
 class FilmSliderDatabaseSeeder extends Seeder {
 
 	/**

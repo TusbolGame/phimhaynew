@@ -141,7 +141,7 @@
 	                		//chua login
 	                		//show modal
 	                		$('.modal-alert-not-login').modal('show');
-	                	}else if(result['status'] == 1 && result['timeout'] == 1){
+	                	}else if(result['status'] == 1){
 	                		//vote success
 	                		//unset class vote-default
 							$('.vote a span.vote-default').removeClass('vote-default');
@@ -150,12 +150,17 @@
 							//$('.vote a span').eq(data['evaluate_film_vote']).addClass('vote-default');
 							//set vote count
 							$('span.movie-evaluate-vote-count').text(parseInt($('span.movie-evaluate-vote-count').text())+1);
+							//
+							$('.modal-alert-success-content').text('Đã dánh giá phim');
+	                		$('.modal-alert-success').modal('show');
 							//unset event click
+							$('div.vote a').unbind();
+							$('.div.vote a').addClass('cursor-default');
 
-	                	} else if(result['timeout'] == 0){
-	                		//het timeout, ko dc evaluate
-	                		//show modal
-	                		$('div.vote a').unbind();
+	                	}else if(result['status'] == 0){
+	                		//error
+	                		$('.modal-alert-error-content').text(result['content']);
+	                		$('.modal-alert-error').modal('show');
 	                	}
 	                },
 	                error : function (){

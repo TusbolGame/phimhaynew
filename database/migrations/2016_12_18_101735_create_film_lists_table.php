@@ -20,6 +20,7 @@ class CreateFilmListsTable extends Migration {
 			$table->foreign('id')->references('id')->on('film_details')->onDelete('cascade');
 			$table->string('film_name_en')->nullable();
 			$table->string('film_name_vn')->nullable();
+			$table->char('film_category', 2)->default('le'); //le, bo
 			$table->integer('film_time')->nullable();
 			$table->integer('film_years')->nullable();
 			$table->char('film_quality', 8)->nullable(); // HD, Full HD, 2K

@@ -138,7 +138,7 @@
                 </tr>
                 <tr>
                     <th>Phim Loại</th>
-                    <td>{!! $film_detail->film_category !!}</td>
+                    <td>{!! $film_list->film_category !!}</td>
                 </tr>
                 <tr>
                     <th>Nội Dung</th>
@@ -146,7 +146,7 @@
                 </tr>
                 <tr>
                     <th>Thời Lượng Phim</th>
-                    <td>{!! $film_list->film_name_vn !!}</td>
+                    <td>{!! $film_process->xulyGetFilmTime($film_list->film_time, $film_list->film_category) !!}</td>
                 </tr>
                 <tr>
                     <th>Điểm IDMB</th>

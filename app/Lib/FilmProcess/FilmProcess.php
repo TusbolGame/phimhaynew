@@ -32,7 +32,7 @@ class FilmProcess
 		return $this->getFilmNameVnEn($film_name_vn, $film_name_en).' '.$film_years.' '.$film_quality;
 	}
 	public function getTitleWatch($film_name_vn, $film_name_en, $film_years, $film_quality, $film_category, $film_episode = 'Trailer'){
-		if($film_category == 'le' || $film_category == 'hhle'){
+		if($film_category == 'le'){
 			return $this->getTitleInfo($film_name_vn, $film_name_en, $film_years, $film_quality);
 		}else{
 			//phim bo
@@ -181,24 +181,19 @@ class FilmProcess
 			echo '</ul>';
 		}		
 	}
-	//chua
-	public function xylyGetFilmLoai(){
-		$film_loai = $film_video->getFilmLoai();
-		$film_loai_name = '';
-		if($film_loai == 'le'){
-			$film_loai_name = 'lẻ';
+	public function xylyGetFilmCategory($category){
+		if($category == 'le'){
+			return 'lẻ';
+		}else if($category == 'bo'){
+			return 'bộ';
 		}
-		if($film_loai == 'bo'){
-			$film_loai_name = 'bộ';
+	}
+	public function xylyGetFilmKind($kind){
+		if($kind == 'hoat-hinh'){
+			return 'hoạt hình';
+		}else if($kind == 'truyen'){
+			return 'truyện';
 		}
-		//xu ly phim hhbo, hhle--> change hoat-hinh
-		if($film_loai == 'hhbo' || $film_loai == 'hhle'){
-			$film_loai = 'hoat-hinh';
-			$film_loai_name = 'hoạt hình';
-		}
-		?>
-			<a href="<?php echo '../../the-loai/phim-'.$film_loai.'/'; ?>" title="Phim <?php echo $film_loai_name; ?>">Phim <?php echo $film_loai_name; ?></a>
-		<?php
 	}
 	public function xulyGetFilmKeyWords($film_key_words){
 		$data = explode(',', $film_key_words);

@@ -21,14 +21,10 @@ class FilmPersonController extends Controller {
 			//update viewed
 			$person->person_viewed = $person->person_viewed + 1;
 			$person->save();
-			$film_actor = FilmActor::where('actor_id', $id)->with('filmList')->with(['filmDetail' => function($query){
-				$query->select('film_category');
-			}])->paginate(1, ['*'], 'page_actor');
+			$film_actor = FilmActor::where('actor_id', $id)->with('filmList')->paginate(1, ['*'], 'page_actor');
 			$film_actor->setPath(route('person.getProfile', $id));
 			$film_actor->setPageName('page_actor');
-			$film_director = FilmDirector::where('director_id', $id)->with('filmList')->with(['filmDetail' => function($query){
-				$query->select('film_category');
-			}])->paginate(1, ['*'], 'page_director');
+			$film_director = FilmDirector::where('director_id', $id)->with('filmList')->paginate(1, ['*'], 'page_director');
 			$film_director->setPath(route('person.getProfile', $id));
 			$film_director->setPageName('page_director');
 			// var_dump($film_actor);
@@ -96,7 +92,7 @@ class FilmPersonController extends Controller {
 			$job_arr[$key] = ['film_person_id' => $person->id, 'film_job_id' => (int)$val];
 		}
 		FilmPersonJob::insert($job_arr);
-		return redirect()->route('admin.person.getList')->with(['flash_message'=>'Thành công ! Hoàn thành thêm mới một Person']);
+		return redirect()->route('admin.person.getList')->with(['flash_message'=>'Thành công ! Hoàn thành thêm mới một Person: '.$person->person_name]);
 	}
 	public function getEdit($id){
 		$person = FilmPerson::find($id);

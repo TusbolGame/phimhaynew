@@ -70,13 +70,16 @@
                     $date = explode('-', $film_detail->film_release_date);
                  ?>
                 <div class="col-xs-3">
-                    <input type="text" name="film_release_date_day" class="form-control" value="@if( count($date) == 3 && isset($date[0])){!! $date[0] !!}@endif" placeholder="Nhập ngày">
+                    <input type="text" name="film_release_date_day" class="form-control" value="@if( count($date) == 3 && isset($date[0])){!! $date[0] !!}@endif" placeholder="Nhập ngày" autocomplete="off">
                 </div>
                 <div class="col-xs-3">
-                    <input type="text" name="film_release_date_month" class="form-control" value="@if (count($date) == 3 && isset($date[1])){!! $date[1] !!}@endif" placeholder="Nhập tháng">
+                    <input type="text" name="film_release_date_month" class="form-control" value="@if (count($date) == 3 && isset($date[1])){!! $date[1] !!}@endif" placeholder="Nhập tháng" autocomplete="off">
                 </div>
-                <div class="col-xs-3">
+                <!-- <div class="col-xs-3">
                     <input type="text" name="film_release_date_year" class="form-control" value="@if (count($date) == 3 && isset($date[2])){!! $date[2] !!}@endif" required="true" placeholder="Nhập năm">
+                </div>-->
+                <div class="col-xs-3">
+                    <input type="text" name="film_release_date_year" class="form-control" value="{!! $film_list->film_years !!}" required="true" placeholder="Nhập năm">
                 </div>
                 
                 

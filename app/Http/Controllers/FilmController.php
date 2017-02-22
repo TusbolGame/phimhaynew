@@ -31,7 +31,31 @@ use App\Lib\CaptchaImages\CaptchaSessionDownloadFilm;
 use App\Lib\SessionTimeouts\SessionDownloadFilm;
 use Input;
 use Auth;
+use Schema;
 class FilmController extends Controller {
+
+	public function getTest(){
+		// Schema::table('film_details', function($table) {
+		//     //
+		//     $table->char('film_kind', 10)->default('truyen')->after('film_category');
+		// });
+		// Schema::table('film_lists', function($table) {
+		//     //
+		//     $table->char('film_category', 2)->default('le')->after('film_name_vn');
+		// });
+		// $film_detail = FilmDetail::all();
+		// foreach ($film_detail as $data) {
+		// 	if ($data->film_category == 'hhle' || $data->film_category == 'hhbo') {
+		// 		$data->film_kind = 'hoat-hinh';
+		// 		$data->save();
+		// 	}		
+		// 	if($data->film_category == 'hhbo' || $data->film_category == 'bo'){
+		// 		$film_list = FilmList::find($data->id);
+		// 		$film_list->film_category = 'bo';
+		// 		$film_list->save();
+		// 	}
+		// }
+	}
 
 	public function getFilmInfo($film_dir, $film_id){
 		$film_id = (int)$film_id;
@@ -328,17 +352,10 @@ class FilmController extends Controller {
 		$film_detail->film_info = $request->film_info;
 		$film_detail->film_score_imdb = $request->film_score_imdb;
 		$film_detail->film_score_aw = $request->film_score_aw;
-		//film_type
-		// $film_detail->film_type = implode(',', $request->film_type);
-		//fix country -> table film_detail_countries
-		// $film_detail->film_country = implode(',', $request->film_country);
-		//fix change table person
-		// $film_detail->film_director = $request->film_director;
-		// $film_detail->film_actor = $request->film_actor;
 		//date
-		$day = (!empty($request->film_release_date_day)) ? $request->film_release_date_day : '??';
-		$month = (!empty($request->film_release_date_month)) ? $request->film_release_date_month : '??';
-		$year = (!empty($request->film_release_date_year)) ? $request->film_release_date_year : '??';
+		$day = ($request->film_release_date_day != '') ? $request->film_release_date_day : '??';
+		$month = ($request->film_release_date_month != '') ? $request->film_release_date_month : '??';
+		$year = ($request->film_release_date_year != '') ? $request->film_release_date_year : '??';
 		$film_detail->film_release_date = $day.'-'.$month.'-'.$year;
 		$film_detail->film_production_company = $request->film_production_company;
 		if(!$request->has('relate')){
@@ -634,6 +651,7 @@ class FilmController extends Controller {
 	public function getSearch(){
 		$name = Input::get('name');
 		$category = Input::get('category');
+		$kind = Input::get('kind');
 		$type = Input::get('type');
 		$country = Input::get('country');
 		$year = Input::get('year');
@@ -645,7 +663,7 @@ class FilmController extends Controller {
 		$films = null;
 		//ko name
 		if(empty($name)){
-			if($category == null && $type == null && $country == null && $year == null){
+			if($category == null && $type == null && $country == null && $year == null && $kind == null){
 				//get id episode
 				// $films = FilmDetail::orderBy('id', 'DESC')->select('id')->paginate(25);
 				$films = FilmDetail::distinct()
@@ -667,57 +685,251 @@ class FilmController extends Controller {
 						if(!empty($country)){
 							//is type
 							if(!empty($type)){
-								$films = FilmDetail::where('film_category', 'LIKE', '%'.$category.'%')
-								->whereHas('filmDetailType', function($query) use($country){
-										$query->whereHas('filmType', function($query2) use($type){
-											$query2->where('type_alias', $type);
-										});
-									})
-								->whereHas('filmDetailCountry', function($query) use($country){
-										$query->whereHas('filmCountry', function($query2) use($country){
-											$query2->where('country_alias', $country);
-										});
-									})
-								->whereHas('filmList', function($q) use($truoc2010){
-									$q->where('film_years', '<', $truoc2010);
-								})
-								->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+								//is kind
+								if(!empty($kind)){
+									//is category
+									if(!empty($category)){
+										$films = FilmDetail::where('film_kind', $kind)
+										->whereHas('filmDetailType', function($query) use($type){
+												$query->whereHas('filmType', function($query2) use($type){
+													$query2->where('type_alias', $type);
+												});
+											})
+										->whereHas('filmDetailCountry', function($query) use($country){
+												$query->whereHas('filmCountry', function($query2) use($country){
+													$query2->where('country_alias', $country);
+												});
+											})
+										->whereHas('filmList', function($q) use($truoc2010, $category){
+											$q->where('film_years', '<', $truoc2010)->where('film_category', $category);
+										})
+										->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+									}else{
+										//ko category
+										$films = FilmDetail::where('film_kind', $kind)
+										->whereHas('filmDetailType', function($query) use($type){
+												$query->whereHas('filmType', function($query2) use($type){
+													$query2->where('type_alias', $type);
+												});
+											})
+										->whereHas('filmDetailCountry', function($query) use($country){
+												$query->whereHas('filmCountry', function($query2) use($country){
+													$query2->where('country_alias', $country);
+												});
+											})
+										->whereHas('filmList', function($q) use($truoc2010){
+											$q->where('film_years', '<', $truoc2010);
+										})
+										->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+									}
+								}else{
+									//ko kind
+									// ->whereHas('filmList', function($q2) use($category){
+									// 		$q2->where('film_category', $category);
+									// 	})
+									//is category
+									if(!empty($category)){
+										$films = FilmDetail::
+										whereHas('filmDetailType', function($query) use($type){
+												$query->whereHas('filmType', function($query2) use($type){
+													$query2->where('type_alias', $type);
+												});
+											})
+										->whereHas('filmDetailCountry', function($query) use($country){
+												$query->whereHas('filmCountry', function($query2) use($country){
+													$query2->where('country_alias', $country);
+												});
+											})
+										->whereHas('filmList', function($q) use($truoc2010, $category){
+											$q->where('film_years', '<', $truoc2010)->where('film_category', $category);
+										})
+										->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+									}else{
+										//ko category
+										$films = FilmDetail::
+										whereHas('filmDetailType', function($query) use($type){
+												$query->whereHas('filmType', function($query2) use($type){
+													$query2->where('type_alias', $type);
+												});
+											})
+										->whereHas('filmDetailCountry', function($query) use($country){
+												$query->whereHas('filmCountry', function($query2) use($country){
+													$query2->where('country_alias', $country);
+												});
+											})
+										->whereHas('filmList', function($q) use($truoc2010){
+											$q->where('film_years', '<', $truoc2010);
+										})
+										->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+									}
+									
+								}
 							}else{
 								//ko type
-								$films = FilmDetail::where('film_category', 'LIKE', '%'.$category.'%')
-								->whereHas('filmDetailCountry', function($query) use($country){
-										$query->whereHas('filmCountry', function($query2) use($country){
-											$query2->where('country_alias', $country);
-										});
-									})
-								->whereHas('filmList', function($q) use($truoc2010){
-									$q->where('film_years', '<', $truoc2010);
-								})
-								->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+								//is kind
+								if(!empty($kind)){
+									//is category
+									if(!empty($category)){
+										$films = FilmDetail::where('film_kind', $kind)
+										->whereHas('filmDetailCountry', function($query) use($country){
+												$query->whereHas('filmCountry', function($query2) use($country){
+													$query2->where('country_alias', $country);
+												});
+											})
+										->whereHas('filmList', function($q) use($truoc2010, $category){
+											$q->where('film_years', '<', $truoc2010)->where('film_category', $category);
+										})
+										->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+									}else{
+										//is year
+										//is country
+										//ko type
+										//is kind
+										//ko category
+										$films = FilmDetail::where('film_kind', $kind)
+										->whereHas('filmDetailCountry', function($query) use($country){
+												$query->whereHas('filmCountry', function($query2) use($country){
+													$query2->where('country_alias', $country);
+												});
+											})
+										->whereHas('filmList', function($q) use($truoc2010){
+											$q->where('film_years', '<', $truoc2010);
+										})
+										->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+									}
+								}else{
+									//ko type, ko kind
+									//is category
+									if(!empty($category)){
+										$films = FilmDetail::
+										whereHas('filmDetailCountry', function($query) use($country){
+												$query->whereHas('filmCountry', function($query2) use($country){
+													$query2->where('country_alias', $country);
+												});
+											})
+										->whereHas('filmList', function($q) use($truoc2010, $category){
+											$q->where('film_years', '<', $truoc2010)->where('film_category', $category);
+										})
+										->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+									}else{
+										//is year, is country, ko type ko kind ko cate
+										$films = FilmDetail::
+										whereHas('filmDetailCountry', function($query) use($country){
+												$query->whereHas('filmCountry', function($query2) use($country){
+													$query2->where('country_alias', $country);
+												});
+											})
+										->whereHas('filmList', function($q) use($truoc2010){
+											$q->where('film_years', '<', $truoc2010);
+										})
+										->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+									}
+									
+								}	
 							}
-							
 						} /*endif(!empty($country))*/
 						//ko co country
 						else{
 							//is type
 							if(!empty($type)){
-								$films = FilmDetail::where('film_category', 'LIKE', '%'.$category.'%')
-								->whereHas('filmDetailType', function($query) use($country){
-										$query->whereHas('filmType', function($query2) use($type){
-											$query2->where('type_alias', $type);
-										});
-									})
-								->whereHas('filmList', function($q) use($truoc2010){
-									$q->where('film_years', '<', $truoc2010);
-								})
-								->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+								//is kind
+								if(!empty($kind)){
+									//is category
+									if(!empty($category)){
+										$films = FilmDetail::where('film_kind', $kind)
+										->whereHas('filmDetailType', function($query) use($type){
+												$query->whereHas('filmType', function($query2) use($type){
+													$query2->where('type_alias', $type);
+												});
+											})
+										->whereHas('filmList', function($q) use($truoc2010, $category){
+											$q->where('film_years', '<', $truoc2010)->where('film_category', $category);
+										})
+										->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+									}else{
+										//ko category
+										$films = FilmDetail::where('film_kind', $kind)
+										->whereHas('filmDetailType', function($query) use($type){
+												$query->whereHas('filmType', function($query2) use($type){
+													$query2->where('type_alias', $type);
+												});
+											})
+										->whereHas('filmList', function($q) use($truoc2010){
+											$q->where('film_years', '<', $truoc2010);
+										})
+										->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+									}
+								}else{
+									//ko kind
+									//is category
+									if(!empty($category)){
+										$films = FilmDetail::
+										whereHas('filmDetailType', function($query) use($type){
+												$query->whereHas('filmType', function($query2) use($type){
+													$query2->where('type_alias', $type);
+												});
+											})
+										->whereHas('filmList', function($q) use($truoc2010, $category){
+											$q->where('film_years', '<', $truoc2010)->where('film_category', $category);
+										})
+										->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+									}else{
+										//ko category
+										$films = FilmDetail::
+										whereHas('filmDetailType', function($query) use($type){
+												$query->whereHas('filmType', function($query2) use($type){
+													$query2->where('type_alias', $type);
+												});
+											})
+										->whereHas('filmList', function($q) use($truoc2010){
+											$q->where('film_years', '<', $truoc2010);
+										})
+										->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+									}
+									
+								}
 							}else{
 								//ko type
-								$films = FilmDetail::where('film_category', 'LIKE', '%'.$category.'%')
-								->whereHas('filmList', function($q) use($truoc2010){
-									$q->where('film_years', '<', $truoc2010);
-								})
-								->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+								//is kind
+								if(!empty($kind)){
+									//is category
+									if(!empty($category)){
+										$films = FilmDetail::where('film_kind', $kind)
+										->whereHas('filmList', function($q) use($truoc2010, $category){
+											$q->where('film_years', '<', $truoc2010)->where('film_category', $category);
+										})
+										->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+									}else{
+										//is year
+										//ko country
+										//ko type
+										//is kind
+										//ko category
+										$films = FilmDetail::where('film_kind', $kind)
+										->whereHas('filmList', function($q) use($truoc2010){
+											$q->where('film_years', '<', $truoc2010);
+										})
+										->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+									}
+								}else{
+									//ko type, ko kind
+									//is category
+									if(!empty($category)){
+										$films = FilmDetail::
+										whereHas('filmList', function($q) use($truoc2010, $category){
+											$q->where('film_years', '<', $truoc2010)->where('film_category', $category);
+										})
+										->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+									}else{
+										//is year, ko country, ko type ko kind ko cate
+										$films = FilmDetail::
+										whereHas('filmList', function($q) use($truoc2010){
+											$q->where('film_years', '<', $truoc2010);
+										})
+										->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+									}
+									
+								}	
 							}
 							
 						}
@@ -727,115 +939,486 @@ class FilmController extends Controller {
 						if(!empty($country)){
 							//is type
 							if(!empty($type)){
-								$films = FilmDetail::where('film_category', 'LIKE', '%'.$category.'%')
-									->whereHas('filmDetailType', function($query) use($type){
-										$query->whereHas('filmType', function($query2) use($type){
-											$query2->where('type_alias', $type);
-										});
-									})
-									->whereHas('filmList', function($q) use($year){
-										$q->where('film_years', $year);
-									})
-									->whereHas('filmDetailCountry', function($query) use($country){
-										$query->whereHas('filmCountry', function($query2) use($country){
-											$query2->where('country_alias', $country);
-										});
-									})
-									->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
-							}
-							else{
+								//is kind
+								if(!empty($kind)){
+									//is category
+									if(!empty($category)){
+										$films = FilmDetail::where('film_kind', $kind)
+										->whereHas('filmDetailType', function($query) use($type){
+												$query->whereHas('filmType', function($query2) use($type){
+													$query2->where('type_alias', $type);
+												});
+											})
+										->whereHas('filmDetailCountry', function($query) use($country){
+												$query->whereHas('filmCountry', function($query2) use($country){
+													$query2->where('country_alias', $country);
+												});
+											})
+										->whereHas('filmList', function($q) use($year, $category){
+											$q->where('film_years', $year)->where('film_category', $category);
+										})
+										->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+									}else{
+										//ko category
+										$films = FilmDetail::where('film_kind', $kind)
+										->whereHas('filmDetailType', function($query) use($type){
+												$query->whereHas('filmType', function($query2) use($type){
+													$query2->where('type_alias', $type);
+												});
+											})
+										->whereHas('filmDetailCountry', function($query) use($country){
+												$query->whereHas('filmCountry', function($query2) use($country){
+													$query2->where('country_alias', $country);
+												});
+											})
+										->whereHas('filmList', function($q) use($year){
+											$q->where('film_years', $year);
+										})
+										->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+									}
+								}else{
+									//ko kind
+									// ->whereHas('filmList', function($q2) use($category){
+									// 		$q2->where('film_category', $category);
+									// 	})
+									//is category
+									if(!empty($category)){
+										$films = FilmDetail::
+										whereHas('filmDetailType', function($query) use($type){
+												$query->whereHas('filmType', function($query2) use($type){
+													$query2->where('type_alias', $type);
+												});
+											})
+										->whereHas('filmDetailCountry', function($query) use($country){
+												$query->whereHas('filmCountry', function($query2) use($country){
+													$query2->where('country_alias', $country);
+												});
+											})
+										->whereHas('filmList', function($q) use($year, $category){
+											$q->where('film_years', $year)->where('film_category', $category);
+										})
+										->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+									}else{
+										//ko category
+										$films = FilmDetail::
+										whereHas('filmDetailType', function($query) use($type){
+												$query->whereHas('filmType', function($query2) use($type){
+													$query2->where('type_alias', $type);
+												});
+											})
+										->whereHas('filmDetailCountry', function($query) use($country){
+												$query->whereHas('filmCountry', function($query2) use($country){
+													$query2->where('country_alias', $country);
+												});
+											})
+										->whereHas('filmList', function($q) use($year){
+											$q->where('film_years', $year);
+										})
+										->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+									}
+									
+								}
+							}else{
 								//ko type
-								$films = FilmDetail::where('film_category', 'LIKE', '%'.$category.'%')
-									->whereHas('filmList', function($q) use($year){
-										$q->where('film_years', $year);
-									})
-									->whereHas('filmDetailCountry', function($query) use($country){
-										$query->whereHas('filmCountry', function($query2) use($country){
-											$query2->where('country_alias', $country);
-										});
-									})
-									->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+								//is kind
+								if(!empty($kind)){
+									//is category
+									if(!empty($category)){
+										$films = FilmDetail::where('film_kind', $kind)
+										->whereHas('filmDetailCountry', function($query) use($country){
+												$query->whereHas('filmCountry', function($query2) use($country){
+													$query2->where('country_alias', $country);
+												});
+											})
+										->whereHas('filmList', function($q) use($year, $category){
+											$q->where('film_years', $year)->where('film_category', $category);
+										})
+										->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+									}else{
+										//is year
+										//is country
+										//ko type
+										//is kind
+										//ko category
+										$films = FilmDetail::where('film_kind', $kind)
+										->whereHas('filmDetailCountry', function($query) use($country){
+												$query->whereHas('filmCountry', function($query2) use($country){
+													$query2->where('country_alias', $country);
+												});
+											})
+										->whereHas('filmList', function($q) use($year){
+											$q->where('film_years', $year);
+										})
+										->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+									}
+								}else{
+									//ko type, ko kind
+									//is category
+									if(!empty($category)){
+										$films = FilmDetail::
+										whereHas('filmDetailCountry', function($query) use($country){
+												$query->whereHas('filmCountry', function($query2) use($country){
+													$query2->where('country_alias', $country);
+												});
+											})
+										->whereHas('filmList', function($q) use($year, $category){
+											$q->where('film_years', $year)->where('film_category', $category);
+										})
+										->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+									}else{
+										//is year, is country, ko type ko kind ko cate
+										$films = FilmDetail::
+										whereHas('filmDetailCountry', function($query) use($country){
+												$query->whereHas('filmCountry', function($query2) use($country){
+													$query2->where('country_alias', $country);
+												});
+											})
+										->whereHas('filmList', function($q) use($year){
+											$q->where('film_years', $year);
+										})
+										->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+									}
+									
+								}	
 							}
-							
-						}
-						//ko country
+						} /*endif(!empty($country))*/
+						//ko co country
 						else{
 							//is type
 							if(!empty($type)){
-								$films = FilmDetail::where('film_category', 'LIKE', '%'.$category.'%')
-									->whereHas('filmDetailType', function($query) use($type){
-										$query->whereHas('filmType', function($query2) use($type){
-											$query2->where('type_alias', $type);
-										});
-									})
-									->whereHas('filmList', function($q) use($year){
-										$q->where('film_years', $year);
-									})
-									->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
-							}
-							else{
+								//is kind
+								if(!empty($kind)){
+									//is category
+									if(!empty($category)){
+										$films = FilmDetail::where('film_kind', $kind)
+										->whereHas('filmDetailType', function($query) use($type){
+												$query->whereHas('filmType', function($query2) use($type){
+													$query2->where('type_alias', $type);
+												});
+											})
+										->whereHas('filmList', function($q) use($year, $category){
+											$q->where('film_years', $year)->where('film_category', $category);
+										})
+										->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+									}else{
+										//ko category
+										$films = FilmDetail::where('film_kind', $kind)
+										->whereHas('filmDetailType', function($query) use($type){
+												$query->whereHas('filmType', function($query2) use($type){
+													$query2->where('type_alias', $type);
+												});
+											})
+										->whereHas('filmList', function($q) use($year){
+											$q->where('film_years', $year);
+										})
+										->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+									}
+								}else{
+									//ko kind
+									//is category
+									if(!empty($category)){
+										$films = FilmDetail::
+										whereHas('filmDetailType', function($query) use($type){
+												$query->whereHas('filmType', function($query2) use($type){
+													$query2->where('type_alias', $type);
+												});
+											})
+										->whereHas('filmList', function($q) use($year, $category){
+											$q->where('film_years', $year)->where('film_category', $category);
+										})
+										->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+									}else{
+										//ko category
+										$films = FilmDetail::
+										whereHas('filmDetailType', function($query) use($type){
+												$query->whereHas('filmType', function($query2) use($type){
+													$query2->where('type_alias', $type);
+												});
+											})
+										->whereHas('filmList', function($q) use($year){
+											$q->where('film_years', $year);
+										})
+										->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+									}
+									
+								}
+							}else{
 								//ko type
-								$films = FilmDetail::where('film_category', 'LIKE', '%'.$category.'%')
-									->whereHas('filmList', function($q) use($year){
-										$q->where('film_years', $year);
-									})
-									->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+								//is kind
+								if(!empty($kind)){
+									//is category
+									if(!empty($category)){
+										$films = FilmDetail::where('film_kind', $kind)
+										->whereHas('filmList', function($q) use($year, $category){
+											$q->where('film_years', $year)->where('film_category', $category);
+										})
+										->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+									}else{
+										//is year
+										//ko country
+										//ko type
+										//is kind
+										//ko category
+										$films = FilmDetail::where('film_kind', $kind)
+										->whereHas('filmList', function($q) use($year){
+											$q->where('film_years', $year);
+										})
+										->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+									}
+								}else{
+									//ko type, ko kind
+									//is category
+									if(!empty($category)){
+										$films = FilmDetail::
+										whereHas('filmList', function($q) use($year, $category){
+											$q->where('film_years', $year)->where('film_category', $category);
+										})
+										->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+									}else{
+										//is year, ko country, ko type ko kind ko cate
+										$films = FilmDetail::
+										whereHas('filmList', function($q) use($year){
+											$q->where('film_years', $year);
+										})
+										->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+									}
+									
+								}	
 							}
 							
 						}
 					}
-				}
+				} /*endif !empty year*/
 				else{
 					//ko year
+					//is country
 					//is country
 					if(!empty($country)){
 						//is type
 						if(!empty($type)){
-							$films = FilmDetail::where('film_category', 'LIKE', '%'.$category.'%')
-								->whereHas('filmDetailType', function($query) use($type){
-										$query->whereHas('filmType', function($query2) use($type){
-											$query2->where('type_alias', $type);
-										});
+							//is kind
+							if(!empty($kind)){
+								//is category
+								if(!empty($category)){
+									$films = FilmDetail::where('film_kind', $kind)
+									->whereHas('filmDetailType', function($query) use($type){
+											$query->whereHas('filmType', function($query2) use($type){
+												$query2->where('type_alias', $type);
+											});
+										})
+									->whereHas('filmDetailCountry', function($query) use($country){
+											$query->whereHas('filmCountry', function($query2) use($country){
+												$query2->where('country_alias', $country);
+											});
+										})
+									->whereHas('filmList', function($q) use($category){
+										$q->where('film_category', $category);
 									})
-								->whereHas('filmDetailCountry', function($query) use($country){
-									$query->whereHas('filmCountry', function($query2) use($country){
-										$query2->where('country_alias', $country);
-									});
-								})
-								->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+									->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+								}else{
+									//ko category
+									$films = FilmDetail::where('film_kind', $kind)
+									->whereHas('filmDetailType', function($query) use($type){
+											$query->whereHas('filmType', function($query2) use($type){
+												$query2->where('type_alias', $type);
+											});
+										})
+									->whereHas('filmDetailCountry', function($query) use($country){
+											$query->whereHas('filmCountry', function($query2) use($country){
+												$query2->where('country_alias', $country);
+											});
+										})
+									->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+								}
+							}else{
+								//ko kind
+								//is category
+								if(!empty($category)){
+									$films = FilmDetail::
+									whereHas('filmDetailType', function($query) use($type){
+											$query->whereHas('filmType', function($query2) use($type){
+												$query2->where('type_alias', $type);
+											});
+										})
+									->whereHas('filmDetailCountry', function($query) use($country){
+											$query->whereHas('filmCountry', function($query2) use($country){
+												$query2->where('country_alias', $country);
+											});
+										})
+									->whereHas('filmList', function($q) use($category){
+										$q->where('film_category', $category);
+									})
+									->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+								}else{
+									//ko category
+									$films = FilmDetail::
+									whereHas('filmDetailType', function($query) use($type){
+											$query->whereHas('filmType', function($query2) use($type){
+												$query2->where('type_alias', $type);
+											});
+										})
+									->whereHas('filmDetailCountry', function($query) use($country){
+											$query->whereHas('filmCountry', function($query2) use($country){
+												$query2->where('country_alias', $country);
+											});
+										})
+									->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+								}
+								
+							}
 						}else{
 							//ko type
-							$films = FilmDetail::where('film_category', 'LIKE', '%'.$category.'%')
-								->whereHas('filmDetailCountry', function($query) use($country){
-									$query->whereHas('filmCountry', function($query2) use($country){
-										$query2->where('country_alias', $country);
-									});
-								})
-								->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+							//is kind
+							if(!empty($kind)){
+								//is category
+								if(!empty($category)){
+									$films = FilmDetail::where('film_kind', $kind)
+									->whereHas('filmDetailCountry', function($query) use($country){
+											$query->whereHas('filmCountry', function($query2) use($country){
+												$query2->where('country_alias', $country);
+											});
+										})
+									->whereHas('filmList', function($q) use($category){
+										$q->where('film_category', $category);
+									})
+									->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+								}else{
+									//ko year
+									//is country
+									//ko type
+									//is kind
+									//ko category
+									$films = FilmDetail::where('film_kind', $kind)
+									->whereHas('filmDetailCountry', function($query) use($country){
+											$query->whereHas('filmCountry', function($query2) use($country){
+												$query2->where('country_alias', $country);
+											});
+										})
+									->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+								}
+							}else{
+								//ko type, ko kind
+								//is category
+								if(!empty($category)){
+									$films = FilmDetail::
+									whereHas('filmDetailCountry', function($query) use($country){
+											$query->whereHas('filmCountry', function($query2) use($country){
+												$query2->where('country_alias', $country);
+											});
+										})
+									->whereHas('filmList', function($q) use($category){
+										$q->where('film_category', $category);
+									})
+									->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+								}else{
+									//ko year, is country, ko type ko kind ko cate
+									$films = FilmDetail::
+									whereHas('filmDetailCountry', function($query) use($country){
+											$query->whereHas('filmCountry', function($query2) use($country){
+												$query2->where('country_alias', $country);
+											});
+										})
+									->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+								}
+								
+							}	
 						}
-						
-					}
-					//ko country
+					} /*endif(!empty($country))*/
+					//ko co country
 					else{
 						//is type
 						if(!empty($type)){
-							$films = FilmDetail::where('film_category', 'LIKE', '%'.$category.'%')
-								->whereHas('filmDetailType', function($query) use($type){
-										$query->whereHas('filmType', function($query2) use($type){
-											$query2->where('type_alias', $type);
-										});
+							//is kind
+							if(!empty($kind)){
+								//is category
+								if(!empty($category)){
+									$films = FilmDetail::where('film_kind', $kind)
+									->whereHas('filmDetailType', function($query) use($type){
+											$query->whereHas('filmType', function($query2) use($type){
+												$query2->where('type_alias', $type);
+											});
+										})
+									->whereHas('filmList', function($q) use($category){
+										$q->where('film_category', $category);
 									})
-								->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
-						}
-						else{
+									->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+								}else{
+									//ko category
+									$films = FilmDetail::where('film_kind', $kind)
+									->whereHas('filmDetailType', function($query) use($type){
+											$query->whereHas('filmType', function($query2) use($type){
+												$query2->where('type_alias', $type);
+											});
+										})
+									->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+								}
+							}else{
+								//ko kind
+								//is category
+								if(!empty($category)){
+									$films = FilmDetail::
+									whereHas('filmDetailType', function($query) use($type){
+											$query->whereHas('filmType', function($query2) use($type){
+												$query2->where('type_alias', $type);
+											});
+										})
+									->whereHas('filmList', function($q) use($category){
+										$q->where('film_category', $category);
+									})
+									->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+								}else{
+									//ko category
+									$films = FilmDetail::
+									whereHas('filmDetailType', function($query) use($type){
+											$query->whereHas('filmType', function($query2) use($type){
+												$query2->where('type_alias', $type);
+											});
+										})
+									->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+								}
+								
+							}
+						}else{
 							//ko type
-							$films = FilmDetail::where('film_category', 'LIKE', '%'.$category.'%')
-								->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+							//is kind
+							if(!empty($kind)){
+								//is category
+								if(!empty($category)){
+									$films = FilmDetail::where('film_kind', $kind)
+									->whereHas('filmList', function($q) use($category){
+										$q->where('film_category', $category);
+									})
+									->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+								}else{
+									//ko year
+									//ko country
+									//ko type
+									//is kind
+									//ko category
+									$films = FilmDetail::where('film_kind', $kind)
+									->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+								}
+							}else{
+								//ko type, ko kind
+								//is category
+								if(!empty($category)){
+									$films = FilmDetail::
+									whereHas('filmList', function($q) use($category){
+										$q->where('film_category', $category);
+									})
+									->select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+								}else{
+									//ko year, ko country, ko type ko kind ko cate
+									$films = FilmDetail::
+									select('id')->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+								}
+								
+							}	
 						}
 						
 					}
 
-				}
+				} /*end else ko year */
 			}
 		}else{
 			//is name
@@ -850,7 +1433,7 @@ class FilmController extends Controller {
 		}
 		$films->setPath(route('film.getSearch'));
 		// dump($films);
-		return view('phimhay.film-search', compact('films', 'category', 'type', 'country', 'year', 'name'));
+		return view('phimhay.film-search', compact('films', 'category', 'kind', 'type', 'country', 'year', 'name'));
 	}
 	//
 	public function getFilmDownloadCaptcha($film_dir, $film_id, Request $request){

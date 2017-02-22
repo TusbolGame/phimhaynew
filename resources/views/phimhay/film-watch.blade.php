@@ -1,8 +1,8 @@
 @extends('phimhay.master')
 @if($film_list->film_status != 'Trailer') 
-	@section('title', $film_process->getTitleWatch($film_list->film_name_vn, $film_list->film_name_en, $film_list->film_years, $film_list->film_quality, $film_detail->film_category, 'Trailer'))
+	@section('title', $film_process->getTitleWatch($film_list->film_name_vn, $film_list->film_name_en, $film_list->film_years, $film_list->film_quality, $film_list->film_category, $film_list->film_status))
 @else
-	@section('title', $film_process->getTitleWatch($film_list->film_name_vn, $film_list->film_name_en, $film_list->film_years, $film_list->film_quality, $film_detail->film_category, 'Trailer'))
+	@section('title', $film_process->getTitleWatch($film_list->film_name_vn, $film_list->film_name_en, $film_list->film_years, $film_list->film_quality, $film_list->film_category, $film_list->film_status))
 @endif
 @section('description', $film_process->getFilmDescriptionInfo($film_detail->film_info))
 @section('css')
@@ -30,7 +30,7 @@
 		@if($film_list->film_status != 'Trailer')
 		<div class="film-watch-title">
 			<h3><a href="{!! route('film.getFilm', [$film_list->film_dir_name, $film_list->id]) !!}" title="">{!! $film_process->getFilmNameVnEn($film_list->film_name_vn, $film_list->film_name_en) !!}
-			@if ($film_detail->film_category == 'bo' || $film_detail->film_category == 'hhbo') 
+			@if ($film_list->film_category == 'bo') 
 				Tập {!! $film_episode_watch->film_episode !!} 
 			@endif
 			</a></h3>
@@ -41,7 +41,7 @@
 		<div class="film-watch-option">
 			<ul>
 				<li>
-					@if ($film_detail->film_category == 'bo' || $film_detail->film_category == 'hhbo')
+					@if ($film_list->film_category == 'bo')
 						<a href="" title=""><span class="glyphicon glyphicon-forward"></span>Tập kế tiếp</a>
 					@else
 						<a href="javascript:void(0);" title="Không có tập kế tiếp"><span class="glyphicon glyphicon-forward"></span>Không có tập kế tiếp</a></a>
@@ -107,7 +107,7 @@
 				<h5 class="film-watch-source-list-title">Server</h5>
 				<ul>
 				@if (count($film_episode_list) > 0)
-					@if ($film_detail->film_category == 'le' || $film_detail->film_category == 'hhle')
+					@if ($film_list->film_category == 'le')
 						@foreach ($film_episode_list as $film_episode)
 								
 								<li><a href="{!! route('film.getFilmWatch', [$film_list->film_dir_name, $film_list->id, $film_episode->id]) !!}" @if ($film_episode_watch->id == $film_episode->id) class="film-watch-source-selected" @endif>{!! $film_process->xulyGetFilmLanguage($film_episode->film_episode_language) !!}</a></li>
@@ -164,6 +164,8 @@
 			
 		</div>
 	</div>
+	@include('phimhay.include.modal-message-error')
+	@include('phimhay.include.modal-message-success')
 	<!-- end film commnet -->
 	<script>
 		$(document).ready(function () {
