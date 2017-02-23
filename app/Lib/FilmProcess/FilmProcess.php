@@ -181,14 +181,14 @@ class FilmProcess
 			echo '</ul>';
 		}		
 	}
-	public function xylyGetFilmCategory($category){
+	public function xulyGetFilmCategory($category){
 		if($category == 'le'){
 			return 'lẻ';
 		}else if($category == 'bo'){
 			return 'bộ';
 		}
 	}
-	public function xylyGetFilmKind($kind){
+	public function xulyGetFilmKind($kind){
 		if($kind == 'hoat-hinh'){
 			return 'hoạt hình';
 		}else if($kind == 'truyen'){

@@ -137,8 +137,12 @@
                     <td>{!! $film_list->film_name_en !!}</td>
                 </tr>
                 <tr>
+                    <th>Phim</th>
+                    <td>{!! $film_process->xulyGetFilmKind($film_detail->film_kind) !!}</td>
+                </tr>
+                <tr>
                     <th>Phim Loại</th>
-                    <td>{!! $film_list->film_category !!}</td>
+                    <td>{!! $film_process->xulyGetFilmCategory($film_list->film_category) !!}</td>
                 </tr>
                 <tr>
                     <th>Nội Dung</th>

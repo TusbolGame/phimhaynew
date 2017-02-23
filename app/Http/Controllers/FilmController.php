@@ -223,21 +223,11 @@ class FilmController extends Controller {
 		return view('admin.film.add', compact('film_job'));
 	}
 	public function postAdd(Request $request){
-		// if($request->has('film_relate_no')){
-		// 	var_dump($request->film_relate_no);
-		// }
-
-		//die();
 		$film_detail = new FilmDetail();
-		$film_detail->film_category = $request->film_category;
+		$film_detail->film_kind = $request->film_kind;
 		$film_detail->film_info = $request->film_info;
 		$film_detail->film_score_imdb = $request->film_score_imdb;
 		$film_detail->film_score_aw = $request->film_score_aw;
-		//film_type
-		// $film_detail->film_type = (count($request->film_type) >= 1) ? implode(',', $request->film_type) : null;
-		// $film_detail->film_country = (count($request->film_country) >= 1) ? implode(',', $request->film_country) : null;
-		//$film_detail->film_director = $request->film_director;
-		//$film_detail->film_actor = $request->film_actor;
 		//date
 		$film_detail->film_release_date = $request->film_release_date_year.'-'.$request->film_release_date_month.'-'.$request->film_release_date_day;
 		$film_detail->film_production_company = $request->film_production_company;
@@ -333,6 +323,7 @@ class FilmController extends Controller {
 		$film_list->id = $film_detail->id;
 		$film_list->film_name_en = $request->film_name_en;
 		$film_list->film_name_vn = $request->film_name_vn;
+		$film_list->film_category = $request->film_category;
 		$film_list->film_time = $request->film_time;
 		$film_list->film_years = $request->film_release_date_year;
 		$film_list->film_quality = '';
@@ -353,6 +344,9 @@ class FilmController extends Controller {
 	}
 	public function getEdit($film_id){
 		$film_detail = FilmDetail::find($film_id);
+		if(count($film_detail) == 0){
+			return redirect()->route('admin.film.getList')->with(['flash_message_error' =>'Get Edit! Không tồn tại film id: '.$film_id]);
+		}
 		$film_list = FilmList::find($film_id);
 		$film_trailer = FilmTrailer::find($film_id);
 		$film_job = FilmJob::all();
@@ -368,7 +362,10 @@ class FilmController extends Controller {
 	}
 	public function postEdit($film_id, Request $request){
 		$film_detail = FilmDetail::find($film_id);
-		$film_detail->film_category = $request->film_category;
+		if(count($film_detail) == 0){
+			return redirect()->route('admin.film.getList')->with(['flash_message_error' =>'Post Edit! Không tồn tại film id: '.$film_id]);
+		}
+		$film_detail->film_kind = $request->film_kind;
 		$film_detail->film_info = $request->film_info;
 		$film_detail->film_score_imdb = $request->film_score_imdb;
 		$film_detail->film_score_aw = $request->film_score_aw;
@@ -489,6 +486,7 @@ class FilmController extends Controller {
 		$film_list = FilmList::find($film_id);
 		$film_list->film_name_en = $request->film_name_en;
 		$film_list->film_name_vn = $request->film_name_vn;
+		$film_list->film_category = $request->film_category;
 		$film_list->film_time = $request->film_time;
 		$film_list->film_years = $request->film_release_date_year;
 		$film_list->film_quality = $request->film_quality;
@@ -504,6 +502,9 @@ class FilmController extends Controller {
 	}
 	public function getShow($film_id){
 		$film_detail = FilmDetail::find($film_id);
+		if(count($film_detail) == 0){
+			return redirect()->route('admin.film.getList')->with(['flash_message_error' =>'Show! Không tồn tại film id: '.$film_id]);
+		}
 		$film_list = FilmList::find($film_id);
 		$film_trailer = FilmTrailer::find($film_id);
 		$film_episodes = FilmEpisode::where('film_id', $film_id)->paginate(12);

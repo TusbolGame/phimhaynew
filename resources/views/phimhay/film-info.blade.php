@@ -51,13 +51,14 @@
 							<dd class="film-status">{!! $film_list->film_status !!}</dd>
 							<br>
 							<dt>Đạo diễn:</dt>
-							<dd>
+							<dd class="film-type">
 								<ul>
 									@foreach ($directors as $director)
 									<li><a href="{!! route('person.getProfile', [$director->filmPerson->person_dir_name, $director->filmPerson->id]) !!}" title="{!! $director->filmPerson->person_name !!}">{!! $director->filmPerson->person_name !!}</a></li>
 									@endforeach
 								</ul>
 							</dd>
+							<br>
 							<dt>Quốc gia:</dt>
 							<dd class="film-type">{!! $film_process->xulyGetFilmCountry($film_detail->film_country) !!}</dd>
 							<br>
@@ -69,11 +70,11 @@
 								<ul>
 									<!-- kind -->
 									<li>
-										<a href="{!! route('film.getSearch') !!}?type={!! $film_detail->film_kind !!}" title="Phim {!! $film_process->xylyGetFilmKind($film_detail->film_kind) !!}">Phim {!! $film_process->xylyGetFilmKind($film_detail->film_kind) !!}</a>
+										<a href="{!! route('film.getSearch') !!}?type={!! $film_detail->film_kind !!}" title="Phim {!! $film_process->xulyGetFilmKind($film_detail->film_kind) !!}">Phim {!! $film_process->xulyGetFilmKind($film_detail->film_kind) !!}</a>
 									</li>
 									<!-- category -->
 									<li>
-										<a href="{!! route('film.getSearch') !!}?type={!! $film_list->film_category !!}" title="Phim {!! $film_process->xylyGetFilmcategory($film_list->film_category) !!}">Phim {!! $film_process->xylyGetFilmCategory($film_list->film_category) !!}</a>
+										<a href="{!! route('film.getSearch') !!}?type={!! $film_list->film_category !!}" title="Phim {!! $film_process->xulyGetFilmcategory($film_list->film_category) !!}">Phim {!! $film_process->xulyGetFilmCategory($film_list->film_category) !!}</a>
 									</li>
 									@foreach($film_detail_type as $type)
 									<li>

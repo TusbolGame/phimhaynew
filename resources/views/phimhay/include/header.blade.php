@@ -7,12 +7,12 @@
 		</div>
 		<!-- search -->
 		<div class="search">
-			<form action="#" class="form-search-film" method="GET" accept-charset="utf-8">
+			<form action="{!! route('film.getSearch') !!}" class="form-search-film" method="GET" accept-charset="utf-8">
 				<input type="hidden" name="_token" value="{!! csrf_token() !!}">
 				<div class="input-group">
-				    <input type="text" id="search-key-value" class="form-control" name="txtSearch"placeholder="Tìm tên phim" value="@if(isset($name)) {!! $name !!} @endif">
+				    <input type="text" id="search-key-value" class="form-control" name="name"placeholder="Tìm tên phim" value="@if(isset($name)) {!! $name !!} @endif">
 				    	<span class="input-group-btn">
-				        <button class="btn btn-default film-btn-search" type="button">Tìm Kiếm</button>
+				        <button class="btn btn-default film-btn-search" type="submit">Tìm Kiếm</button>
 				     	</span>
 				    </div><!-- /input-group -->
 				    <div class="search-result">
@@ -87,28 +87,6 @@
 			      		<li class="dropdown">
 				        	<a class="dropdown-toggle" data-toggle="dropdown" href="{!! url('film') !!}">THỂ LOẠI
 				        	<span class="caret"></span></a>
-				        	<!-- <ul class="dropdown-menu">
-					          	<li><a href="{!! url('film?type=chien-tranh') !!}">Phim Chiến tranh</a></li>
-								<li><a href="{!! url('film?type=co-trang') !!}">Phim Cổ trang</a></li>
-								<li><a href="{!! url('film?type=gia-tuong') !!}">Phim Giả tưởng</a></li>
-								<li><a href="{!! url('film?type=hai-huoc') !!}">Phim Hài hước</a></li>
-						        <li><a href="{!! url('film?type=hanh-dong') !!}">Phim Hành động</a></li>
-						        <li><a href="{!! url('film?type=hinh-su') !!}">Phim Hình sự</a></li>
-						        <li><a href="{!! url('film?type=hoc-duong') !!}">Phim Học đường</a></li>
-						        <li><a href="{!! url('film?type=kinh-di') !!}">Phim Kinh dị</a></li>
-						        <li><a href="{!! url('film?type=hoi-hop-gay-can') !!}">Phim Hồi hộp Gây cấn</a></li>
-						        <li><a href="{!! url('film?type=phieu-luu') !!}">Phim Phép thuật</a></li>
-						        <li><a href="{!! url('film?type=phieu-luu') !!}">Phim Phiêu lưu</a></li>
-						        <li><a href="{!! url('film?type=sieu-nhien') !!}">Phim Siêu nhiên</a></li>
-						        <li><a href="{!! url('film?type=vo-thuat') !!}">Phim Võ thuật</a></li>
-						        <li><a href="{!! url('film?type=vien-tuong') !!}">Phim Viễn tưởng</a></li>
-						        <li><a href="{!! url('film?type=tai-lieu') !!}">Phim Tài liệu</a></li>
-						        <li><a href="{!! url('film?type=tam-ly') !!}">Phim Tâm lý</a></li>
-						        <li><a href="{!! url('film?type=tinh-cam') !!}">Phim Tình cảm</a></li>
-						        <li><a href="{!! url('film?type=than-thoai') !!}">Phim Thần thoại</a></li>
-						        <li><a href="{!! url('film?type=trinh-tham') !!}">Phim Trinh thám</a></li>
-						        <li><a href="{!! url('film?type=zombie') !!}">Phim Zombie</a></li>
-					        </ul> -->
 					        <ul class="dropdown-menu">
 					        	@foreach($film_type as $data)
 					          	<li><a href="{!! url('film?type='.$data->type_alias) !!}">Phim {!! $data->type_name !!}</a></li>
@@ -118,21 +96,6 @@
 			      		<li class="dropdown">
 				        	<a class="dropdown-toggle" data-toggle="dropdown" href="{!! url('film?category=le') !!}">PHIM LẺ
 				        	<span class="caret"></span></a>
-				        	<!-- <ul class="dropdown-menu">
-					          	<li><a href="{!! url('film?category=le&country=anh') !!}">Phim Anh</a></li>
-						        <li><a href="{!! url('film?category=le&country=an-do') !!}">Phim Ấn Độ</a></li>
-						        <li><a href="{!! url('film?category=le&country=au-my') !!}">Phim Âu-Mỹ</a></li>
-								<li><a href="{!! url('film?category=le&country=dai-loan') !!}">Phim Đài Loan</a></li>
-								<li><a href="{!! url('film?category=le&country=han-quoc') !!}">Phim Hàn Quốc</a></li>
-								<li><a href="{!! url('film?category=le&country=hong-kong') !!}">Phim Hồng Kông</a></li>
-						        <li><a href="{!! url('film?category=le&country=my') !!}">Phim Mỹ</a></li>
-						        <li><a href="{!! url('film?category=le&country=nga') !!}">Phim Nga</a></li>
-						        <li><a href="{!! url('film?category=le&country=nhat-ban') !!}">Phim Nhật Bản</a></li>
-						        <li><a href="{!! url('film?category=le&country=viet-nam') !!}">Phim Việt Nam</a></li>
-						        <li><a href="{!! url('film?category=le&country=thai-lan') !!}">Phim Thái Lan</a></li>
-						        <li><a href="{!! url('film?category=le&country=trung-quoc') !!}">Phim Trung Quốc</a></li>
-						        <li><a href="{!! url('film?category=le&country=quoc-gia-khac') !!}">Phim Quốc Gia Khác</a></li>
-					        </ul> -->
 					        <ul class="dropdown-menu">
 					        	@foreach($film_country as $data)
 					          	<li><a href="{!! url('film?category=le&country='.$data->country_alias) !!}">Phim {!! $data->country_name !!}</a></li>
@@ -142,21 +105,6 @@
 		      			<li class="dropdown">
 				        	<a class="dropdown-toggle" data-toggle="dropdown" href="#">PHIM BỘ
 				        	<span class="caret"></span></a>
-				        	<!-- <ul class="dropdown-menu">
-					          	<li><a href="{!! url('film?category=bo&country=anh') !!}">Phim Anh</a></li>
-								<li><a href="{!! url('film?category=bo&country=an-do') !!}') !!}">Phim Ấn Độ</a></li>
-								<li><a href="{!! url('film?category=bo&country=au-my') !!}">Phim Âu-Mỹ</a></li>
-								<li><a href="{!! url('film?category=bo&country=dai-loan') !!}') !!}">Phim Đài Loan</a></li>
-								<li><a href="{!! url('film?category=bo&country=han-quoc') !!}') !!}">Phim Hàn Quốc</a></li>
-								<li><a href="{!! url('film?category=bo&country=hong-kong') !!}') !!}">Phim Hồng Kông</a></li>
-						        <li><a href="{!! url('film?category=bo&country=my') !!}">Phim Mỹ</a></li>
-						        <li><a href="{!! url('film?category=bo&country=nga') !!}">Phim Nga</a></li>
-						        <li><a href="{!! url('film?category=bo&country=nhat-ban') !!}">Phim Nhật Bản</a></li>
-						        <li><a href="{!! url('film?category=bo&country=viet-nam') !!}">Phim Việt Nam</a></li>
-						        <li><a href="{!! url('film?category=bo&country=thai-lan') !!}">Phim Thái Lan</a></li>
-						        <li><a href="{!! url('film?category=bo&country=trung-quoc') !!}">Phim Trung Quốc</a></li>
-						        <li><a href="{!! url('film?category=bo&country=quoc-gia-khac') !!}">Phim Quốc Gia Khác</a></li>
-					        </ul> -->
 					        <ul class="dropdown-menu">
 					        	@foreach($film_country as $data)
 					          	<li><a href="{!! url('film?category=bo&country='.$data->country_alias) !!}">Phim {!! $data->country_name !!}</a></li>
@@ -164,24 +112,11 @@
 					         </ul>
 		      			</li>
 		      			<li class="dropdown">
-				        	<a class="dropdown-toggle" data-toggle="dropdown" href="{!! url('film?category=hh') !!}">PHIM HOẠT HÌNH
+				        	<a class="dropdown-toggle" data-toggle="dropdown" href="{!! url('film?kind=hoat-hinh') !!}">PHIM HOẠT HÌNH
 				        	<span class="caret"></span></a>
-				        	<!-- <ul class="dropdown-menu">
-					          	<li><a href="{!! url('film?category=hh&type=gia-tuong') !!}">Phim Giả tưởng</a></li>
-						        <li><a href="{!! url('film?category=hh&type=hanh-dong') !!}">Phim Hành động </a></li>
-						        <li><a href="{!! url('film?category=hh&type=hai-huoc') !!}">Phim Hài hước</a></li>
-								<li><a href="{!! url('film?category=hh&type=hoc-duong') !!}">Phim Học đường</a></li>
-								<li><a href="{!! url('film?category=hh&type=kinh-di') !!}">Phim Kinh dị</a></li>
-						        <li><a href="{!! url('film?category=hh&type=vien-tuong') !!}">Phim Viễn tưởng</a></li>
-						        <li><a href="{!! url('film?category=hh&type=phep-thuat') !!}">Phim Phép thuật</a></li>
-						        <li><a href="{!! url('film?category=hh&type=phieu-luu') !!}">Phim Phiêu lưu</a></li>
-						        <li><a href="{!! url('film?category=hh&type=sieu-nhien') !!}">Phim Siêu nhiên</a></li>
-						        <li><a href="{!! url('film?category=hh&type=tinh-cam') !!}">Phim Tình cảm</a></li>
-						        <li><a href="{!! url('film?category=hh&type=vo-thuat') !!}">Phim Võ thuật</a></li>
-					        </ul> -->
 					        <ul class="dropdown-menu">
 					        	@foreach($film_type as $data)
-					          	<li><a href="{!! route('film.getSearch') !!}?category=hh&type={!! $data->type_alias !!}">Phim {!! $data->type_name !!}</a></li>
+					          	<li><a href="{!! route('film.getSearch') !!}?kind=hoat-hinh&type={!! $data->type_alias !!}">Phim {!! $data->type_name !!}</a></li>
 					          	@endforeach
 					        </ul>
 		      			</li>
@@ -204,28 +139,27 @@
 	// $(window).onscroll(function(){
 	// 	menuFixScroll();
 	// });
-	window.onscroll = function() {menuFixScroll()};
-	function menuFixScroll() {
-		    if (document.body.scrollTop > 80 || document.documentElement.scrollTop > 80) {
-		    	//var menu = document.getElementById("Menu");
-		        //menu.style.position = 'fixed';
-		        //menu.style.top = '0px';
-		        $('.menu').addClass('menu-fix');
-		        $('.content').attr('margin-top', 80);
-		    } else {
-		        //document.getElementById("Menu").style.position = 'relative';
-		        $('.menu').removeClass('menu-fix');
-		        $('.content').attr('margin-top', 0);
-		    }
-
-		}
+	// window.onscroll = function() {menuFixScroll()};
+	// function menuFixScroll() {
+	// 	    if (document.body.scrollTop > 80 || document.documentElement.scrollTop > 80) {
+	// 	    	//var menu = document.getElementById("Menu");
+	// 	        //menu.style.position = 'fixed';
+	// 	        //menu.style.top = '0px';
+	// 	        $('.menu').addClass('menu-fix');
+	// 	        $('.content').attr('margin-top', 80);
+	// 	    } else {
+	// 	        //document.getElementById("Menu").style.position = 'relative';
+	// 	        $('.menu').removeClass('menu-fix');
+	// 	        $('.content').attr('margin-top', 0);
+	// 	    }
+	// 	}
 </script>
 <script>
-$('.film-btn-search').click(function() {
-	$key = $('input#search-key-value').val();
-	$film_url = '{!! route('film.getSearch') !!}';
-	window.location.href = $film_url+'?name='+$key;
-});
+// $('.film-btn-search').click(function() {
+// 	$key = $('input#search-key-value').val();
+// 	$film_url = '{!! route('film.getSearch') !!}';
+// 	window.location.href = $film_url+'?name='+$key;
+// });
 	//search
 $('.search-icon-close').click(function() {
 	$('.search-result').hide();

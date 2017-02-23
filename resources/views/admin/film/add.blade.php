@@ -25,6 +25,18 @@
                     <textarea class="form-control" name="film_name_en" placeholder="Nhập tên phim tiếng anh or nhật, ...">{{ old('film_name_en') }}</textarea>
                 </div>
             </div>
+            <div class="clearfix"></div>
+            <div class="col-lg-3">
+                <div class="form-group">
+                    <label>Phim<span class="text-danger">*</span></label>
+                    <div>
+                        <select name="film_kind" class="form-control" required="true">
+                            <option value="truyen" @if(old('film_kind') == 'truyen') selected @endif>Phim Truyện</option>
+                            <option value="hoat-hinh" @if(old('film_kind') == 'hoat-hinh') selected @endif>Phim Hoạt hình</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
             <div class="col-lg-3">
                 <div class="form-group">
                     <label>Loại Phim<span class="text-danger">*</span></label>
@@ -32,8 +44,6 @@
                         <select name="film_category" class="form-control">
                             <option value="le" @if(old('film_category') == 'le') selected @endif>Phim Lẻ</option>
                             <option value="bo" @if(old('film_category') == 'bo') selected @endif>Phim Bộ</option>
-                            <option value="hhle" @if(old('film_category') == 'hhle') selected @endif>Hoạt Hình Lẻ</option>
-                            <option value="hhbo" @if(old('film_category') == 'hhbo') selected @endif>Hoạt Hình Bộ</option>
                         </select>
                     </div>
                 </div>
