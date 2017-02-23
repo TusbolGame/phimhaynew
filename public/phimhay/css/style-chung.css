@@ -813,6 +813,17 @@ div.vote a{
 .person-list ol li .film-actor-img{
     height: 145px;
 }
+.link-list-person{
+    display: inline-block;
+}
+.link-list-person a{
+    font-size: 16px;
+    color: wheat;
+}
+.link-list-person a:hover{
+    color: white;
+    transition: 0.3s;
+}
 .film-actor-img{
     height: 128px;
 }

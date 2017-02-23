@@ -29,23 +29,14 @@
               <textarea class="form-control actor_birth_date" name="actor_birth_date" class="Nhập ngày sinh, địa điểm"></textarea>
             </div>
             <div class="form-group">
-              <label>Giới tính:</label>
-              <label>Nam<input type="radio" name="actor_sex" class="actor_sex" value="Nam"></label>
-              <label>Nữ<input type="radio" name="actor_sex" class="actor_sex" value="Nữ"></label>
-              <br>
-            </div>
-            <div class="form-group">
-             <label>Nghề nghiệp:</label>
-              <select name="actor_job[]" class="form-control actor_job" required="true" multiple>
+                <label>Nghề nghiệp:</label>
                 @foreach ($film_job as $job)
-                  @if ($job->id == 2)
-                    <option value="{!! $job->id !!}" selected="true">{!! $job->job_name !!}</option>
-                  @else
-                    <option value="{!! $job->id !!}">{!! $job->job_name !!}</option>
-                  @endif
+                <div class="checkbox">
+                    <label><input type="checkbox" class="actor_job" name="actor_job[]" value="{!! $job->id !!}">{!! $job->job_name !!}</label>
+                </div>
                 @endforeach
-              </select>
             </div>
+            
             <div class="form-group">
               <label>Chiều cao</label>
               <input type="text" class="form-control actor_height" name="actor_height" placeholder="Nhập chiều cao" value="">
@@ -105,7 +96,7 @@
                 $('.add-film-person-director').click(function() {
                     //job
                     $job = new Array();
-                    $('.director_job option:selected').each(function() {
+                    $('.director_job:checked').each(function() {
                         $job.push($(this).val());
                     });
                     // console.log($job);
@@ -118,7 +109,6 @@
                         person_birth_name : $('.director_birth_name').val(),
                         person_nick_name : $('.director_nick_name').val(),
                         person_birth_date : $('.director_birth_date').val(),
-                        person_sex : $('.director_sex:checked') ? $('.director_sex:checked').val() : '',
                         person_height : $('.director_height').val(),
                         person_job : $job,
                         person_info : $('.director_info').val(),
@@ -154,7 +144,7 @@
                 $('.add-film-person-actor').click(function() {
                     //job
                     $job = new Array();
-                    $('.actor_job option:selected').each(function() {
+                    $('.actor_job:checked').each(function() {
                         $job.push($(this).val());
                     });
                     //goi ajax
@@ -166,7 +156,6 @@
                         person_birth_name : $('.actor_birth_name').val(),
                         person_nick_name : $('.ator_nick_name').val(),
                         person_birth_date : $('.ator_birth_date').val(),
-                        person_sex : $('.actor_sex:checked') ? $('.actor_sex:checked').val() : '',
                         person_height : $('.actor_height').val(),
                         person_job : $job,
                         person_info : $('.actor_info').val(),

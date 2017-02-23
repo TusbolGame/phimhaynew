@@ -22,18 +22,12 @@ class AdminAddFilmPersonRequest extends Request {
 	public function rules()
 	{
 		return [
-			'person_name' => 'required',
-			'person_sex' => 'required',
-			'person_job' => 'required',
-			'person_image' => 'required'
+			'person_name' => 'required'
 		];
 	}
 	public function messages(){
 		return [
-			'person_name.required' => 'Chưa nhập nhân vật name',
-			'person_sex.required' => 'Chưa nhập giới tính',
-			'person_job.required' => 'Chưa nhập nghề nghiệp',
-			'person_image.required' => 'Chưa nhập ảnh đại diện'
+			'person_name.required' => 'Chưa nhập nhân vật name'
 		];
 	}
 

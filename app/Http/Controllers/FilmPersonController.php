@@ -21,47 +21,80 @@ class FilmPersonController extends Controller {
 			//update viewed
 			$person->person_viewed = $person->person_viewed + 1;
 			$person->save();
-			$film_actor = FilmActor::where('actor_id', $id)->with('filmList')->paginate(1, ['*'], 'page_actor');
-			$film_actor->setPath(route('person.getProfile', $id));
-			$film_actor->setPageName('page_actor');
-			$film_director = FilmDirector::where('director_id', $id)->with('filmList')->paginate(1, ['*'], 'page_director');
-			$film_director->setPath(route('person.getProfile', $id));
-			$film_director->setPageName('page_director');
+			$film_actor = FilmActor::where('actor_id', $id)->orderByRaw('RAND()')->take(10)->with('filmList')->get();
+			$film_director = FilmDirector::where('director_id', $id)->orderByRaw('RAND()')->take(10)->with('filmList')->get();
+			$total_director = FilmDirector::where('director_id', $id)->count();
+			$total_actor = FilmActor::where('actor_id', $id)->count();
 			// var_dump($film_actor);
 			//get job
 			$film_person_job = FilmPersonJob::where('film_person_id', $id)->with('filmJob')->get();
 			// var_dump($film_person_job->filmJob);
 			// die();
-			return view('phimhay.person.profile', compact('person', 'film_actor', 'film_director', 'film_person_job'));
+			return view('phimhay.person.profile', compact('person', 'film_actor', 'film_director', 'film_person_job', 'total_director', 'total_actor'));
 		}
 		//not found
-		// return redirect()->route('404');
+		return redirect()->route('404');
+	}
+	public function getPersonDirector($id){
+		$person = FilmPerson::find($id);
+		if(count($person) == 1){
+			$film_director = FilmDirector::where('director_id', $id)->with('filmList')->paginate(20);
+			$film_director->setPath(route('person.getPersonDirector', $id));
+			return view('phimhay.person.person-director', compact('person', 'film_director'));
+		}
+		//not found
+		return redirect()->route('404');
+	}
+	public function getPersonActor($id){
+		$person = FilmPerson::find($id);
+		if(count($person) == 1){
+			$film_actor = FilmActor::where('actor_id', $id)->with('filmList')->paginate(20);
+			$film_actor->setPath(route('person.getPersonActor', $id));
+			return view('phimhay.person.person-actor', compact('person', 'film_actor'));
+		}
+		//not found
+		return redirect()->route('404');
 	}
 	//search person
 	public function getPersonList(Request $request){
 		//job
-		$film_job = FilmJob::all();
+		$film_job = FilmJob::orderBy('job_name', 'ASC')->get();
 		$person_name = null;
 		$person_job = null;
 		//get
 		if($request->isMethod('get')){
-			$film_person = FilmPerson::orderBy('id', 'DESC')->paginate(18);
+			$film_person = FilmPerson::orderBy('person_name', 'ASC')->paginate(18);
 		}else if($request->isMethod('post')){
 			$person_name = $request->person_name;
 			$person_job = (int)$request->person_job;
 			// var_dump($person_name);
 			// var_dump($person_job);die();
-
-			$film_person = FilmPerson::where('person_name', 'LIKE', '%'.$person_name.'%')->whereHas('filmPersonJob', function($query) use($person_job){
-				$query->where('film_job_id', $person_job);
-			})->orderBy('id', 'DESC')->paginate(18);
-			// dd($film_person);die();
+			if(!empty($person_name) != '' && !empty($person_job)){
+				//is person_name, is person_job
+				//return get
+				$film_person = FilmPerson::where('person_name', 'LIKE', '%'.$person_name.'%')
+				->whereHas('filmPersonJob', function($query) use($person_job){
+					$query->where('film_job_id', $person_job);
+				})
+				->orderBy('person_name', 'ASC')->paginate(18);
+			}else if(!empty($person_name)){
+				//is name, no job
+				$film_person = FilmPerson::where('person_name', 'LIKE', '%'.$person_name.'%')
+				->orderBy('person_name', 'ASC')->paginate(18);
+			}
+			else if(!empty($person_job)){
+				//is job, no name
+				$film_person = FilmPerson::whereHas('filmPersonJob', function($query) use($person_job){
+					$query->where('film_job_id', $person_job);
+				})
+				->orderBy('person_name', 'ASC')->paginate(18);
+			}			
 		}
 		$film_person->setPath(route('person.getList'));
 		return view('phimhay.person.search', compact('film_person', 'film_job'))->with(['person_name' => $person_name, 'person_job' => $person_job]);
 	}
 	public function getAdd(){
-		$film_job = FilmJob::all();
+		$film_job = FilmJob::orderBy('job_name', 'ASC')->get();
 		return view('admin.person.add', compact('film_job'));
 	}
 	public function postAdd(AdminAddFilmPersonRequest $request){
@@ -79,7 +112,6 @@ class FilmPersonController extends Controller {
 		$person->person_full_name = $request->person_full_name;
 		$person->person_birth_name = $request->person_birth_name;
 		$person->person_nick_name = $request->person_nick_name;
-		$person->person_sex = $request->person_sex;
 		$person->person_birth_date = $request->person_birth_date;
 		$person->person_height = $request->person_height;
 		$person->person_info = $request->person_info;
@@ -87,11 +119,13 @@ class FilmPersonController extends Controller {
 		$person->person_dir_name = $dir_name;
 		$person->save();
 		//job
-		$job_arr = [];
-		foreach ($request->person_job as $key => $val) {
-			$job_arr[$key] = ['film_person_id' => $person->id, 'film_job_id' => (int)$val];
+		if(count($request->person_job) > 0){
+			$job_arr = [];
+			foreach ($request->person_job as $key => $val) {
+				$job_arr[$key] = ['film_person_id' => $person->id, 'film_job_id' => (int)$val];
+			}
+			FilmPersonJob::insert($job_arr);
 		}
-		FilmPersonJob::insert($job_arr);
 		return redirect()->route('admin.person.getList')->with(['flash_message'=>'Thành công ! Hoàn thành thêm mới một Person: '.$person->person_name]);
 	}
 	public function getEdit($id){
@@ -101,7 +135,7 @@ class FilmPersonController extends Controller {
 			//
 			return redirect()->route('admin.person.getList')->withErrors('Không thành công ! Không tồn tại Person để cập nhật');
 		}
-		$film_job = FilmJob::all();
+		$film_job = FilmJob::orderBy('job_name', 'ASC')->get();
 		$film_person_job = FilmPersonJob::where('film_person_id', $id)->with('filmJob')->get();
 		return view('admin.person.edit', compact('person', 'film_job', 'film_person_job'));
 	}
@@ -119,7 +153,6 @@ class FilmPersonController extends Controller {
 		$person->person_full_name = $request->person_full_name;
 		$person->person_birth_name = $request->person_birth_name;
 		$person->person_nick_name = $request->person_nick_name;
-		$person->person_sex = $request->person_sex;
 		$person->person_birth_date = $request->person_birth_date;
 		$person->person_height = $request->person_height;
 		$person->person_info = $request->person_info;

@@ -34,18 +34,12 @@
               <textarea class="form-control" name="person_birth_date" class="Nhập ngày sinh, địa điểm">{!! old('person_birth_date') !!}</textarea>
             </div>
             <div class="form-group">
-              <label>Giới tính:</label>
-              <label>Nam<input type="radio" name="person_sex" value="Nam" required="true" @if(old('person_sex') == 'Nam') checked="true" @endif></label>
-              <label>Nữ<input type="radio" name="person_sex" value="Nữ" required="true" @if(old('person_sex') == 'Nữ') checked="true" @endif></label>
-              <br>
-            </div>
-            <div class="form-group">
              <label>Nghề nghiệp:</label>
-              <select name="person_job[]" class="form-control" required="true" multiple>
                 @foreach ($film_job as $job)
-                    <option value="{!! $job->id !!}">{!! $job->job_name !!}</option>
+                <div class="checkbox">
+                    <label><input type="checkbox" name="person_job[]" value="{!! $job->id !!}">{!! $job->job_name !!}</label>
+                </div>
                 @endforeach
-              </select>
             </div>
             <div class="form-group">
               <label>Chiều cao</label>
@@ -57,7 +51,7 @@
             </div>
             <div class="form-group">
               <label>Ảnh đại diện</label>
-              <textarea class="form-control" name="person_image" required="true" placeholder="Nhập đường dẫn ảnh">{!! old('person_image') !!}</textarea>
+              <textarea class="form-control" name="person_image" placeholder="Nhập đường dẫn ảnh">{!! old('person_image') !!}</textarea>
             </div>
             <div class="text-center">
                 <input type="submit" name="submit" class="btn btn-primary" value="Thêm Person">

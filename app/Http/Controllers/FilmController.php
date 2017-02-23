@@ -55,6 +55,16 @@ class FilmController extends Controller {
 		// 		$film_list->save();
 		// 	}
 		// }
+		//nam7, nu 8
+		// $arr = [87, 88, 91];
+		// $film_person = FilmPerson::whereIn('id', $arr)->get();
+		// foreach ($film_person as $data) {
+		// 	$job = new FilmPersonJob();
+		// 	$job->film_person_id = $data->id;
+		// 	// $job->film_job_id = 8;
+		// 	$job->film_job_id = 7;
+		// 	$job->save();
+		// }
 	}
 
 	public function getFilmInfo($film_dir, $film_id){
@@ -105,7 +115,7 @@ class FilmController extends Controller {
 				//is relate
 				$relate_id = $film_detail->film_relate_id;
 				$film_relates = FilmDetail::where('id', '!=', $film_id)
-					->whereHas('filmDetail', function($query) use($relate_id){
+					->whereHas('filmDetailType', function($query) use($relate_id){
 						$query->where('film_relate_id', $relate_id);
 					})
 					->select('id')->orderByRaw('RAND()')->take($relate_max)->with('filmList')->get();

@@ -1,6 +1,6 @@
 @extends('phimhay.master')
 @section('title', $person->person_name.' Profile | PhimHay')
-@section('description', '')
+@section('description', $person->person_name.' - '.htmlentities($person->person_info))
 @section('css')
 	<!-- slick -->
 	<link rel="stylesheet" type="text/css" href="{!! asset('public/slick-1.6.0/slick.css') !!}">
@@ -44,9 +44,6 @@
 							<dt>Biệt hiệu:</dt>
 							<dd>{!! $person->person_nick_name !!}</dd>
 							<br>
-							<dt>Phái:</dt>
-							<dd>{!! $person->person_sex !!}</dd>
-							<br>
 							<dt>Ngày sinh:</dt>
 							<dd>{!! $person->person_birth_date !!}</dd>
 							<br>
@@ -82,7 +79,8 @@
 		@if (count($film_director) > 0)
 		<div class="list-film-new">
 			<div class="film-new-title">
-				<p><span class="glyphicon glyphicon-pencil"></span> PHIM ĐÃ ĐẠO DIỄN</p>
+				<span><span class="glyphicon glyphicon-pencil"></span> PHIM ĐÃ ĐẠO DIỄN ({!! $total_director !!})</span>
+				<span class="link-list-person"><a href="{!! route('person.getPersonDirector', $person->id) !!}" class="btn btn-link">Xem danh sách</a></span>
 			</div>
 			<ul class="list-film-new-ul list-film-person">
 				@foreach ($film_director as $film)
@@ -97,18 +95,19 @@
 							<span class="film-title-vn">{!! $film_process->getFilmNameVn($film->filmList->film_name_vn, $film->filmList->film_name_en) !!}</span>
 							<span class="film-title-en">{!! $film_process->getFilmNameEn($film->filmList->film_name_vn, $film->filmList->film_name_en) !!}</span>
 							<span class="film-title-time">{!! $film_process->xulyGetFilmTime($film->filmList->film_time, $film->filmList->film_category) !!}</span>
+							<span class="film-title-year">{!! $film->filmList->film_years !!}</span>
 						</div>
 					</a>
 				</li>
 				@endforeach
 			</ul>
-			{!! $film_director->render() !!}
 		</div>
 		@endif
 		@if (count($film_actor) > 0)
 		<div class="list-film-new">
 			<div class="film-new-title">
-				<p><span class="glyphicon glyphicon-film"></span> PHIM THAM GIA</p>
+				<span><span class="glyphicon glyphicon-film"></span> PHIM THAM GIA ({!! $total_actor !!})</span>
+				<span class="link-list-person"><a href="{!! route('person.getPersonActor', $person->id) !!}" class="btn btn-link">Xem danh sách</a></span>
 			</div>
 			<ul class="list-film-new-ul list-film-person">
 				@foreach ($film_actor as $film)
@@ -123,39 +122,13 @@
 							<span class="film-title-vn">{!! $film_process->getFilmNameVn($film->filmList->film_name_vn, $film->filmList->film_name_en) !!}</span>
 							<span class="film-title-en">{!! $film_process->getFilmNameEn($film->filmList->film_name_vn, $film->filmList->film_name_en) !!}</span>
 							<span class="film-title-time">{!! $film_process->xulyGetFilmTime($film->filmList->film_time, $film->filmList->film_category) !!}</span>
+							<span class="film-title-year">{!! $film->filmList->film_years !!}</span>
 						</div>
 					</a>
 				</li>
 				@endforeach
 			</ul>
-			{!! $film_actor->render() !!}
 		</div>
 		@endif
 	</div>
-<script type="text/javascript">
-//http://laraget.com/blog/how-to-create-an-ajax-pagination-using-laravel
-$(function() {
-    $('body').on('click', '.pagination a', function(e) {
-        e.preventDefault();
-
-        $('#load a').css('color', '#dfecf6');
-        $('#load').append('<img style="position: absolute; left: 0; top: 0; z-index: 100000;" src="/images/loading.gif" />');
-
-        var url = $(this).attr('href');  
-        getArticles(url);
-        window.history.pushState("", "", url);
-    });
-
-    function getArticles(url) {
-        $.ajax({
-            url : url  
-        }).done(function (data) {
-            $('.articles').html(data);  
-        }).fail(function () {
-            alert('Articles could not be loaded.');
-        });
-    }
-});
-
-</script>
 @stop

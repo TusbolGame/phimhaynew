@@ -29,7 +29,7 @@
 	<div class="film-new">
 		<div class="list-film-new">
 			<div class="film-new-title">
-				<p><span class="glyphicon glyphicon-user"></span> DANH SÁCH DIỄN VIÊN - ĐẠO DIỄN</p>
+				<p><span class="glyphicon glyphicon-user"></span> DANH SÁCH DIỄN VIÊN - ĐẠO DIỄN ({!! $film_person->total() !!})</p>
 			</div>
 			<div class="film-actor-list person-list">
 				<ol>

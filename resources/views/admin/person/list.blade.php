@@ -16,7 +16,6 @@
                 <th>Tên đầy đủ</th>
                 <th>Tên khai sinh</th>
                 <th>Biệt hiệu</th>
-                <th>Giới tính</th>
                 <th>Địa chỉ</th>
                 <th>Nghề nghiệp</th>
                 <th>Chiều cao (m)</th>
@@ -35,7 +34,6 @@
                     <td>{{ $data->person_full_name }}</td>
                     <td>{{ $data->person_birth_name }}</td>
                     <td>{{ $data->person_nick_name }}</td>
-                    <td>{{ $data->person_sex }}</td>
                     <td class="person_info">{{ $data->person_birth_date }}</td>
                     <td>
                         @if(count($data->filmPersonJob) > 0)

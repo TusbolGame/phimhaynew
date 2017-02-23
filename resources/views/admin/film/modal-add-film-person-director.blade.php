@@ -29,21 +29,12 @@
               <textarea class="form-control director_birth_date" name="director_birth_date" class="Nhập ngày sinh, địa điểm"></textarea>
             </div>
             <div class="form-group">
-              <label>Giới tính:</label>
-              <label>Nam<input type="radio" name="director_sex" class="director_sex" value="Nam"></label>
-              <label>Nữ<input type="radio" name="director_sex" class="director_sex" value="Nữ"></label>
-            </div>
-            <div class="form-group">
-              <label>Nghề nghiệp:</label>
-              <select name="director_job" class="form-control director_job" required="true" multiple>
+                <label>Nghề nghiệp:</label>
                 @foreach ($film_job as $job)
-                  @if ($job->id == 1)
-                    <option value="{!! $job->id !!}" selected="true">{!! $job->job_name !!}</option>
-                  @else
-                    <option value="{!! $job->id !!}">{!! $job->job_name !!}</option>
-                  @endif
+                <div class="checkbox">
+                    <label><input type="checkbox" class="director_job" name="director_job[]" value="{!! $job->id !!}">{!! $job->job_name !!}</label>
+                </div>
                 @endforeach
-              </select>
             </div>
             <div class="form-group">
               <label>Chiều cao</label>

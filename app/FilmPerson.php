@@ -6,7 +6,7 @@ class FilmPerson extends Model {
 
 	//
 	protected $table = 'film_people';
-	protected $fillable = ['id', 'actor_name', 'actor_full_name', 'actor_birth_name', 'actor_birth_date', 'actor_nick_name', 'actor_sex', 'person_height', 'actor_job', 'actor_info', 'actor_image'];
+	protected $fillable = ['id', 'actor_name', 'actor_full_name', 'actor_birth_name', 'actor_birth_date', 'actor_nick_name', 'person_height', 'actor_job', 'actor_info', 'actor_image'];
 	public $timestamps = true;
 	public function filmDirector(){
 		return $this->hasMany('App\FilmDirector', 'director_id', 'id');

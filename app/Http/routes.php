@@ -69,13 +69,8 @@ Route::group(['prefix' => 'person'], function() {
     //
     Route::match(['get', 'post'],'/', ['as' => 'person.getList', 'uses' => 'FilmPersonController@getPersonList']);
     Route::get('profile/{dir_name}/{id}', ['as' => 'person.getProfile', 'uses' => 'FilmPersonController@getProfile']);
-    //ajax get list 
-    Route::group(['prefix' => 'ajax'], function() {
-        //director
-        Route::post('page-director', ['as' => 'personAjax.postPageDirector', 'uses' => 'FilmPersonAjaxController@postPageDirector']);
-    });
-    
-    //Route::post('change-info', ['as' => 'user.postChangeInfo', 'uses' => 'UserController@postChangeInfo']);
+    Route::get('person-director/{id}', ['as' => 'person.getPersonDirector', 'uses' => 'FilmPersonController@getPersonDirector']);
+    Route::get('person-actor/{id}', ['as' => 'person.getPersonActor', 'uses' => 'FilmPersonController@getPersonActor']);
 });
 
 //route captcha

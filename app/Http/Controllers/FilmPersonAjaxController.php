@@ -41,18 +41,19 @@ class FilmPersonAjaxController extends Controller {
 				$person->person_birth_name = Request::get('person_birth_name');
 				$person->person_nick_name = Request::get('person_nick_name');
 				$person->person_birth_date = Request::get('person_birth_date');
-				$person->person_sex = Request::get('person_sex');
 				$person->person_height = Request::get('person_height');
 				$person->person_info = Request::get('person_info');
 				$person->person_image = Request::get('person_image');
 				$person->person_dir_name = $dir_name;
 				$person->save();
 				//job
-				$job_arr = [];
-				foreach (Request::get('person_job') as $key => $val) {
-					$job_arr[$key] = ['film_person_id' => $person->id, 'film_job_id' => (int)$val];
+				if(count(Request::get('person_job'))){
+					$job_arr = [];
+					foreach (Request::get('person_job') as $key => $val) {
+						$job_arr[$key] = ['film_person_id' => $person->id, 'film_job_id' => (int)$val];
+					}
+					FilmPersonJob::insert($job_arr);
 				}
-				FilmPersonJob::insert($job_arr);
 				$result['content'] = $person;
 				$result['status'] = 1;
 				return response()->json($result);
@@ -86,22 +87,5 @@ class FilmPersonAjaxController extends Controller {
 		$result['content'] = 'Không thêm đc person';
 		return response()->json($result);
 	}
-	//ajax list director
-	public function postPageDirector(){
-		$result = array('status' => 0, 'content' => '', 'login' => 1, 'timeout' => 1);
-		if (Request::ajax())
-		{
-			//get 10 row 
-			$film_director = FilmDirector::where('director_id', $id)->with('filmList')->with(['filmDetail' => function($query){
-				$query->select('film_category');
-			}])->paginate(1, ['*'], 'page_director');
-			if(count($person) >= 1){
-				$result['content'] = $person;
-				$result['status'] = 1;
-				return response()->json($result);
-			}
-		}
-		$result['content'] = 'Error dont Ajax';
-		return response()->json($result);
-	}
+	
 }

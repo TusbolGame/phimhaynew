@@ -34,14 +34,7 @@
               <textarea class="form-control" name="person_birth_date" class="Nhập ngày sinh, địa điểm">{!! old('person_birth_date', $person->person_birth_date) !!}</textarea>
             </div>
             <div class="form-group">
-              <label>Giới tính:</label>
-              <label>Nam<input type="radio" name="person_sex" value="Nam" required="true" @if(old('person_sex', $person->person_sex) == 'Nam') checked="true" @endif></label>
-              <label>Nữ<input type="radio" name="person_sex" value="Nữ" required="true" @if(old('person_sex', $person->person_sex) == 'Nữ') checked="true" @endif></label>
-              <br>
-            </div>
-            <div class="form-group">
              <label>Nghề nghiệp:</label>
-              <select name="person_job[]" class="form-control" required="true" multiple>
               <?php 
                 $check_job = [];
                     foreach ($film_person_job as $person_job) {
@@ -49,9 +42,10 @@
                     }
                ?>
                 @foreach ($film_job as $job)
-                    <option value="{!! $job->id !!}" @if(isset($check_job[$job->id])) selected @endif>{!! $job->job_name !!}</option>
+                <div class="checkbox">
+                    <label><input type="checkbox" name="person_job[]" value="{!! $job->id !!}" @if(isset($check_job[$job->id])) checked @endif>{!! $job->job_name !!}</label>
+                </div>
                 @endforeach
-              </select>
             </div>
             <div class="form-group">
               <label>Chiều cao</label>
