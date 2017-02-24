@@ -9,12 +9,13 @@ use App\Http\Requests\ChangePasswordRequest;
 use App\Http\Requests\ChangeInfoUserRequest;
 use App\Http\Requests\AdminAddUserRequest;
 use App\User;
+use App\FilmUserTick;
+use App\FilmUserWatch;
 use Hash;
 use Auth;
 use Validator;
 use Input;
 use File;
-use App\FilmUserDiff;
 use Intervention\Image\Facades\Image;
 // use Intervention\Image\Facades\Image;
 class UserController extends Controller {
@@ -37,10 +38,6 @@ class UserController extends Controller {
 		//remember
 		$user->remember_token = $request->_token;
 		$user->save();
-		//create film user diff
-		$film_user_diff = new FilmUserDiff();
-		$film_user_diff->id = $user->id;
-		$film_user_diff->save();
 		return redirect()->route('admin.user.getList')->with(['flash_message'=>'Success ! Complete Add Cate new']);
 	}
 	//list
@@ -163,7 +160,8 @@ class UserController extends Controller {
 	//
 	public function getProfile($id){
 		if($id != Auth::user()->id){
-			return redirect()->route('home');
+			//403, permission
+			return redirect()->route('403');
 		}
 		//hash email
 		$email = null;
@@ -174,7 +172,11 @@ class UserController extends Controller {
 				$email = substr($data[0], 0, 2).$name_hash_star.'@'.$data[1];
 			}
 		}
-		return view('phimhay.user.profile', compact('email'));
+		$film_user_tick = FilmUserTick::where('user_id', Auth::user()->id)->orderByRaw('RAND()')->take(10)->with('filmList')->get();
+		$total_user_tick = FilmUserTick::where('user_id', Auth::user()->id)->count();
+		$film_user_watch = FilmUserWatch::where('user_id', Auth::user()->id)->orderByRaw('RAND()')->take(10)->with('filmList')->get();
+		$total_user_watch = FilmUserWatch::where('user_id', Auth::user()->id)->count();
+		return view('phimhay.user.profile', compact('email', 'film_user_tick', 'total_user_tick', 'film_user_watch', 'total_user_watch'));
 	}
 	public function postChangePassword(ChangePasswordRequest $request){
 		//check pass
@@ -220,5 +222,25 @@ class UserController extends Controller {
 		}
 		$user->save();
 		return redirect()->back()->with(['success' => 'Thay đổi thông tin thành công']);
+	}
+	public function getFilmUserTick($id){
+		if($id != Auth::user()->id){
+			//403, permission
+			return redirect()->route('403');
+		}
+		//
+		$film_user_tick = FilmUserTick::where('user_id', $id)->with('filmList')->paginate(20);
+		$film_user_tick->setPath(route('user.getFilmUserTick', $id));
+		return view('phimhay.user.film-user-tick', compact('film_user_tick'));
+	}
+	public function getFilmUserWatch($id){
+		if($id != Auth::user()->id){
+			//403, permission
+			return redirect()->route('403');
+		}
+		//
+		$film_user_watch = FilmUserWatch::where('user_id', $id)->with('filmList')->paginate(20);
+		$film_user_watch->setPath(route('user.getFilmUserWatch', $id));
+		return view('phimhay.user.film-user-watch', compact('film_user_watch'));
 	}
 }

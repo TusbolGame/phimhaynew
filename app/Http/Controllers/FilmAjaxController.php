@@ -7,10 +7,10 @@ use Request;
 //
 use App\FilmRelate;
 use App\FilmList;
-use App\FilmUserDiff;
 use App\FilmCommentLocal;
 use App\FilmPerson;
 use App\FilmPersonJob;
+use App\FilmUserTick;
 use App\Lib\FilmProcess\FilmProcess;
 use App\User;
 use Auth;
@@ -68,64 +68,45 @@ class FilmAjaxController extends Controller {
 		    	if(Request::cookie('film_tick_'.$film_id) > 6){
 			    	$result['content'] = 'Spam! Bạn đã đánh dấu phim quá nhiều lần, nếu bạn còn Spam sẽ bị khóa tài khoản. Cảm ơn!';
 			    	return response()->json($result)->withCookie(cookie('film_tick_'.$film_id,(int)Request::cookie('film_tick_'.$film_id) + 1 , 30));
-			    }
-			    
-		    }
-		    $film_user_diff =  FilmUserDiff::find(Auth::user()->id);
-		    if(count($film_user_diff) == 1){
-		    	
-		    	$data = json_decode($film_user_diff->film_ticked, true);
-		    	
-		    	//check add
-		    	if(Request::get('film_tick_content') == 'add_tick'){
-		    		//not exists --> add
-		    		if(!isset($data[$film_id])){
-		    			$tick_max_count = 50;// maximum tick
-		    			if(count($data) > $tick_max_count){
-		    				//remove fist child
-		    				array_shift($data); 
-		    				unset($data[0]);
-		    			}
-		    			$data[$film_id] = 1;
-		    			$film_user_diff->film_ticked = json_encode($data);
-		    			$film_user_diff->save();
-		    			$result['status'] = 1;
-		    			$result['content'] = 'success_add_tick';
-		    			if(!Request::cookie('film_tick_'.$film_id)){
-				    		return response()->json($result)->withCookie(cookie('film_tick_'.$film_id, 1, 30));
-				    	}
-				    	else{
-				    		//ton tai cookie
-				    		return response()->json($result)->withCookie(cookie('film_tick_'.$film_id,(int)Request::cookie('film_tick_'.$film_id) + 1 , 30));
-				    	}
-		    		}
-		    	}		    	
-		    	//check remove
-		    	else if(Request::get('film_tick_content') == 'remove_tick'){
-		    		//check exist --> remove
-		    		if(isset($data[$film_id])){
-		    			unset($data[$film_id]);
-		    			$film_user_diff->film_ticked = json_encode($data);
-		    			$film_user_diff->save();
-
-		    			$result['status'] = 1;
-		    			$result['content'] = 'success_remove_tick';
-		    			$film_user_diff->save();
-		    			// return response()->json($result);
-		    			//check exists cookie
-				    	if(!Request::cookie('film_tick_'.$film_id)){
-				    		return response()->json($result)->withCookie(cookie('film_tick_'.$film_id, 1, 30));
-				    	}
-				    	else{
-				    		//ton tai cookie
-				    		return response()->json($result)->withCookie(cookie('film_tick_'.$film_id,(int)Request::cookie('film_tick_'.$film_id) + 1 , 30));
-				    	}
-		    		}
-			    	
-		    	}
-		    	$result['content'] = 'not_success';
-				return response()->json($result);
-		    }
+			    }  
+		    }		    
+	    	//check add
+	    	if(Request::get('film_tick_content') == 'add_tick'){
+    			//
+    			$film_user_tick = FilmUserTick::where('user_id', Auth::user()->id)->where('film_id', $film_id)->get();
+    			if(count($film_user_tick) == 0){
+    				//add
+    				FilmUserTick::insert(['film_id' => $film_id, 'user_id' => Auth::user()->id]);
+    				$result['status'] = 1;
+	    			$result['content'] = 'success_add_tick';
+	    			if(!Request::cookie('film_tick_'.$film_id)){
+			    		return response()->json($result)->withCookie(cookie('film_tick_'.$film_id, 1, 30));
+			    	}
+			    	else{
+			    		//ton tai cookie
+			    		return response()->json($result)->withCookie(cookie('film_tick_'.$film_id,(int)Request::cookie('film_tick_'.$film_id) + 1 , 30));
+			    	}
+    			}	
+	    	}		    	
+	    	//check remove
+	    	else if(Request::get('film_tick_content') == 'remove_tick'){
+	    		//
+    			$film_user_tick = FilmUserTick::where('user_id', Auth::user()->id)->where('film_id', $film_id)->first();
+    			if(count($film_user_tick) == 1){
+    				//exist --> remove
+    				$film_user_tick->delete();
+    				$result['status'] = 1;
+	    			$result['content'] = 'success_remove_tick';
+	    			//check exists cookie
+			    	if(!Request::cookie('film_tick_'.$film_id)){
+			    		return response()->json($result)->withCookie(cookie('film_tick_'.$film_id, 1, 30));
+			    	}
+			    	else{
+			    		//ton tai cookie
+			    		return response()->json($result)->withCookie(cookie('film_tick_'.$film_id,(int)Request::cookie('film_tick_'.$film_id) + 1 , 30));
+			    	}
+    			}	    	
+	    	}
 		    $result['content'] = 'Lỗi';
 			return response()->json($result);
 		}

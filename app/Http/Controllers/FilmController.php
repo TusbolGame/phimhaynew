@@ -15,7 +15,8 @@ use App\FilmList;
 use App\FilmTrailer;
 use App\FilmEpisode;
 use App\PhimHayConfig;
-use App\FilmUserDiff;
+use App\FilmUserTick;
+use App\FilmUserWatch;
 use App\FilmCommentLocal;
 use App\FilmActor;
 use App\FilmDirector;
@@ -135,9 +136,8 @@ class FilmController extends Controller {
 			//get ticked
 			$ticked = 0;
 			if(Auth::check()){
-				$film_user_diff = FilmUserDiff::find(Auth::user()->id);
-				$data = json_decode($film_user_diff->film_ticked, true);
-				if(isset($data[$film_id])){
+				$film_user_tick = FilmUserTick::where('film_id', $film_id)->where('user_id', Auth::user()->id)->get();
+				if(count($film_user_tick) == 1){
 					$ticked = 1;
 				}
 			}
@@ -157,29 +157,38 @@ class FilmController extends Controller {
 			return view('phimhay.film-info', compact('film_list', 'film_detail', 'film_trailer', 'ticked', 'film_episode_id', 'film_relates', 'film_relate_adds', 'film_comments', 'directors', 'actors', 'film_detail_type', 'film_comment_local_count'));
 		}
 		//not found
-		return redirect()->route('404');
-		
-
-		
+		return redirect()->route('404');	
 	}
 	public function getFilmWatch($film_dir, $film_id, $film_episode_id){
 		$film_id = (int)$film_id;
 		//
-		//
-		$film_detail = null;
 		$film_list = FilmList::where('id', $film_id)->where('film_dir_name', $film_dir)->first();
-
 		if(count($film_list) == 1){
 			$film_list->film_viewed = $film_list->film_viewed + 1;
 			$film_list->save();
-			$film_detail = FilmDetail::find($film_id);
+			//user watch
+			if(Auth::check()){
+				$film_user_watch = FilmUserWatch::where('film_id', $film_id)->where('user_id', Auth::user()->id)->first();
+				if(count($film_user_watch) == 1){
+					//exist --> ++
+					$film_user_watch->user_viewed = $film_user_watch->user_viewed + 1;
+					$film_user_watch->save();
+				}else{
+					//add
+					$film_user_watch_new = new FilmUserWatch();
+					$film_user_watch_new->film_id = $film_id;
+					$film_user_watch_new->user_id = Auth::user()->id;
+					$film_user_watch_new->user_viewed = 1;
+					$film_user_watch_new->save();
+
+				}
+			}
 			//
 			//get ticked
 			$ticked = 0;
 			if(Auth::check()){
-				$film_user_diff = FilmUserDiff::find(Auth::user()->id);
-				$data = json_decode($film_user_diff->film_ticked, true);
-				if(isset($data[$film_id])){
+				$film_user_tick = FilmUserTick::where('film_id', $film_id)->where('user_id', Auth::user()->id)->get();
+				if(count($film_user_tick) == 1){
 					$ticked = 1;
 				}
 			}
@@ -192,10 +201,12 @@ class FilmController extends Controller {
 				// dump($film_episode_list);
 			}
 			//
+			$film_detail = FilmDetail::find($film_id);
 			//film relate
 			$relate_max = 12;
 			$film_relates = null;
 			$film_relate_adds = null;
+
 			if($film_detail->film_relate_id == 1){
 
 				//random type

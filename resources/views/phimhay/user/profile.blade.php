@@ -154,5 +154,60 @@
         </div>
     </div>
 </div>
-
+<div class="film-new">
+    @if (count($film_user_tick) > 0)
+    <div class="list-film-new">
+        <div class="film-new-title">
+            <span><span class="glyphicon glyphicon-pencil"></span> PHIM ĐÁNH DẤU ({!! $total_user_tick !!})</span>
+            <span class="link-list-person"><a href="{!! route('user.getFilmUserTick', Auth::user()->id) !!}" class="btn btn-link">Xem danh sách</a></span>
+        </div>
+        <ul class="list-film-new-ul list-film-person">
+            @foreach ($film_user_tick as $film)
+            <li>
+                <a href="{!! route('film.getFilm', [$film->filmList->film_dir_name, $film->filmList->id]) !!}" title="">
+                    <div class="film-new-thumbnail">
+                        <img src="{!! $film->filmList->film_thumbnail_small !!}" alt="Error Thumbnail small">
+                        <div class="film-ribbon-status"><span>{!! $film->filmList->film_status !!}</span></div>
+                        <div class="film-ribbon-language"><span>{!! $film_process->xulyGetFilmLanguage($film->filmList->film_language) !!}</span></div>
+                    </div>
+                    <div class="film-new-detail">
+                        <span class="film-title-vn">{!! $film_process->getFilmNameVn($film->filmList->film_name_vn, $film->filmList->film_name_en) !!}</span>
+                        <span class="film-title-en">{!! $film_process->getFilmNameEn($film->filmList->film_name_vn, $film->filmList->film_name_en) !!}</span>
+                        <span class="film-title-time">{!! $film_process->xulyGetFilmTime($film->filmList->film_time, $film->filmList->film_category) !!}</span>
+                        <span class="film-title-year">{!! $film->filmList->film_years !!}</span>
+                    </div>
+                </a>
+            </li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
+    @if (count($film_user_watch) > 0)
+    <div class="list-film-new">
+        <div class="film-new-title">
+            <span><span class="glyphicon glyphicon-film"></span> PHIM ĐÃ XEM ({!! $total_user_watch !!})</span>
+            <span class="link-list-person"><a href="{!! route('user.getFilmUserWatch', Auth::user()->id) !!}" class="btn btn-link">Xem danh sách</a></span>
+        </div>
+        <ul class="list-film-new-ul list-film-person">
+            @foreach ($film_user_watch as $film)
+            <li>
+                <a href="{!! route('film.getFilm', [$film->filmList->film_dir_name, $film->filmList->id]) !!}" title="">
+                    <div class="film-new-thumbnail">
+                        <img src="{!! $film->filmList->film_thumbnail_small !!}" alt="Error Thumbnail small">
+                        <div class="film-ribbon-status"><span>{!! $film->filmList->film_status !!}</span></div>
+                        <div class="film-ribbon-language"><span>{!! $film_process->xulyGetFilmLanguage($film->filmList->film_language) !!}</span></div>
+                    </div>
+                    <div class="film-new-detail">
+                        <span class="film-title-vn">{!! $film_process->getFilmNameVn($film->filmList->film_name_vn, $film->filmList->film_name_en) !!}</span>
+                        <span class="film-title-en">{!! $film_process->getFilmNameEn($film->filmList->film_name_vn, $film->filmList->film_name_en) !!}</span>
+                        <span class="film-title-time">{!! $film_process->xulyGetFilmTime($film->filmList->film_time, $film->filmList->film_category) !!}</span>
+                        <span class="film-title-year">{!! $film->filmList->film_years !!}</span>
+                    </div>
+                </a>
+            </li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
+</div>
 @stop

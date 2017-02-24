@@ -20,7 +20,6 @@ use App\User;
 use Mail;
 use Request;
 use App\UserSession;
-use App\FilmUserDiff;
 class AuthController extends Controller {
 
 	/*
@@ -122,10 +121,6 @@ class AuthController extends Controller {
 			$user->remember_token = $request->_token;
 			$user->save();
 			//dk thanh cong
-			//create film user diff
-			$film_user_diff = new FilmUserDiff();
-			$film_user_diff->id = $user->id;
-			$film_user_diff->save();
 			return redirect()->route('auth.getActiveMessage')->with(['message_active'=>'is_active_success']);
 			
 		}

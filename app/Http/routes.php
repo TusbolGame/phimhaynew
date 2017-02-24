@@ -25,6 +25,7 @@ Route::controllers([
 Route::group(['prefix' => 'error'], function() {
     Route::get('404', ['as' => '404', 'uses' => 'HandlerController@get404']);
     Route::get('500', ['as' => '500', 'uses' => 'HandlerController@get500']);
+    Route::get('403', ['as' => '403', 'uses' => 'HandlerController@get403']);
 });
 //provider login
 Route::group(['prefix' => 'provider'], function() {
@@ -61,6 +62,8 @@ Route::group(['prefix' => 'auth'], function() {
 Route::group(['prefix' => 'user', 'middleware' => 'auth'], function() {
     //
     Route::get('profile/{id}', ['as' => 'user.getProfile', 'uses' => 'UserController@getProfile']);
+    Route::get('film-tick/{id}', ['as' => 'user.getFilmUserTick', 'uses' => 'UserController@getFilmUserTick']);
+    Route::get('film-watch/{id}', ['as' => 'user.getFilmUserWatch', 'uses' => 'UserController@getFilmUserWatch']);
     Route::post('change-password', ['as' => 'user.postChangePassword', 'uses' => 'UserController@postChangePassword']);
     Route::post('change-info', ['as' => 'user.postChangeInfo', 'uses' => 'UserController@postChangeInfo']);
 });

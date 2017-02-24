@@ -9,6 +9,9 @@ class HandlerController extends Controller {
 
 	//
 	//
+	public function get403(){
+		return view('phimhay.include.403');
+	}
 	public function get404(){
 		return view('phimhay.include.404');
 	}
