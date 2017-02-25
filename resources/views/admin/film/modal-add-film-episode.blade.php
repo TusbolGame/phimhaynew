@@ -11,19 +11,19 @@
           <div class="form-group">           
             <label>Episode</label><br>
             <label>Link Number: </label>
-            <div class="form-group">
-              <input type="number" name="film_link_number" class="form-control" value="1" placeholder="Nhập link number">
-            </div>
+            <input type="number" name="film_link_number" class="form-control" value="1" placeholder="Nhập link number">
+          </div>
+          <div class="form-group">
             <label>Ngôn Ngữ Episode:</label>
-            <div>
-                <select name="film_episode_language" class="form-control">
-                    <option value="vs" @if(old('film_episode_language') == 'vs') selected @endif>VietSub</option>
-                    <option value="tm" @if(old('film_episode_language') == 'tm') selected @endif>Thuyết Minh</option>
-                    <option value="lt" @if(old('film_episode_language') == 'lt') selected @endif>Lồng Tiếng</option>
-                    <option value="es" @if(old('film_episode_language') == 'es') selected @endif>EnlishSub</option>
-                    <option value="raw" @if(old('film_episode_language') == 'raw') selected @endif>Raw</option>
-                </select>
-            </div>
+            <select name="film_episode_language" class="form-control">
+              <option value="vs" @if(old('film_episode_language') == 'vs') selected @endif>VietSub</option>
+              <option value="tm" @if(old('film_episode_language') == 'tm') selected @endif>Thuyết Minh</option>
+              <option value="lt" @if(old('film_episode_language') == 'lt') selected @endif>Lồng Tiếng</option>
+              <option value="es" @if(old('film_episode_language') == 'es') selected @endif>EnlishSub</option>
+              <option value="raw" @if(old('film_episode_language') == 'raw') selected @endif>Raw</option>
+            </select>
+          </div>
+          <div class="form-group">
             <label>Chất Lượng Episode:</label>
             <div>
                 <select name="film_episode_quality" class="form-control">
@@ -34,10 +34,14 @@
                     <option value="2160p" @if(old('film_episode_quality') == '2160p') selected @endif>2160p</option>
                 </select>
             </div>
+          </div>
+          <div class="form-group">
             <label>Film Episode: lẻ - 0, bộ - tập mấy  </label>
             <div class="form-group">
               <input type="number" name="film_episode" class="form-control" value="0" placeholder="Nhập: bộ là tập mấy, lẻ là 0">
             </div>
+          </div>
+          <div class="form-group">
             <label>Nguồn Episode: </label>
             <div class="form-group">
                 <select class="form-control" name="film_src_name">
@@ -46,14 +50,14 @@
                     <option value="google drive" @if(old('film_src_name') == 'google drive') selected @endif>Google Drive</option>
                 </select>
             </div>
+          </div>
+          <div class="form-group">
             <label>Source Episode</label>
-            <div>
-                <textarea name="film_src_full" class="form-control" placeholder="Nhập URL trailer">{!! old('film_src_full') !!}</textarea>
-            </div>
-            <div>
-                <label>Source phim remote (không bắt buộc)</label>
-                <textarea name="film_src_remote" class="form-control" placeholder="Nhập URL Remote">{!! old('film_src_remote') !!}</textarea>
-            </div>
+            <textarea name="film_src_full" class="form-control" placeholder="Nhập URL trailer">{!! old('film_src_full') !!}</textarea>
+          </div>
+          <div class="form-group">
+            <label>Source phim remote (không bắt buộc)</label>
+            <textarea name="film_src_remote" class="form-control" placeholder="Nhập URL Remote">{!! old('film_src_remote') !!}</textarea>
           </div>
           <div class="text-right">
             <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>

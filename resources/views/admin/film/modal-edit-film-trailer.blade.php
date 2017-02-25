@@ -11,27 +11,25 @@
           <div class="form-group">           
             <label>Trailer</label><br>
             <label>Nguồn Trailer: </label>
-            <div>
-                <select class="form-control" name="film_src_name">
-                    <option value="youtube" @if($film_trailer->film_src_name == 'youtube') selected @endif>Youtube</option>
-                    <option value="google photos" @if($film_trailer->film_src_name == 'google photos') selected @endif>Google Photos</option>
-                    <option value="google drive" @if($film_trailer->film_src_name == 'google drive') selected @endif>Google Drive</option>
-                </select>
-            </div>
+            <select class="form-control" name="film_src_name">
+                <option value="youtube" @if($film_trailer->film_src_name == 'youtube') selected @endif>Youtube</option>
+                <option value="google photos" @if($film_trailer->film_src_name == 'google photos') selected @endif>Google Photos</option>
+                <option value="google drive" @if($film_trailer->film_src_name == 'google drive') selected @endif>Google Drive</option>
+            </select>
+          </div>
+          <div class="form-group">
             <label>Source Trailer</label>
-            <div>
-                <textarea name="film_src_full" class="form-control" placeholder="Nhập URL trailer">{!! $film_trailer->film_src_full !!}</textarea>
-            </div>
+            <textarea name="film_src_full" class="form-control" placeholder="Nhập URL trailer">{!! $film_trailer->film_src_full !!}</textarea>
+          </div>
+          <div class="form-group">
             <label>Ngôn Ngữ Trailer:</label>
-            <div>
-                <select name="film_episode_language" class="form-control">
-                    <option value="vs" @if($film_trailer->film_episode_language == 'vs') selected @endif>VietSub</option>
-                    <option value="tm" @if($film_trailer->film_episode_language == 'tm') selected @endif>Thuyết Minh</option>
-                    <option value="lt" @if($film_trailer->film_episode_language == 'lt') selected @endif>Lồng Tiếng</option>
-                    <option value="es" @if($film_trailer->film_episode_language == 'es') selected @endif>EnlishSub</option>
-                    <option value="raw" @if($film_trailer->film_episode_language == 'raw') selected @endif>Raw</option>
-                </select>
-            </div>
+            <select name="film_episode_language" class="form-control">
+              <option value="vs" @if($film_trailer->film_episode_language == 'vs') selected @endif>VietSub</option>
+              <option value="tm" @if($film_trailer->film_episode_language == 'tm') selected @endif>Thuyết Minh</option>
+              <option value="lt" @if($film_trailer->film_episode_language == 'lt') selected @endif>Lồng Tiếng</option>
+              <option value="es" @if($film_trailer->film_episode_language == 'es') selected @endif>EnlishSub</option>
+              <option value="raw" @if($film_trailer->film_episode_language == 'raw') selected @endif>Raw</option>
+            </select>
           </div>
           <div class="text-right">
             <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>

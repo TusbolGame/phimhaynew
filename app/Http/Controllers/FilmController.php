@@ -364,7 +364,7 @@ class FilmController extends Controller {
 		return redirect()->route('admin.film.getShow', $film_detail->id);
 	}
 	public function getList(){
-		$films = FilmDetail::orderBy('id', 'DESC')->paginate(5);
+		$films = FilmDetail::orderBy('id', 'DESC')->with('filmList')->paginate(5);
 		$films->setPath(route('admin.film.getList'));
 		//dump($film_detail);
 		return view('admin.film.list', compact('films'));
@@ -527,10 +527,18 @@ class FilmController extends Controller {
 		$film_list->save();
 		return redirect()->route('admin.film.getShow', $film_detail->id);
 	}
+	public function getDelete($film_id){
+		$film_detail = FilmDetail::find($film_id);
+		if(count($film_detail) == 0){
+			return redirect()->route('admin.film.getList')->with(['flash_message_error' =>'Lỗi! Delete: Không tồn tại film id: '.$film_id]);
+		}
+		$film_detail->delete();
+		return redirect()->route('admin.film.getList')->with(['flash_message' =>'Thành công! Delete: Đã Delete Film_Id: '.$film_id]);
+	}
 	public function getShow($film_id){
 		$film_detail = FilmDetail::find($film_id);
 		if(count($film_detail) == 0){
-			return redirect()->route('admin.film.getList')->with(['flash_message_error' =>'Show! Không tồn tại film id: '.$film_id]);
+			return redirect()->route('admin.film.getList')->with(['flash_message_error' =>'Lỗi! Show! Không tồn tại film_id: '.$film_id]);
 		}
 		$film_list = FilmList::find($film_id);
 		$film_trailer = FilmTrailer::find($film_id);
@@ -634,15 +642,17 @@ class FilmController extends Controller {
 		//change -- status
 		$film_process = new FilmProcess();
 		$film_list = FilmList::find($film_id);
-		$film_list->film_quality = $request->film_episode_quality;
+		$film_list->film_quality = $film_process->xulyAddFilmQuality($film_list->film_quality, $request->film_episode_quality);
 		//
 		if($film_list->film_category == 'le'){
 			//le -> xu ly quality
 			//change status
-			$film_list->film_status = $film_process->xulyGetFilmQuality($request->film_episode_quality);
+			$film_list->film_status = $film_process->xulyGetFilmQuality($film_list->film_quality);
 		}else{
-			//bo
-			$film_list->film_status = 'Tập '.$film_episode->film_episode.'/'.$film_list->film_time.' '.$film_process->xulyGetFilmQuality($request->film_episode_quality);
+			if((int)$request->film_link_number == 1){
+				//bo
+				$film_list->film_status = 'Tập '.$film_episode->film_episode.'/'.$film_list->film_time.' '.$film_process->xulyGetFilmQuality($film_list->film_quality);
+			}
 		}
 		//set language
 		$film_list->film_language = $film_process->xulyAddFilmLanguage($film_list->film_language, $request->film_episode_language);
@@ -654,6 +664,7 @@ class FilmController extends Controller {
 		$film_list = FilmList::find($film_id);
 		return view('admin.film.edit-film-episode', compact('film_episode', 'film_list'));
 	}
+	//test lai
 	public function postEditFilmEpisode($film_id, $id, Request $request){
 		$film_episode = FilmEpisode::find($id);
 		$film_episode->film_src_name = $request->film_src_name;
@@ -661,6 +672,7 @@ class FilmController extends Controller {
 		$film_episode->film_link_number = $request->film_link_number;
 		$film_episode->film_episode = $request->film_episode;
 		$film_episode->film_episode_language = $request->film_episode_language;
+		$film_episode->film_episode_quality = $request->film_episode_quality;
 		$film_episode->film_src_remote = $request->film_src_remote;
 		//
 		//getlink, youtube ko can getlink
@@ -693,6 +705,24 @@ class FilmController extends Controller {
 			$film_episode->film_src_2160p = ($get_link_video->getSrc2160()) ? $get_link_video->getSrc2160() : null;
 		}
 		$film_episode->save();
+		//change -- status
+		$film_process = new FilmProcess();
+		$film_list = FilmList::find($film_id);
+		$film_list->film_quality = $film_process->xulyAddFilmQuality($film_list->film_quality, $request->film_episode_quality);
+		//
+		if($film_list->film_category == 'le'){
+			//le -> xu ly quality
+			//change status
+			$film_list->film_status = $film_process->xulyGetFilmQuality($film_list->film_quality);
+		}else{
+			//bo
+			if((int)$request->film_link_number == 1){
+				$film_list->film_status = 'Tập '.$film_episode->film_episode.'/'.$film_list->film_time.' '.$film_process->xulyGetFilmQuality($film_list->film_quality);
+			}
+		}
+		//set language
+		$film_list->film_language = $film_process->xulyAddFilmLanguage($film_list->film_language, $request->film_episode_language);
+		$film_list->save();
 		return redirect()->route('admin.film.getShow', $film_id);
 	}
 	public function getDeleteFilmEpisode($film_id, $id){

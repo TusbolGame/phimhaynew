@@ -1,8 +1,7 @@
 @extends('admin.master')
 @section('header')
 <div class="col-lg-12">
-    <h1 class="page-header bg-primary">Danh Sách Phim
-    </h1>
+    <h1 class="page-header bg-primary">Danh Sách Phim</h1>
 </div>
 @endsection
 @section('content')
@@ -33,11 +32,13 @@
                     <td>{!! $film->filmList->film_dir_name !!}</td>
                     <td>{!! $film->filmList->film_status !!}</td>
                     <td>{!! $film->filmTrailer->film_src_full !!}</td>
-                    <td>{!! $film->filmList->updated_at !!}</td>
-                    <td>{!! $film->filmList->created_at !!}</td>
+                    <td>{!! $film->updated_at !!}</td>
+                    <td>{!! $film->created_at !!}</td>
                     <td><a href="{!! route('admin.film.getShow', $film->id) !!}">Xem</a></td>
                     <td><a href="{!! route('admin.film.getEdit', $film->id) !!}">Sửa</a></td>
-                    <td>Xoa</td>
+                    <td>
+                        <a onclick="return checkDelete('Bạn có muốn xóa Film Name: {!! $film_process->getFilmNameVnEn($film->filmList->film_name_vn, $film->filmList->film_name_en) !!} không?');" href="{!! route('admin.film.getDelete', [$film->id]) !!}"> Xóa</a>
+                    </td>
                 </tr>
             @endforeach
         </tbody>

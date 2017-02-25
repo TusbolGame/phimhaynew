@@ -118,6 +118,20 @@ class FilmProcess
 			}
 		}
 	}
+	public function xulyAddFilmQuality($film_quality, $quality){
+		if($film_quality != ''){
+			//vd 1 array: 360p,480p,720p,1080p,2160p
+			//so sanh, if > change
+			$data = ['360p' => 1, '480p' => 2, '720p' => 3, '1080p' => 4, '2160p' => 5];
+			if(isset($data[$film_quality]) && isset($data[$quality])){
+				if($data[$film_quality] < $data[$quality]){
+					return $quality;
+				}
+				return $film_quality;
+			}			
+		}
+		return $quality;
+	}
 	public function xulyGetFilmLanguage($film_language){
 		if($film_language != null){
 			//vd 1 array: vs,tm,lt
