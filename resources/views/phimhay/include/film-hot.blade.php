@@ -13,7 +13,7 @@
 					<div class="col-sm-7 col-xs-8 film-hot-detail">
 						<span class="film-title-vn">{!! $film_process->getFilmNameVn($hot->film_name_vn, $hot->film_name_en) !!}</span>
 						<span class="film-title-en">{!! $film_process->getFilmNameEn($hot->film_name_vn, $hot->film_name_en) !!}</span>
-						<span class="film-title-view">Luot xem: {!! $hot->film_viewed !!}</span>
+						<span class="film-title-view">Lượt xem: {!! $hot->film_viewed !!}</span>
 						<span class="film-title-rate-vote rate-vote rate-vote-{!! $hot->film_vote !!}"></span>
 						<span class="film-title-time">{!! $film_process->xulyGetFilmTime($hot->film_time, $hot->film_category) !!}</span>
 					</div>
@@ -37,7 +37,7 @@
 					<div class="col-sm-7 col-xs-8 film-hot-detail">
 						<span class="film-title-vn">{!! $film_process->getFilmNameVn($hot->film_name_vn, $hot->film_name_en) !!}</span>
 						<span class="film-title-en">{!! $film_process->getFilmNameEn($hot->film_name_vn, $hot->film_name_en) !!}</span>
-						<span class="film-title-view">Luot xem: {!! $hot->film_viewed !!}</span>
+						<span class="film-title-view">Lượt xem: {!! $hot->film_viewed !!}</span>
 						<span class="film-title-rate-vote rate-vote rate-vote-{!! $hot->film_vote !!}"></span>
 						<span class="film-title-time">{!! $film_process->xulyGetFilmTime($hot->film_time, $hot->film_category) !!}</span>
 					</div>
@@ -61,7 +61,7 @@
 					<div class="col-sm-7 col-xs-8 film-hot-detail">
 						<span class="film-title-vn">{!! $film_process->getFilmNameVn($hot->film_name_vn, $hot->film_name_en) !!}</span>
 						<span class="film-title-en">{!! $film_process->getFilmNameEn($hot->film_name_vn, $hot->film_name_en) !!}</span>
-						<span class="film-title-view">Luot xem: {!! $hot->film_viewed !!}</span>
+						<span class="film-title-view">Lượt xem: {!! $hot->film_viewed !!}</span>
 						<span class="film-title-rate-vote rate-vote rate-vote-{!! $hot->film_vote !!}"></span>
 						<span class="film-title-time">{!! $film_process->xulyGetFilmTime($hot->film_time, $hot->film_category) !!}</span>
 					</div>

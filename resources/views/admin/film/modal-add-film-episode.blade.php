@@ -29,7 +29,7 @@
                 <select name="film_episode_quality" class="form-control">
                     <option value="360p" @if(old('film_episode_quality') == '360p') selected @endif>360p</option>
                     <option value="480p" @if(old('film_episode_quality') == '480p') selected @endif>480p</option>
-                    <option value="720p" @if(old('film_episode_quality') == '720p') selected @endif>720p</option>
+                    <option value="720p" @if(old('film_episode_quality') == '720p') selected @endif @if(old('film_episode_quality') == '') selected @endif>720p</option>
                     <option value="1080p" @if(old('film_episode_quality') == '1080p') selected @endif>1080p</option>
                     <option value="2160p" @if(old('film_episode_quality') == '2160p') selected @endif>2160p</option>
                 </select>
@@ -42,7 +42,7 @@
             <div class="form-group">
                 <select class="form-control" name="film_src_name">
                     <option value="youtube" @if(old('film_src_name') == 'youtube') selected @endif>Youtube</option>
-                    <option value="google photos" @if(old('film_src_name') == 'google photos') selected @endif>Google Photos</option>
+                    <option value="google photos" @if(old('film_src_name') == 'google photos') selected @endif @if(old('film_src_name') == '') selected @endif>Google Photos</option>
                     <option value="google drive" @if(old('film_src_name') == 'google drive') selected @endif>Google Drive</option>
                 </select>
             </div>
@@ -57,7 +57,7 @@
           </div>
           <div class="text-right">
             <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
-            <button type="submit" class="btn btn-primary">Sửa Episode</button>
+            <button type="submit" class="btn btn-primary">Thêm Episode</button>
           </div> 
         </form>
       </div>

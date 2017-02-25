@@ -17,8 +17,8 @@ class FilmTypeController extends Controller {
 	public function index()
 	{
 		//
-		$film_type = FilmType::all();
-		return view('admin.type.list', compact('film_type'));
+		// $film_type = FilmType::all();
+		return view('admin.type.list');
 	}
 
 	/**

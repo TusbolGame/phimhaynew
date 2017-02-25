@@ -34,7 +34,7 @@ class PhimHayConfigServiceProvider extends ServiceProvider {
 			$query->select('id')->where('film_kind', 'truyen');
 		})->orderBy('film_viewed', 'DESC')->take(6)->get();
 		$film_country = FilmCountry::all();
-		$film_type = FilmType::all();
+		$film_type = FilmType::orderBy('type_name', 'ASC')->get();
 		view()->share('film_hots', $film_hots);
 		view()->share('film_process', $film_process);
 		view()->share('film_country', $film_country);

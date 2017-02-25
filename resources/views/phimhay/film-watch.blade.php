@@ -12,7 +12,8 @@
 
 @stop
 @section('js')
-	
+	<script src="{!! asset('public/jquery/jquery-migrate-1.2.1.min.js') !!}" type="text/javascript"></script>
+	<script src="{!! asset('public/slick-1.6.0/slick.min.js') !!}" type="text/javascript"></script>
 @stop
 @section('film-dir')
 	<div class="film-dir">
@@ -27,7 +28,7 @@
 	@include('phimhay.include.input-film-id', ['film_id' => $film_list->id])
 	@include('phimhay.include.modal-alert-not-login')
 	<div class="film-watch film-background-border">
-		@if($film_list->film_status != 'Trailer')
+		@if($film_list->film_status != 'Trailer' && count($film_episode_watch) > 0)
 		<div class="film-watch-title">
 			<h3><a href="{!! route('film.getFilm', [$film_list->film_dir_name, $film_list->id]) !!}" title="">{!! $film_process->getFilmNameVnEn($film_list->film_name_vn, $film_list->film_name_en) !!}
 			@if ($film_list->film_category == 'bo') 

@@ -60,7 +60,15 @@
 							</dd>
 							<br>
 							<dt>Quốc gia:</dt>
-							<dd class="film-type">{!! $film_process->xulyGetFilmCountry($film_detail->film_country) !!}</dd>
+							<dd class="film-type">
+								<ul>
+									@foreach($film_detail_country as $data)
+									<li>
+										<a href="{!! route('film.getSearch') !!}?country={!! $data->filmCountry->country_alias !!}" title="{!! $data->filmCountry->country_name !!}">{!! $data->filmCountry->country_name !!}</a>
+									</li>
+									@endforeach
+								</ul>
+							</dd>
 							<br>
 							<dt>Năm:</dt>
 							<dd><a href="{!! url('film?year='.$film_list->film_years) !!}" title="Phim năm 2013">{!! $film_list->film_years !!}</a></dd>

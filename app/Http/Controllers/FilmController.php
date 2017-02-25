@@ -154,7 +154,10 @@ class FilmController extends Controller {
 			$film_detail_type = FilmDetailType::where('film_id', $film_id)->with(['filmType' => function ($query){
 				$query->select('id', 'type_name', 'type_alias');
 			}])->get();
-			return view('phimhay.film-info', compact('film_list', 'film_detail', 'film_trailer', 'ticked', 'film_episode_id', 'film_relates', 'film_relate_adds', 'film_comments', 'directors', 'actors', 'film_detail_type', 'film_comment_local_count'));
+			$film_detail_country = FilmDetailCountry::where('film_id', $film_id)->with(['filmCountry' => function ($query){
+				$query->select('id', 'country_name', 'country_alias');
+			}])->get();
+			return view('phimhay.film-info', compact('film_list', 'film_detail', 'film_trailer', 'ticked', 'film_episode_id', 'film_relates', 'film_relate_adds', 'film_comments', 'directors', 'actors', 'film_detail_type', 'film_detail_country', 'film_comment_local_count'));
 		}
 		//not found
 		return redirect()->route('404');	
@@ -250,7 +253,10 @@ class FilmController extends Controller {
 		$film_detail->film_score_imdb = $request->film_score_imdb;
 		$film_detail->film_score_aw = $request->film_score_aw;
 		//date
-		$film_detail->film_release_date = $request->film_release_date_year.'-'.$request->film_release_date_month.'-'.$request->film_release_date_day;
+		$day = ($request->film_release_date_day != '') ? $request->film_release_date_day : '??';
+		$month = ($request->film_release_date_month != '') ? $request->film_release_date_month : '??';
+		$year = ($request->film_release_date_year != '') ? $request->film_release_date_year : '??';
+		$film_detail->film_release_date = $day.'-'.$month.'-'.$year;
 		$film_detail->film_production_company = $request->film_production_company;
 		//phim lien quan moi
 		if($request->film_relate_new != ''){
@@ -630,7 +636,7 @@ class FilmController extends Controller {
 		$film_list = FilmList::find($film_id);
 		$film_list->film_quality = $request->film_episode_quality;
 		//
-		if($film_list->filmDetail->film_category == 'le' || $film_list->filmDetail->film_category == 'hhle'){
+		if($film_list->film_category == 'le'){
 			//le -> xu ly quality
 			//change status
 			$film_list->film_status = $film_process->xulyGetFilmQuality($request->film_episode_quality);
@@ -638,13 +644,14 @@ class FilmController extends Controller {
 			//bo
 			$film_list->film_status = 'Tập '.$film_episode->film_episode.'/'.$film_list->film_time.' '.$film_process->xulyGetFilmQuality($request->film_episode_quality);
 		}
+		//set language
+		$film_list->film_language = $film_process->xulyAddFilmLanguage($film_list->film_language, $request->film_episode_language);
 		$film_list->save();
 		return redirect()->route('admin.film.getShow', $film_id);
 	}
 	public function getEditFilmEpisode($film_id, $id, Request $request){
 		$film_episode = FilmEpisode::find($id);
 		$film_list = FilmList::find($film_id);
-		$film_process = new FilmProcess();
 		return view('admin.film.edit-film-episode', compact('film_episode', 'film_list'));
 	}
 	public function postEditFilmEpisode($film_id, $id, Request $request){
@@ -687,6 +694,15 @@ class FilmController extends Controller {
 		}
 		$film_episode->save();
 		return redirect()->route('admin.film.getShow', $film_id);
+	}
+	public function getDeleteFilmEpisode($film_id, $id){
+		$film_episode = FilmEpisode::find($id);
+		$film_list = FilmList::find($film_id);
+		if(count($film_episode) == 0 && count($film_episode) == 0){
+			return redirect()->route('admin.film.getList')->withErrors('Lỗi! Xóa Episode không thành công, không có episode_id '.$id.' ở film_id '.$film_id.' để xóa');
+		}
+		$film_episode->delete();
+		return redirect()->route('admin.film.getShow', $film_id)->with(['flash_message' => 'Thành công! Đã xóa episode_id '.$id.' ở film_id '.$film_id]);
 	}
 	//phim auto or search
 	//film?country=abc&type=hanh-dong&year=2999

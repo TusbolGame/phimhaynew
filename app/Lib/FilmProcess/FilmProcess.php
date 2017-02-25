@@ -86,7 +86,7 @@ class FilmProcess
 		);
 	}
 	public function xulyFilmStatus($film_category, $film_quality, $film_episode, $film_time){
-		if($film_category == 'le' || $film_category == 'hhle'){
+		if($film_category == 'le'){
 			return $this->xulyGetFilmQuality($film_quality);
 		}else{
 			//phim bo,hhbo
@@ -136,6 +136,26 @@ class FilmProcess
 			return implode(', ', $result);	
 		}	
 	}
+	public function xulyAddFilmLanguage($film_language, $language){
+		if($film_language != ''){
+			//vd 1 array: vs,tm,lt
+			$result = $film_language;
+			$data = explode(',', $film_language);
+			$check = [];
+			foreach ($data as $key) {
+				//
+				if($key == $language){
+					$check[$language] = 1;
+				}
+			}
+			if(!isset($check[$language])){
+				//ko ton tai -> add
+				$result = $result.','.$language;
+			}
+			return $result;
+		}
+		return $language;
+	}
 	public function xulyGetFilmType($film_type, $film_category = null){
 		
 		$data = explode(',', $film_type);
@@ -164,6 +184,7 @@ class FilmProcess
 		}
 		echo '</ul>';
 	}
+	//fix --> loi--> ko can fix-->change table
 	public function xulyGetFilmCountry($film_country){
 		$data = explode(',', $film_country);
 		if(count($data) > 0){

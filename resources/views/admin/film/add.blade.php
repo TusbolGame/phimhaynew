@@ -167,29 +167,6 @@
                 <div class="form-group">
                     <label>Thể Loại<span class="text-danger">*</span></label>
                     <div class="enter-data-ul">
-                        <!-- <ul>
-                            <li><label><input type="checkbox" name="film_type[]" value="chien-tranh">Phim chiến tranh</label></li>
-                            <li><label><input type="checkbox" name="film_type[]" value="co-trang">Phim cổ trang</label></li>
-                            <li><label><input type="checkbox" name="film_type[]" value="gia-tuong">Phim giả tưởng</label></li>
-                            <li><label><input type="checkbox" name="film_type[]" value="hai-huoc">Phim hài hước</label></li>
-                            <li><label><input type="checkbox" name="film_type[]" value="hanh-dong">Phim hành động</label></li>
-                            <li><label><input type="checkbox" name="film_type[]" value="hinh-sự">Phim hình sự</label></label></li>
-                            <li><label><input type="checkbox" name="film_type[]" value="hoc-duong">Phim học đường</label></li>
-                            <li><label><input type="checkbox" name="film_type[]" value="kinh-di">Phim kinh dị</label></label></li>
-                            <li><label><input type="checkbox" name="film_type[]" value="hoi-hop-gay-can">Phim hồi hộp gây cấn</label></label></li>
-                            <li><label><input type="checkbox" name="film_type[]" value="phep-thuat">Phim phép thuật</label></li>
-                            <li><label><input type="checkbox" name="film_type[]" value="phieu-luu">Phim phiêu lưu</label></label></li>
-                            <li><label><input type="checkbox" name="film_type[]" value="sieu-nhien">Phim siêu nhiên</label></li>
-                            <li><label><input type="checkbox" name="film_type[]" value="tam-ly">Phim tâm lý</label></label></li>
-                            <li><label><input type="checkbox" name="film_type[]" value="tinh-cam">Phim tình cảm</label></li>
-                            <li><label><input type="checkbox" name="film_type[]" value="tai-lieu">Phim tài liệu</label></li>
-                            <li><label><input type="checkbox" name="film_type[]" value="than-thoai">Phim thần thoại</label></li>
-                            <li><label><input type="checkbox" name="film_type[]" value="trinh-tham">Phim trinh thám</label></li>
-                            <li><label><input type="checkbox" name="film_type[]" value="vo-thuat">Phim võ thuật</label></label></li>
-                            <li><label><input type="checkbox" name="film_type[]" value="vien-tuong">Phim viễn tưởng</label></label></li>
-                            <li><label><input type="checkbox" name="film_type[]" value="zombie">Phim Zombie</label></li>   
-                            
-                        </ul> -->
                         <ul>
                             @foreach($film_type as $data)
                             <li><label><input type="checkbox" name="film_type_id[]" value="{!! $data->id !!}">Phim {!! $data->type_name !!}</label></li>
@@ -198,28 +175,6 @@
                     </div>
                 </div>
             </div>
-            <!-- <div class="col-lg-10">
-                <div class="form-group">
-                    <label>Quốc Gia</label>
-                    <div class="enter-data-ul">
-                        <ul>
-                            <li><label><input type="checkbox" name="film_country[]" value="anh">Phim Anh</label></li>
-                            <li><label><input type="checkbox" name="film_country[]" value="an-do">Phim Ấn Độ</label></li>
-                            <li><label><input type="checkbox" name="film_country[]" value="au-my">Phim Âu-Mỹ</label></li>
-                            <li><label><input type="checkbox" name="film_country[]" value="dai-loan">Phim Đài Loan</label></li>
-                            <li><label><input type="checkbox" name="film_country[]" value="han-quoc">Phim Hàn Quốc</label></li>
-                            <li><label><input type="checkbox" name="film_country[]" value="hong-kong">Phim Hồng Kông</label></li>
-                            <li><label><input type="checkbox" name="film_country[]" value="my">Phim Mỹ</li>
-                            <li><label><input type="checkbox" name="film_country[]" value="nga">Phim Nga</label></li>
-                            <li><label><input type="checkbox" name="film_country[]" value="nhat-ban">Phim Nhật</label></li>
-                            <li><label><input type="checkbox" name="film_country[]" value="viet-nam">Phim Việt Nam</label></li>
-                            <li><label><input type="checkbox" name="film_country[]" value="thai-lan">Phim Thái Lan</label></li>
-                            <li><label><input type="checkbox" name="film_country[]" value="trung-quoc">Phim Trung Quốc</label></li>
-                            <li><label><input type="checkbox" name="film_country[]" value="quoc-gia-khac">Phim QG khác</label></li>
-                        </ul>
-                    </div>
-                </div>
-            </div> -->
             <div class="col-lg-10">
                 <div class="form-group">
                     <label>Quốc Gia</label>
@@ -233,22 +188,6 @@
                 </div>
             </div>
             <div class="clearfix"></div>
-            <div class="col-lg-6">
-                <div class="form-group">
-                    <label>Đạo Diễn:</label>
-                    <span class="text-giai-thich"><i>Nếu có nhiều đạo diễn thì cách nhau bằng dấu phẩy và khoảng trắng ', '</i></span>
-                    <span class="text-giai-thich"><i>Ex: Director 1, Director 2</i></span>
-                    <textarea name="film_director" class="form-control" placeholder="Nhập tên đạo diễn" >{{ old('film_director') }}</textarea>
-                </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="form-group">
-                    <label>Diễn Viên:</label>
-                    <span class="text-giai-thich"><i>Nếu có nhiều diễn viên thì cách nhau bằng dấu phẩy và khoảng trắng ', '</i></span>
-                    <span class="text-giai-thich"><i>Ex: Actor 1, Actor 2</i></span>
-                    <textarea name="film_actor" class="form-control" placeholder="Nhập tên diễn viên" >{{ old('film_actor') }}</textarea>
-                </div>
-            </div>
             <div class="col-lg-6">
                 <div class="form-group">
                     <label>Hãng Sản Xuất:</label>

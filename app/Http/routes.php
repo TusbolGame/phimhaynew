@@ -110,7 +110,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function(
         //
         Route::get('episode/edit/{film_id}/{id}',['as'=>'admin.film.getEditFilmEpisode', 'uses'=>'FilmController@getEditFilmEpisode']);
         Route::post('episode/edit/{film_id}/{id}',['as'=>'admin.film.postEditFilmEpisode', 'uses'=>'FilmController@postEditFilmEpisode']);
-
+        Route::get('episode/delete/{film_id}/{id}',['as'=>'admin.film.getDeleteFilmEpisode', 'uses'=>'FilmController@getDeleteFilmEpisode']);
         Route::get('search',['as'=>'admin.film.getSearch', 'uses'=>'FilmController@getSearchAdmin']);
         // //delete
         Route::get('delete/{id}',['as'=>'admin.film.getDelete', 'uses'=>'FilmController@getDelete']);

@@ -25,7 +25,7 @@
 							@if($episode->film_src_name != 'youtube')
 							<td>
 								<div class="dropdown">
-	  								<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">{!! $episode->film_episode_language !!}<span class="caret"></span>
+	  								<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">{!! $film_process->xulyGetFilmLanguage($episode->film_episode_language) !!}<span class="caret"></span>
 	  								</button>
 							  		<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
 							  			@if(!empty($episode->film_src_360p))

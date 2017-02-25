@@ -101,7 +101,7 @@
                     @foreach ($film_episodes as $film_episode)
                     <tr>
                         <td><a href="{!! route('admin.film.getEditFilmEpisode', [$film_id, $film_episode->id]) !!}">Sửa ID {!! $film_episode->id !!}</a></td>
-                        <td>{!! $film_episode->id !!}</td>
+                        <td><a href="{!! route('admin.film.getDeleteFilmEpisode', [$film_id, $film_episode->id]) !!}">Xóa ID {!! $film_episode->id !!}</a></td>
                         <td>{!! $film_episode->id !!}</td>
                         <td>{!! $film_episode->film_link_number !!}</td>
                         <td>{!! $film_episode->film_episode_language !!}</td>

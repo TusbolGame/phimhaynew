@@ -93,7 +93,8 @@
 						<div class="film-new-detail">
 							<span class="film-title-vn">{!! $film_process->getFilmNameVn($film->filmList->film_name_vn, $film->filmList->film_name_en) !!}</span>
 							<span class="film-title-en">{!! $film_process->getFilmNameEn($film->filmList->film_name_vn, $film->filmList->film_name_en) !!}</span>
-							<span class="film-title-time">{!! $film_process->xulyGetFilmTime($film->filmList->film_time, $film->film_category) !!}</span>
+							<span class="film-title-time">{!! $film_process->xulyGetFilmTime($film->filmList->film_time, $film->filmList->film_category) !!}</span>
+							<span class="film-title-year">{!! $film->filmList->film_years !!}</span>
 						</div>
 					</a>
 				</li>
