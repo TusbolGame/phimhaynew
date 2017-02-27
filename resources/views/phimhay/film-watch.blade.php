@@ -205,21 +205,7 @@
 				//view comment facebook
 				$('.film-comment-facebook').slideDown(300).show();
 			});
-			//report error
-			$('.show-modal-report-error').click(function(){
-				//
-				$captcha = '{!! route('captcha.getCaptchaReportErrorAdd', '') !!}/'+Math.random();
-				//add src image captcha
-				$('.captcha-report-error-add').attr('src', $captcha);
-				$('.modal-add-report-error').modal('show');
-			})
-			//onlick reload capcha
-	        $('.icon-reload-report-error-add-captcha').click(function(){
-	            //change address cua captcha-login
-	            $captcha = '{!! route('captcha.getCaptchaReportErrorAdd', '') !!}/'+Math.random();
-	            $('.captcha-report-error-add').attr('src', $captcha);
-	        });
-	        //ajax
+			
 		});
 	</script>
 	@include('phimhay.include.film-relate', [$film_relates, $film_relate_adds, $film_process])

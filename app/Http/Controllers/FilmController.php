@@ -30,6 +30,7 @@ use App\FilmDetailType;
 use App\Lib\FilmProcess\FilmProcess;
 use App\Lib\CaptchaImages\CaptchaSessionDownloadFilm;
 use App\Lib\SessionTimeouts\SessionDownloadFilm;
+use App\Lib\CheckLinks\HttpResponseCode;
 use Input;
 use Auth;
 use Schema;
@@ -67,7 +68,48 @@ class FilmController extends Controller {
 		// 	$job->save();
 		// }
 	}
-
+	//check link
+	public function getCheckLink($film_id){
+		$film_successes = [];
+		$film_errors = [];
+		$film_list = FilmList::find($film_id);
+		//fb
+		if(count($film_list) == 1){
+			//
+			$film_detail = FilmDetail::find($film_id);
+			//check image small
+			$check_link = new HttpResponseCode($film_list->film_thumbnail_small);
+			if($check_link->checkHttpResponseCode200()){
+				//ok
+				$temp_content = 'Thumbnail Small: '.$check_link->getStatusCode().':'.$check_link->getStatusCodeName();
+				array_push($film_successes, $temp_content);
+			}else{
+				$temp_content = 'Thumbnail Small: '.$check_link->getStatusCode().':'.$check_link->getStatusCodeName();
+				array_push($film_errors, $temp_content);
+			}
+			$check_link = new HttpResponseCode($film_detail->film_thumbnail_big);
+			if($check_link->checkHttpResponseCode200()){
+				//ok
+				$temp_content = 'Thumbnail Big: '.$check_link->getStatusCode().':'.$check_link->getStatusCodeName();
+				array_push($film_successes, $temp_content);
+			}else{
+				$temp_content = 'Thumbnail Big: '.$check_link->getStatusCode().':'.$check_link->getStatusCodeName();
+				array_push($film_errors, $temp_content);
+			}
+			$check_link = new HttpResponseCode($film_detail->film_poster_video);
+			if($check_link->checkHttpResponseCode200()){
+				//ok
+				$temp_content = 'Poster Video: '.$check_link->getStatusCode().':'.$check_link->getStatusCodeName();
+				array_push($film_successes, $temp_content);
+			}else{
+				$temp_content = 'Thumbnail Video: '.$check_link->getStatusCode().':'.$check_link->getStatusCodeName();
+				array_push($film_errors, $temp_content);
+			}
+			return redirect()->route('admin.film.getShow', $film_list->id)->with(['film_successes' => $film_successes, 'film_errors' => $film_errors]);
+		}
+		// var_dump($film_successes);
+		// var_dump($film_errors);
+	}
 	public function getFilmInfo($film_dir, $film_id){
 		$film_id = (int)$film_id;
 		// echo '<br>'.$film_dir;

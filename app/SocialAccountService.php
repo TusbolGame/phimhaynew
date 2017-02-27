@@ -4,7 +4,6 @@ namespace App;
 
 use Laravel\Socialite\Contracts\User as ProviderUser;
 
-use App\FilmUserDiff;
 class SocialAccountService
 {
     public function createOrGetUser(ProviderUser $providerUser)
@@ -38,12 +37,9 @@ class SocialAccountService
                 $user->email = $providerUser->getEmail();
                 $user->first_name = $providerUser->getName();
                 $user->image = $providerUser->getAvatar();
+                $user->actived = 1; //is active
                 $user->level = 2; //member
                 $user->save();
-                //create film user diff
-                $film_user_diff = new FilmUserDiff();
-                $film_user_diff->id = $user->id;
-                $film_user_diff->save();
             }
 
             $account->user()->associate($user);

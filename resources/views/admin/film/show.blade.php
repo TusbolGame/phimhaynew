@@ -7,10 +7,30 @@
 </div>
 @endsection
 @section('content')
+<div class="clearfix"></div>
+@if(Session::has('film_errors'))
+    <div class="alert alert-danger">
+        <ul>
+            @foreach(Session::get('film_errors') as $key)
+                <li>{!! $key !!}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+@if(Session::has('film_successes'))
+    <div class="alert alert-success">
+        <ul>
+            @foreach(Session::get('film_successes') as $key)
+                <li>{!! $key !!}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
 <div class="col-lg-12 admin-detail">
     <div class="col-lg-6">
         <a href="{!! route('admin.film.getEdit', $film_list->id) !!}" class="btn btn-success">Chỉnh sửa thông tin phim và trailer</a>
         <a href="{!! route('film.getFilm', [$film_list->film_dir_name, $film_list->id]) !!}" class="btn btn-info">Xem phim</a>
+        <a href="{!! route('admin.film.getCheckLink', $film_list->id) !!}" class="btn btn-primary">Check Link</a>
         <h4>Thông tin phim</h4>
         <table class="table table-striped table-bordered fix-word-break">
             <tbody>

@@ -32,7 +32,7 @@ class Authenticate {
 	 */
 	public function handle($request, Closure $next)
 	{
-		if ($this->auth->guest() && $this->auth->actived == 1 && $this->auth->blocked == 0 )
+		if ($this->auth->guest())
 		{
 			if ($request->ajax())
 			{
@@ -42,13 +42,16 @@ class Authenticate {
 			{
 				return redirect()->guest('auth/login');
 			}
-		}else if ($this->auth->check() && $this->auth->user()->actived == 0 && $this->auth->user()->blocked == 1 ){
-			//call logout
-			$this->auth->logout();
-			//login
-			return redirect()->route('auth.getLogin');
+		}else if ($this->auth->check()){
+			if ($this->auth->user()->actived == 1 && $this->auth->user()->blocked == 0 ){
+				return $next($request);
+			}else if ($this->auth->user()->actived == 1 && $this->auth->user()->blocked == 1 ){
+				//call logout
+				$this->auth->logout();
+				//login
+				return redirect()->route('auth.getLogin');
+			}
 		}
-
 		return $next($request);
 	}
 

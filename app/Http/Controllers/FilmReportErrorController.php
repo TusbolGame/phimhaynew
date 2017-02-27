@@ -110,10 +110,6 @@ class FilmReportErrorController extends Controller {
 		$film_report_error = FilmReportError::whereIn('id', $data_id)->update(['report_error_status' => 1]);
 		return redirect()->route('admin.report-error.index')->with(['flash_message' => 'Thành công| Đã đánh dấu Report Id: '.$request->report_error_id]);
 	}
-	public function postAdd(Request $request){
-		if(Request::ajax()){
-
-		}
-	}
+	
 
 }

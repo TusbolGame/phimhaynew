@@ -111,6 +111,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function(
         Route::post('edit/{id}',['as'=>'admin.film.postEdit', 'uses'=>'FilmController@postEdit']);
         //show
         Route::get('show/{film_id}',['as'=>'admin.film.getShow', 'uses'=>'FilmController@getShow']);
+        //check-link
+        Route::get('check-link/{film_id}',['as'=>'admin.film.getCheckLink', 'uses'=>'FilmController@getCheckLink']);
         Route::post('trailer/edit/{film_id}',['as'=>'admin.film.postEditFilmTrailer', 'uses'=>'FilmController@postEditFilmTrailer']);
         Route::post('episode/add/{film_id}',['as'=>'admin.film.postAddFilmEpisode', 'uses'=>'FilmController@postAddFilmEpisode']);
         //
