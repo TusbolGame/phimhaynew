@@ -9,6 +9,7 @@ use App\Lib\CaptchaImages\CaptchaSessionLoginUser;
 use App\Lib\CaptchaImages\CaptchaSessionRegisterUser;
 use App\Lib\CaptchaImages\CaptchaSessionRecoverUser;
 use App\Lib\CaptchaImages\CaptchaSessionDownloadFilm;
+use App\Lib\CaptchaImages\CaptchaSessionReportErrorAdd;
 class CaptchaController extends Controller {
 
 	public function getCaptchaLoginUser($id){
@@ -30,5 +31,10 @@ class CaptchaController extends Controller {
 		$captcha_download = new CaptchaSessionDownloadFilm();
 		$captcha_download->forgetCaptchaSessionUses();
 		$captcha_download->createAndGetCaptchaSessionUses();
+	}
+	public function getCaptchaReportErrorAdd($id){
+		$captcha_report_error = new CaptchaSessionReportErrorAdd();
+		$captcha_report_error->forgetCaptchaSessionUses();
+		$captcha_report_error->createAndGetCaptchaSessionUses();
 	}
 }

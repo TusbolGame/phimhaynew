@@ -27,6 +27,7 @@
 @section('content')
 	@include('phimhay.include.input-film-id', ['film_id' => $film_list->id])
 	@include('phimhay.include.modal-alert-not-login')
+	@include('phimhay.include.modal-add-report-error', ['film_id' => $film_list->id])
 	<div class="film-watch film-background-border">
 		@if($film_list->film_status != 'Trailer' && count($film_episode_watch) > 0)
 		<div class="film-watch-title">
@@ -84,7 +85,7 @@
 					  	</ul>
 					</div>
 				</li>
-				<li><a href="" title=""><span class="glyphicon glyphicon-wrench"></span>Báo lỗi phim</a></li>
+				<li><a href="javascript:void(0)" class="show-modal-report-error" title=""><span class="glyphicon glyphicon-wrench"></span>Báo lỗi phim</a></li>
 			</ul>
 		</div>
 		@else
@@ -204,6 +205,21 @@
 				//view comment facebook
 				$('.film-comment-facebook').slideDown(300).show();
 			});
+			//report error
+			$('.show-modal-report-error').click(function(){
+				//
+				$captcha = '{!! route('captcha.getCaptchaReportErrorAdd', '') !!}/'+Math.random();
+				//add src image captcha
+				$('.captcha-report-error-add').attr('src', $captcha);
+				$('.modal-add-report-error').modal('show');
+			})
+			//onlick reload capcha
+	        $('.icon-reload-report-error-add-captcha').click(function(){
+	            //change address cua captcha-login
+	            $captcha = '{!! route('captcha.getCaptchaReportErrorAdd', '') !!}/'+Math.random();
+	            $('.captcha-report-error-add').attr('src', $captcha);
+	        });
+	        //ajax
 		});
 	</script>
 	@include('phimhay.include.film-relate', [$film_relates, $film_relate_adds, $film_process])

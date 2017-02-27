@@ -75,7 +75,11 @@ Route::group(['prefix' => 'person'], function() {
     Route::get('person-director/{id}', ['as' => 'person.getPersonDirector', 'uses' => 'FilmPersonController@getPersonDirector']);
     Route::get('person-actor/{id}', ['as' => 'person.getPersonActor', 'uses' => 'FilmPersonController@getPersonActor']);
 });
-
+//report error
+Route::group(['prefix' => 'report-error'], function() {
+    //
+    Route::post('add', ['as' => 'reportErrorAjax.postAdd', 'uses' => 'FilmReportErrorAjaxController@postAdd']);
+});
 //route captcha
 Route::group(['prefix' => 'captcha'], function() {
 	//captcha login
@@ -86,6 +90,8 @@ Route::group(['prefix' => 'captcha'], function() {
     Route::get('recover/{id}', ['as'=>'captcha.getCaptchaRecoverUser', 'uses'=>'CaptchaController@getCaptchaRecoverUser']);
     //captcha download
     Route::get('download/{id}', ['as'=>'captcha.getCaptchaDownloadFilm', 'uses'=>'CaptchaController@getCaptchaDownloadFilm']);
+    //captcha report error add
+    Route::get('report-error-add/{id}', ['as'=>'captcha.getCaptchaReportErrorAdd', 'uses'=>'CaptchaController@getCaptchaReportErrorAdd']);
 });
 
 //admin
@@ -183,6 +189,12 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function(
     //call route('admin.country.???')
     Route::resource('country', 'FilmCountryController', ['except' => ['show']]);
     Route::resource('type', 'FilmTypeController', ['except' => ['show']]);
+    Route::resource('report-error', 'FilmReportErrorController', ['only' => ['index', 'destroy', 'show']]);
+    Route::group(['prefix' => 'report-error'], function() {
+        //
+        Route::post('delete-array/{id}',['as'=>'admin.report-error.postDeleteArray', 'uses'=>'FilmReportErrorController@postDeleteArray']);
+        Route::post('read-array/{id}',['as'=>'admin.report-error.postReadArray', 'uses'=>'FilmReportErrorController@postReadArray']);
+    });
 });
 // phim
 Route::group(['prefix' => 'film'], function() {
@@ -202,6 +214,7 @@ Route::group(['prefix' => 'film'], function() {
         Route::post('film-evaluate', ['as' => 'filmAjax.getFilmEvaluate', 'uses' => 'FilmAjaxController@getFilmEvaluate']);
         //comment post
         Route::post('film-comment-add/{film_id}', ['as' => 'filmAjax.postFilmCommentAdd', 'uses' => 'FilmAjaxController@postFilmCommentAdd']);
+        Route::post('film-report-error', ['as' => 'filmAjax.getFilmReportError', 'uses' => 'FilmAjaxController@getFilmReportError']);
 
     });
 });
