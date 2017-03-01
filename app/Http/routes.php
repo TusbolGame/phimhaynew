@@ -217,6 +217,9 @@ Route::group(['prefix' => 'film'], function() {
         //comment post
         Route::post('film-comment-add/{film_id}', ['as' => 'filmAjax.postFilmCommentAdd', 'uses' => 'FilmAjaxController@postFilmCommentAdd']);
         Route::post('film-report-error', ['as' => 'filmAjax.getFilmReportError', 'uses' => 'FilmAjaxController@getFilmReportError']);
+        Route::group(['prefix' => 'film-comment-local'], function() {
+            Route::post('add/{film_id}', ['as' => 'commentAjax.postAdd', 'uses' => 'FilmCommentLocalAjaxController@postAdd']);
+        });
 
     });
 });

@@ -10,7 +10,8 @@
 		"guzzlehttp/guzzle": "~5.0",
 		"cartalyst/sentinel": "^2.0",
 		"intervention/image": "^2.3",
-		"laravel/socialite" : "^2.0"
+		"laravel/socialite" : "^2.0",
+		"predis/predis" : "1.1.1"
 		
 	},
 	"require-dev": {

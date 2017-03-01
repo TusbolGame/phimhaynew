@@ -34,9 +34,14 @@ use App\Lib\CheckLinks\HttpResponseCode;
 use Input;
 use Auth;
 use Schema;
+use LRedis;
+
 class FilmController extends Controller {
 
 	public function getTest(){
+		$redis = LRedis::connection();
+        $redis->publish('message', 'ok-'.time());
+        return 'ok';
 		// Schema::table('film_details', function($table) {
 		//     //
 		//     $table->char('film_kind', 10)->default('truyen')->after('film_category');

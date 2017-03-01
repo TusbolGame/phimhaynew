@@ -65,3 +65,6 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+# Nodejs Socket Redis - Realtime
+Nodejs/node_modules

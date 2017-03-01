@@ -11,7 +11,23 @@
 		@endif
 	</div>
 	<div class="comment-form-content col-sm-11">
-		<form action="#" method="POST" class="form-comment-local-add" accept-charset="utf-8">
+		{{-- <form action="#" method="POST" class="form-comment-local-add" accept-charset="utf-8">
+			<input type="hidden" name="_token" value="{!! csrf_token() !!}">
+			<div class="form-group">
+				<textarea name="" class="form-control comment-content" placeholder="Bình luận"></textarea>
+			</div>
+			<div class="form-group">
+				@if(Auth::check())
+					<button type="button" class="btn btn-primary btn-fiml-comment-local-add" data-loading-text="Loading..." autocomplete="off">Bình luận</button>
+				@else
+					<input type="button" class="btn btn-primary" disabled="true" value="Chưa đăng nhập">
+				@endif
+				<p class="comment-check"></p>
+			</div>
+			
+		</form> --}}
+		
+		<form action="{!! route('commentAjax.postAdd', $film_list->id) !!}" method="POST" class="form-comment-local-add" accept-charset="utf-8">
 			<input type="hidden" name="_token" value="{!! csrf_token() !!}">
 			<div class="form-group">
 				<textarea name="" class="form-control comment-content" placeholder="Bình luận"></textarea>
@@ -47,6 +63,7 @@
 	</ul>
 	<!-- <button type="button" id="btn-load-comment-local" data-loading-text="Loading..." class="btn btn-primary form-control" autocomplete="off">Tải thêm bình luận</button> -->
 </div>
+
 <script type="text/javascript" charset="utf-8" async defer>
 	$(document).ready(function () {
 		function showAndGetCommentCheck($content){
@@ -58,6 +75,26 @@
 			$image = $('.user-avata').attr('src');
 			//get username
 			$username = $('.user-username').text();
+			//time
+			$time = new Date();
+			$str = '<li>'+
+				'<div class="comment-avata col-sm-1">'+
+				'<img src="'+$image+'" alt="error image avata">'+
+				'</div>'+
+				'<div class="comment-user-info col-sm-11">'+
+				'<span class="comment-username">'+$username+'</span>'+
+				'<span class="comment-content">'+$content+'</span>'+
+				'<span class="comment-time">'+$time.toUTCString()+'</span>'+
+				'</div>'+
+				'</li>';
+				$comment_list.prepend($str);
+		}
+		function addCommentLocalUser($user_name, $image, $content, $time){
+			$comment_list = $('.comment-local-list ul');
+			//get user image
+			$image = $('.user-avata').attr('src');
+			//get username
+			$username = $user_name;
 			//time
 			$time = new Date();
 			$str = '<li>'+
@@ -86,7 +123,8 @@
 			$.ajax({
 	            type : 'POST',
 	            dataType : 'json',
-	            url : '{!! route('filmAjax.postFilmCommentAdd', $film_list->id) !!}',
+	            {{-- url : '{!! route('filmAjax.postFilmCommentAdd', $film_list->id) !!}', --}}
+	            url : '{!! route('commentAjax.postAdd', $film_list->id) !!}',
 	            data : data,
 	            success : function (result){
 	            	
@@ -160,4 +198,22 @@
 		    $btn.button('reset');
 		})
 	});
+</script>
+<script src="https://localhost/socket.io/socket.io-1.3.4.js"></script>
+<script>
+    var socket = io.connect('https://localhost:8080');
+   	socket.on('message', function (data) {
+   		console.log(data);
+    });
+    //var url = window.location.protocol + '//' + window.location.hostname;
+//     var socket = io(url, {
+//   'secure': true,
+//   'reconnect': true,
+//   'reconnection delay': 500,
+//   'max reconnection attempts': 10
+// });
+// var chosenEvent = 'room_' + room.id;
+// socket.on(chosenEvent, function (data) {
+//   console.log(data);
+// });
 </script>

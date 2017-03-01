@@ -205,6 +205,7 @@ return [
 		'Image' => 'Intervention\Image\Facades\Image',
 		'Socialite' => 'Laravel\Socialite\Facades\Socialite',
 		'LaravelAnalytics' => 'Spatie\LaravelAnalytics\LaravelAnalyticsFacade',
+		'LRedis' => 'Illuminate\Support\Facades\Redis',
 	],
 
 ];

@@ -1,0 +1,10 @@
+{
+  "name": "PhimHayNew",
+  "version": "1.0.0",
+  "private": "true",
+  "dependencies": {
+    "express": "^4.14.1",
+    "redis": "^2.6.5",
+    "socket.io": "^1.7.3"
+  }
+}
