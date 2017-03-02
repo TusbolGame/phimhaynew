@@ -214,11 +214,12 @@ Route::group(['prefix' => 'film'], function() {
         Route::post('film-tick', ['as' => 'filmAjax.getFilmTick', 'uses' => 'FilmAjaxController@getFilmTick']);
         //danh gia
         Route::post('film-evaluate', ['as' => 'filmAjax.getFilmEvaluate', 'uses' => 'FilmAjaxController@getFilmEvaluate']);
-        //comment post
-        Route::post('film-comment-add/{film_id}', ['as' => 'filmAjax.postFilmCommentAdd', 'uses' => 'FilmAjaxController@postFilmCommentAdd']);
+        //report error
         Route::post('film-report-error', ['as' => 'filmAjax.getFilmReportError', 'uses' => 'FilmAjaxController@getFilmReportError']);
+        //comment
         Route::group(['prefix' => 'film-comment-local'], function() {
             Route::post('add/{film_id}', ['as' => 'commentAjax.postAdd', 'uses' => 'FilmCommentLocalAjaxController@postAdd']);
+            Route::post('load/{film_id}', ['as' => 'commentAjax.postLoad', 'uses' => 'FilmCommentLocalAjaxController@postLoad']);
         });
 
     });

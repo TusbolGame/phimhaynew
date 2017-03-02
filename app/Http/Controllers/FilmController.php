@@ -39,8 +39,12 @@ use LRedis;
 class FilmController extends Controller {
 
 	public function getTest(){
-		$redis = LRedis::connection();
-        $redis->publish('message', 'ok-'.time());
+		// $payload = ['data' => ['_channel' => 'film-comment-2s', 'comment' => 'content'
+		// ],
+		// 	'event' => 'messages.new'
+		// 	];
+		// $redis = LRedis::connection();
+  //       $redis->publish('film-comment-2', json_encode($payload));
         return 'ok';
 		// Schema::table('film_details', function($table) {
 		//     //
@@ -190,6 +194,11 @@ class FilmController extends Controller {
 			}
 			//comment
 			$film_comment_local_count = FilmCommentLocal::where('film_id', $film_id)->count();
+			$film_comment_local_id_last = 0; //ko co comment
+			$film_comment_local_last = FilmCommentLocal::where('film_id', $film_id)->first();
+			if(count($film_comment_local_last) == 1){
+				$film_comment_local_id_last = $film_comment_local_last->id;
+			}
 			$film_comments = FilmCommentLocal::where('film_id', $film_id)->orderBy('id', 'DESC')->take(10)->with('user')->get();
 			//director
 			$directors = FilmDirector::where('film_id', $film_id)->with(['filmPerson' => function ($query){
@@ -204,7 +213,9 @@ class FilmController extends Controller {
 			$film_detail_country = FilmDetailCountry::where('film_id', $film_id)->with(['filmCountry' => function ($query){
 				$query->select('id', 'country_name', 'country_alias');
 			}])->get();
-			return view('phimhay.film-info', compact('film_list', 'film_detail', 'film_trailer', 'ticked', 'film_episode_id', 'film_relates', 'film_relate_adds', 'film_comments', 'directors', 'actors', 'film_detail_type', 'film_detail_country', 'film_comment_local_count'));
+			//channel redis
+			$channel_name = 'film-comment-'.$film_id;
+			return view('phimhay.film-info', compact('film_list', 'film_detail', 'film_trailer', 'ticked', 'film_episode_id', 'film_relates', 'film_relate_adds', 'film_comments', 'directors', 'actors', 'film_detail_type', 'film_detail_country', 'film_comment_local_count', 'channel_name', 'film_comment_local_id_last'));
 		}
 		//not found
 		return redirect()->route('404');	
@@ -280,8 +291,15 @@ class FilmController extends Controller {
 			}
 			//comment
 			$film_comment_local_count = FilmCommentLocal::where('film_id', $film_id)->count();
+			$film_comment_local_id_last = 0; //ko co comment
+			$film_comment_local_last = FilmCommentLocal::where('film_id', $film_id)->first();
+			if(count($film_comment_local_last) == 1){
+				$film_comment_local_id_last = $film_comment_local_last->id;
+			}
 			$film_comments = FilmCommentLocal::where('film_id', $film_id)->orderBy('id', 'DESC')->take(10)->with('user')->get();
-			return view('phimhay.film-watch', compact('film_list', 'film_detail', 'ticked', 'film_episode_list', 'film_episode_watch', 'film_relates', 'film_relate_adds', 'film_comments', 'film_comment_local_count'));
+			//channel redis
+			$channel_name = 'film-comment-'.$film_id;
+			return view('phimhay.film-watch', compact('film_list', 'film_detail', 'ticked', 'film_episode_list', 'film_episode_watch', 'film_relates', 'film_relate_adds', 'film_comments', 'film_comment_local_count', 'channel_name', 'film_comment_local_id_last'));
 		}
 		//not found
 		return redirect()->route('404');

@@ -189,7 +189,7 @@
 				</div>
 				<!-- comment local -->
 				<div class="film-comment-local">
-					@include('phimhay.include.film-comment-local', [$film_list->id, $film_comments, $film_comment_local_count])
+					@include('phimhay.include.film-comment-local', [$film_list->id, $film_comments, $film_comment_local_count, $channel_name, $film_comment_local_id_last])
 				</div>
 			</div>
 			

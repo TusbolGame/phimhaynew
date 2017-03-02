@@ -153,36 +153,4 @@ class FilmAjaxController extends Controller {
 		$result['content'] = 'not_ajax';
 		return response()->json($result);
 	}
-
-	//comment
-	public function postFilmCommentAdd($film_id){
-		$result = array('status' => 0, 'content' => '', 'login' => 1, 'timeout' => 1);
-		//check login
-		if(!Auth::check()){
-			$result['content'] = 'not_login';
-			$result['login'] = 0;
-			//die(json_encode($result));
-			return response()->json($result);
-		}
-		if (Request::ajax())
-		{
-			//check film exists
-			$film_list = FilmList::find($film_id)->select('id');
-			if(count($film_list) == 1){
-				//add
-				$film_comment = new FilmCommentLocal();
-				$film_comment->film_id = $film_id;
-				$film_comment->user_id = Auth::user()->id;
-				$film_comment->film_comment_content = Request::get('comment_content');
-				$film_comment->save();
-				$result['status'] = 1;
-				$result['content'] = 'comment-add-success';
-				return response()->json($result);
-			}
-		}
-		$result['content'] = 'comment-add-not-success';
-		return response()->json($result);
-	}
-
-	
 }
