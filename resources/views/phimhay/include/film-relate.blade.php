@@ -7,13 +7,13 @@
 			@foreach ($film_relates as $relate)
 	  		<div>
 	  			<div class="film-relate-item">
-	  				<a href="{!! route('film.getFilm', [$relate->filmList->film_dir_name, $relate->id]) !!}" title="">
+	  				<a href="{!! route('film.getFilm', [$relate->filmList->film_dir_name, $relate->id]) !!}" title="{!! $film_process->getFilmNameVnEn($relate->filmList->film_name_vn, $relate->filmList->film_name_en) !!}">
 		  				<div class="film-relate-item-img">
 		  					<img src="{!! $relate->filmList->film_thumbnail_small !!}" alt="">
 		  				</div>
 		  				<div class="film-relate-item-title">
-		  					<span class="film-title-vn">{!! $film_process->getFilmNameVn($relate->filmList->film_name_vn, $relate->filmList->film_name_en) !!}</span>
-		  					<span class="film-title-en">{!! $film_process->getFilmNameEn($relate->filmList->film_name_vn, $relate->filmList->film_name_en) !!}</span>
+		  					<span class="film-title-vn" title="{!! $film_process->getFilmNameVn($relate->filmList->film_name_vn, $relate->filmList->film_name_en) !!}">{!! $film_process->getFilmNameVn($relate->filmList->film_name_vn, $relate->filmList->film_name_en) !!}</span>
+		  					<span class="film-title-en" title="{!! $film_process->getFilmNameEn($relate->filmList->film_name_vn, $relate->filmList->film_name_en) !!}">{!! $film_process->getFilmNameEn($relate->filmList->film_name_vn, $relate->filmList->film_name_en) !!}</span>
 		  					<span class="film-title-year">{!! $relate->filmList->film_years !!}</span>
 		  				</div>
 		  			</a>
@@ -25,13 +25,13 @@
 			@foreach ($film_relate_adds as $relate)
 	  		<div>
 	  			<div class="film-relate-item">
-	  				<a href="{!! route('film.getFilm', [$relate->filmList->film_dir_name, $relate->id]) !!}" title="">
+	  				<a href="{!! route('film.getFilm', [$relate->filmList->film_dir_name, $relate->id]) !!}" title="{!! $film_process->getFilmNameVnEn($relate->filmList->film_name_vn, $relate->filmList->film_name_en) !!}">
 		  				<div class="film-relate-item-img">
 		  					<img src="{!! $relate->filmList->film_thumbnail_small !!}" alt="">
 		  				</div>
 		  				<div class="film-relate-item-title">
-		  					<span class="film-title-vn">{!! $film_process->getFilmNameVn($relate->filmList->film_name_vn, $relate->filmList->film_name_en) !!}</span>
-		  					<span class="film-title-en">{!! $film_process->getFilmNameEn($relate->filmList->film_name_vn, $relate->filmList->film_name_en) !!}</span>
+		  					<span class="film-title-vn" title="{!! $film_process->getFilmNameVn($relate->filmList->film_name_vn, $relate->filmList->film_name_en) !!}">{!! $film_process->getFilmNameVn($relate->filmList->film_name_vn, $relate->filmList->film_name_en) !!}</span>
+		  					<span class="film-title-en" title="{!! $film_process->getFilmNameEn($relate->filmList->film_name_vn, $relate->filmList->film_name_en) !!}">{!! $film_process->getFilmNameEn($relate->filmList->film_name_vn, $relate->filmList->film_name_en) !!}</span>
 		  					<span class="film-title-year">{!! $relate->filmList->film_years !!}</span>
 		  				</div>
 		  			</a>

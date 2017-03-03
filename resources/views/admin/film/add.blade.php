@@ -135,33 +135,6 @@
                 
                 
             </div>
-            <!-- <div class="col-lg-3">
-                <div class="form-group">
-                    <label>Chất Lượng Phim<span class="text-danger">*</span></label>
-                    <div>
-                        <select name="film_quality" class="form-control">
-                            <option value="SD" @if(old('film_quality') == 'SD') selected @endif>SD - 360p</option>
-                            <option value="HD" @if(old('film_quality') == 'HD') selected @endif @if(!old('film_quality')) selected @endif>HD - 720p</option>
-                            <option value="Full HD" @if(old('film_quality') == 'Full HD') selected @endif>Full HD - 1080p</option>
-                            <option value="2K" @if(old('film_quality') == '2K') selected @endif>2K - 2160p</option>
-                        </select>
-                    </div>
-                </div>
-            </div> -->
-            <!-- <div class="col-lg-3">
-                <div class="form-group">
-                    <label>Ngôn Ngữ<span class="text-danger">*</span></label>
-                    <div>
-                        <select name="film_language" class="form-control">
-                            <option value="vs" @if(old('film_language') == 'vs') selected @endif>VietSub</option>
-                            <option value="tm" @if(old('film_language') == 'tm') selected @endif>Thuyết Minh</option>
-                            <option value="raw" @if(old('film_language') == 'lt') selected @endif>Lồng Tiếng</option>
-                            <option value="es" @if(old('film_language') == 'es') selected @endif>EnlishSub</option>
-                            <option value="raw" @if(old('film_language') == 'raw') selected @endif>Raw</option>
-                        </select>
-                    </div>
-                </div>
-            </div> -->
             <div class="clearfix"></div>
             <div class="col-lg-10">
                 <div class="form-group">
@@ -214,7 +187,7 @@
                 <div class="input-group">
                     <input type="text" class="form-control search-film-relate" placeholder="Tìm kiếm phim liên quan">
                     <span class="input-group-btn">
-                        <button class="btn btn-default" type="button">Search!</button>
+                        <button class="btn btn-default btn-search-ajax-film-relate" type="button">Search!</button>
                     </span>
                 </div><!-- /input-group -->
                 <div class="search-relate-result">
@@ -230,61 +203,7 @@
                 <div class="input-group">
                     <input type="text" class="form-control" name="film_relate_new" placeholder="Nhập phim liên quan mới">
                 </div>
-                <script>
-                    function removeSearchFilmRelate(){
-                        $('.search-relate-result ul li').remove();
-                    }
-                    function showSearchFilmRelate(){
-                        $('.search-relate-result').show();
-                    }
-                    function hideSearchFilmRelate(){
-                        $('.search-relate-result').hide();
-                    }
-                    function addSearchFilmRelate($relate_id, $relate_name){
-                        $relate = '<li><label><input type="radio" name="film_relate_selected" value="'+$relate_id+'">'+$relate_name+'</label></li>';
-                        //append
-                        $('.search-relate-result ul').append($relate);
-                    }
-                    //click close search film relate result
-
-                    $('.search-film-relate').click(function() {
-                        //autocomplete
-                        $(this).keyup(function() {
-                            //goi ajax
-                            var data = {
-                                //token
-                                _token : $('form.form-add-film').children('input[name="_token"]').val(),
-                                search_film_relate : $('.search-film-relate').val()
-                            };
-                            $.ajax({
-                                type : 'POST',
-                                dataType : 'json',
-                                url : '{!! route('filmAjax.getSearchFilmRelate') !!}',
-                                data : data,
-                                success : function (result){
-                                    //goi remove
-                                    removeSearchFilmRelate();
-                                    $('.search-film-relate-key').text(data['search_film_relate']);
-                                    if(result != null){
-                                        var dk = result.length;
-                                        var i = 0;
-                                        while(i < dk){ 
-                                            addSearchFilmRelate(result[i]['id'], result[i]['film_relate_name']);                     
-                                            i++;
-                                        }
-                                        //show
-                                        showSearchFilmRelate();
-                                    }
-
-                                },
-                                error : function (){
-                                    console.log('Lỗi xử lý đường truyền');
-                                }
-                            });
-                        });
-
-                    });
-                </script>
+                @include('admin.film.js-film-relate')
             </div>
             <div>
                 <div class="form-group">
@@ -302,7 +221,7 @@
                     <div class="input-group">
                         <input type="text" class="search-film-director form-control" placeholder="Đạo diễn">
                         <span class="input-group-btn">
-                            <button class="btn btn-default" type="button">Search!</button>
+                            <button class="btn btn-default btn-search-ajax-film-director" type="button">Search!</button>
                         </span>
                     </div><!-- /input-group -->
                     <div class="search-result-film-director">
@@ -334,7 +253,7 @@
                     <div class="input-group">
                         <input type="text" class="search-film-actor form-control" placeholder="Diễn viên">
                         <span class="input-group-btn">
-                            <button class="btn btn-default" type="button">Search!</button>
+                            <button class="btn btn-default btn-search-ajax-film-actor" type="button">Search!</button>
                         </span>
                     </div><!-- /input-group -->
                     <div class="search-result-film-actor">

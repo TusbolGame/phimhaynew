@@ -227,7 +227,8 @@
                 //ajax search director
                 $('.search-film-director').click(function() {
                         //autocomplete
-                        $(this).keyup(function() {
+                        $('.btn-search-ajax-film-director').click(function() {
+                            //clear
                             //goi ajax
                             var data = {
                                 //token
@@ -257,13 +258,14 @@
                                     console.log('Lỗi xử lý đường truyền');
                                 }
                             });
+                            
                         });
 
                     });
                 //ajax search actor
                 $('.search-film-actor').click(function() {
                         //autocomplete
-                        $(this).keyup(function() {
+                        $('.btn-search-ajax-film-actor').click(function() {
                             //goi ajax
                             var data = {
                                 //token

@@ -173,22 +173,6 @@
                 </div>
             </div>
             <div class="clearfix"></div>
-            <!-- <div class="col-lg-6">
-                <div class="form-group">
-                    <label>Đạo Diễn:</label>
-                    <span class="text-giai-thich"><i>Nếu có nhiều đạo diễn thì cách nhau bằng dấu phẩy và khoảng trắng ', '</i></span>
-                    <span class="text-giai-thich"><i>Ex: Director 1, Director 2</i></span>
-                    <textarea name="film_director" class="form-control" placeholder="Nhập tên đạo diễn" >{!! $film_detail->film_director !!}</textarea>
-                </div>
-            </div> -->
-            <!-- <div class="col-lg-6">
-                <div class="form-group">
-                    <label>Diễn Viên:</label>
-                    <span class="text-giai-thich"><i>Nếu có nhiều diễn viên thì cách nhau bằng dấu phẩy và khoảng trắng ', '</i></span>
-                    <span class="text-giai-thich"><i>Ex: Actor 1, Actor 2</i></span>
-                    <textarea name="film_actor" class="form-control" placeholder="Nhập tên diễn viên" >{!! $film_detail->film_actor !!}</textarea>
-                </div>
-            </div> -->
             <div class="col-lg-6">
                 <div class="form-group">
                     <label>Hãng Sản Xuất:</label>
@@ -218,7 +202,7 @@
                 <div class="input-group">
                     <input type="text" class="form-control search-film-relate" placeholder="Tìm kiếm phim liên quan">
                     <span class="input-group-btn">
-                        <button class="btn btn-default" type="button">Search!</button>
+                        <button class="btn btn-default btn-search-ajax-film-relate" type="button">Search!</button>
                     </span>
                 </div><!-- /input-group -->
                 <div class="search-relate-result">
@@ -234,61 +218,7 @@
                 <div class="input-group">
                     <input type="text" class="form-control" name="film_relate_new" placeholder="Nhập phim liên quan mới">
                 </div>
-                <script>
-                    function removeSearchFilmRelate(){
-                        $('.search-relate-result ul li').remove();
-                    }
-                    function showSearchFilmRelate(){
-                        $('.search-relate-result').show();
-                    }
-                    function hideSearchFilmRelate(){
-                        $('.search-relate-result').hide();
-                    }
-                    function addSearchFilmRelate($relate_id, $relate_name){
-                        $relate = '<li><label><input type="radio" name="film_relate_selected" value="'+$relate_id+'">'+$relate_name+'</label></li>';
-                        //append
-                        $('.search-relate-result ul').append($relate);
-                    }
-                    //click close search film relate result
-
-                    $('.search-film-relate').click(function() {
-                        //autocomplete
-                        $(this).keyup(function() {
-                            //goi ajax
-                            var data = {
-                                //token
-                                _token : $('form.form-add-film').children('input[name="_token"]').val(),
-                                search_film_relate : $('.search-film-relate').val()
-                            };
-                            $.ajax({
-                                type : 'POST',
-                                dataType : 'json',
-                                url : '{!! route('filmAjax.getSearchFilmRelate') !!}',
-                                data : data,
-                                success : function (result){
-                                    //goi remove
-                                    removeSearchFilmRelate();
-                                    $('.search-film-relate-key').text(data['search_film_relate']);
-                                    if(result != null){
-                                        var dk = result.length;
-                                        var i = 0;
-                                        while(i < dk){ 
-                                            addSearchFilmRelate(result[i]['id'], result[i]['film_relate_name']);                     
-                                            i++;
-                                        }
-                                        //show
-                                        showSearchFilmRelate();
-                                    }
-
-                                },
-                                error : function (){
-                                    console.log('Lỗi xử lý đường truyền');
-                                }
-                            });
-                        });
-
-                    });
-                </script>
+                @include('admin.film.js-film-relate')
             </div>
             <div>
                 <div class="form-group">
@@ -308,7 +238,7 @@
                     <div class="input-group">
                         <input type="text" class="search-film-director form-control" placeholder="Đạo diễn">
                         <span class="input-group-btn">
-                            <button class="btn btn-default" type="button">Search!</button>
+                            <button class="btn btn-default btn-search-ajax-film-director" type="button">Search!</button>
                         </span>
                     </div><!-- /input-group -->
                     <div class="search-result-film-director">
@@ -342,7 +272,7 @@
                     <div class="input-group">
                         <input type="text" class="search-film-actor form-control" placeholder="Diễn viên">
                         <span class="input-group-btn">
-                            <button class="btn btn-default" type="button">Search!</button>
+                            <button class="btn btn-default btn-search-ajax-film-actor" type="button">Search!</button>
                         </span>
                     </div><!-- /input-group -->
                     <div class="search-result-film-actor">

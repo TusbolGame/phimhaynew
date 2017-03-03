@@ -84,7 +84,7 @@ class FilmPersonAjaxController extends Controller {
 				return response()->json($result);
 			}
 		}
-		$result['content'] = 'Không thêm đc person';
+		$result['content'] = 'Lỗi ajax';
 		return response()->json($result);
 	}
 	

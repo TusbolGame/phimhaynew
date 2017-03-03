@@ -254,7 +254,7 @@ class FilmProcess
 	{
 		$name = $film_name;
 		// xoa ki tu 2 cham : ( )
-		$name = preg_replace('/[:()]/u', '', $name);
+		$name = preg_replace('/[:()"\']/u', '', $name);
 		//doi chu hoa thanh thuong
 		$name = mb_convert_case($name, MB_CASE_LOWER,'utf-8');
 		// xoa utf8
