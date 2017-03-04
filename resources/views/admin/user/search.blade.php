@@ -13,7 +13,7 @@
         <input type="hidden" name="_token" value="{!! csrf_token() !!}">
         <div class="form-group">
             <label>Tìm kiếm user:</label>
-            <input class="form-control" id="search-key-value" name="txtUsername" value="{{ old('txtUsername') }}" placeholder="Please Enter Username or Full name" required="true" />
+            <input class="form-control" id="search-key-value" name="txtUsername" value="{{ old('txtUsername') }}" placeholder="Nhập Username or Full name" required="true" />
         </div>
     <form>
     <div class="user-search-result">
@@ -42,38 +42,36 @@ function addSearchUser($dir, $image, $username, $full_name) {
 function removeSearchUser() {
     $('.user-search-result ul li').remove();
 }
-//khi click vao khoi tao keyup
-$('input#search-key-value').click(function() {
-    $(this).keyup(function() {
-        //goi ajax
-        var data = {
-            _token : $('form.form-search-user').children('input[name="_token"]').val(),
-            search_key_value : $('input#search-key-value').val()
-        };
-        $.ajax({
-            type : 'POST',
-            dataType : 'json',
-            url : '{!! route('admin.userAjax.postSearch') !!}',
-            data : data,
-            success : function (result){
-                //call remove
-                removeSearchUser();
-                if(result['status'] == 1){
-                    var dk = result['content'].length;
-                    var i = 0;
-                    while(i < dk){
-                        addSearchUser('{!! route('admin.user.getEdit', '') !!}/'+result['content'][i]['id'], '{!! route('home') !!}/resources/photos/'+result['content'][i]['image'], result['content'][i]['username'], result['content'][i]['first_name']+' '+result['content'][i]['last_name']);                     
-                        i++;
-                    }
-                    //show
-                    showSearchResult();
+//ajax
+$('input#search-key-value').keyup(function() {
+    //goi ajax
+    var data = {
+        _token : $('form.form-search-user').children('input[name="_token"]').val(),
+        search_key_value : $('input#search-key-value').val()
+    };
+    $.ajax({
+        type : 'POST',
+        dataType : 'json',
+        url : '{!! route('admin.userAjax.postSearch') !!}',
+        data : data,
+        success : function (result){
+            //call remove
+            removeSearchUser();
+            if(result['status'] == 1){
+                var dk = result['content'].length;
+                var i = 0;
+                while(i < dk){
+                    addSearchUser('{!! route('admin.user.getEdit', '') !!}/'+result['content'][i]['id'], '{!! route('home') !!}/resources/photos/'+result['content'][i]['image'], result['content'][i]['username'], result['content'][i]['first_name']+' '+result['content'][i]['last_name']);                     
+                    i++;
                 }
-
-            },
-            error : function (){
-                console.log('Lỗi xử lý đường truyền');
+                //show
+                showSearchResult();
             }
-        });
+
+        },
+        error : function (){
+            console.log('Lỗi xử lý đường truyền');
+        }
     });
 });
 </script>

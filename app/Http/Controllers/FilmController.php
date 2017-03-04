@@ -818,13 +818,14 @@ class FilmController extends Controller {
 		if(empty($name)){
 			if($category == null && $type == null && $country == null && $year == null && $kind == null){
 				//get id episode
-				// $films = FilmDetail::orderBy('id', 'DESC')->select('id')->paginate(25);
-				$films = FilmDetail::distinct()
-				->whereIn('id', function($query2){
-					$query2->from('film_episodes')
-					->select('id')->distinct();
-				})
-				->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+				// $films = FilmDetail::distinct()
+				// ->whereIn('id', function($query2){
+				// 	$query2->from('film_episodes')
+				// 	->select('id')->distinct();
+				// })
+				// ->orderBy('id', 'DESC')->with('filmList')->paginate(25);
+				$films = FilmDetail::orderBy('id', 'DESC')->
+				with('filmList')->paginate(25);
 
 			}
 			else{

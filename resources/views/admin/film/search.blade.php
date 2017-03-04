@@ -68,46 +68,44 @@ function addSearchFilm($film_dir, $film_img, $film_name_full, $film_name_vn, $fi
 function removeSearchFilm() {
     $('.search-result ul li').remove();
 }
-//khi click vao khoi tao keyup
-$('input#search-key-value').click(function() {
-    $(this).keyup(function() {
-        //goi ajax
-        var data = {
-            _token : $('form.form-search-film').children('input[name="_token"]').val(),
-            search_key_value : $('input#search-key-value').val()
-        };
-        $.ajax({
-            type : 'POST',
-            dataType : 'json',
-            url : '{!! route('filmAjax.getSearchFilm') !!}',
-            data : data,
-            success : function (result){
-                //goi remove
-                removeSearchFilm();
-                $('.search-key-word').text(data['search_key_value']);
-                if(result != null){
-                    var dk = result.length;
-                    var i = 0;
-                    while(i < dk){
-                        $name_film = result[i]['film_name_vn']+'-'+result[i]['film_name_en'];
-                        if(result[i]['film_name_vn'] == ''){
-                            $name_film = result[i]['film_name_en'];
-                        }
-                        if(result[i]['film_name_en'] == ''){
-                            $name_film = result[i]['film_name_vn']
-                        }
-                        addSearchFilm('{!! env('WEBSITE_NAME') !!}admin/film/show/'+result[i]['id'], result[i]['film_thumbnail_small'], $name_film, result[i]['film_name_vn'], result[i]['film_name_en'], result[i]['film_years']);                     
-                        i++;
+//ajax
+$('input#search-key-value').keyup(function() {
+    //goi ajax
+    var data = {
+        _token : $('form.form-search-film').children('input[name="_token"]').val(),
+        search_key_value : $('input#search-key-value').val()
+    };
+    $.ajax({
+        type : 'POST',
+        dataType : 'json',
+        url : '{!! route('filmAjax.getSearchFilm') !!}',
+        data : data,
+        success : function (result){
+            //goi remove
+            removeSearchFilm();
+            $('.search-key-word').text(data['search_key_value']);
+            if(result != null){
+                var dk = result.length;
+                var i = 0;
+                while(i < dk){
+                    $name_film = result[i]['film_name_vn']+'-'+result[i]['film_name_en'];
+                    if(result[i]['film_name_vn'] == ''){
+                        $name_film = result[i]['film_name_en'];
                     }
-                    //show
-                    showSearchResult();
+                    if(result[i]['film_name_en'] == ''){
+                        $name_film = result[i]['film_name_vn']
+                    }
+                    addSearchFilm('{!! env('WEBSITE_NAME') !!}admin/film/show/'+result[i]['id'], result[i]['film_thumbnail_small'], $name_film, result[i]['film_name_vn'], result[i]['film_name_en'], result[i]['film_years']);                     
+                    i++;
                 }
-
-            },
-            error : function (){
-                console.log('Lỗi xử lý đường truyền');
+                //show
+                showSearchResult();
             }
-        });
+
+        },
+        error : function (){
+            console.log('Lỗi xử lý đường truyền');
+        }
     });
 });
 </script>

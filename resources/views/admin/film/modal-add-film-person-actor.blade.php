@@ -61,241 +61,236 @@
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 <script type="text/javascript">
-                $('.show-film-person-director').click(function() {
-                    $('.modal-add-film-person-director').modal('show');
-                });
-                $('.show-film-person-actor').click(function() {
-                    $('.modal-add-film-person-actor').modal('show');
-                });
-                //remove director
-                $('body').on('click', '.btn-remove-director', function() {
-                    $(this).parent('li').remove();
-                });
-                //remove actor
-                $('body').on('click', '.btn-remove-actor', function() {
-                    $(this).parent('li').remove();
-                });
-                //add director
-                $('body').on('click', '.btn-add-director', function() {
-                    $result_li = $(this).parent('li');
-                    $director_id = $result_li.children('input').val();
-                    $director_name = $result_li.children('span').text();
-                    addDirector($director_id, $director_name);
-                    $result_li.remove();
-                });
-                //add actor
-                $('body').on('click', '.btn-add-actor', function() {
-                    $result_li = $(this).parent('li');
-                    $director_id = $result_li.children('input').val();
-                    $director_name = $result_li.children('span').text();
-                    addActor($director_id, $director_name);
-                    //remove chinh no
-                    $result_li.remove();
-                });
-                //ajax post director
-                $('.add-film-person-director').click(function() {
-                    //job
-                    $job = new Array();
-                    $('.director_job:checked').each(function() {
-                        $job.push($(this).val());
-                    });
-                    // console.log($job);
-                    //goi ajax
-                    var data = {
-                        //token
-                        _token : $('form.form-add-film').children('input[name="_token"]').val(),
-                        person_name : $('.director_name').val(),
-                        person_full_name : $('.director_full_name').val(),
-                        person_birth_name : $('.director_birth_name').val(),
-                        person_nick_name : $('.director_nick_name').val(),
-                        person_birth_date : $('.director_birth_date').val(),
-                        person_height : $('.director_height').val(),
-                        person_job : $job,
-                        person_info : $('.director_info').val(),
-                        person_image : $('.director_image').val()
-                    };
-                    $.ajax({
-                        type : 'POST',
-                        dataType : 'json',
-                        url : '{!! route('admin.filmPersonAjax.postAdd') !!}',
-                        data : data,
-                        success : function (result){
-                            //
-                            if(result['status'] != 1){
-                                var kq = $('.film-director-result');
-                                kq.text(result['content']);
-                            }
-                            //
-                            else if(result['status'] == 1){
-                                //hide modal
-                                $('.modal-add-film-person-director').modal('hide');
-                                //add director to form
-                                addDirector(result['content']['id'], result['content']['person_name']);
-                            }
-                        },
-                        error : function (){
-                            console.log('Lỗi xử lý đường truyền');
-                        }
-                    });
-                        
+    $('.show-film-person-director').click(function() {
+        $('.modal-add-film-person-director').modal('show');
+    });
+    $('.show-film-person-actor').click(function() {
+        $('.modal-add-film-person-actor').modal('show');
+    });
+    //remove director
+    $('body').on('click', '.btn-remove-director', function() {
+        $(this).parent('li').remove();
+    });
+    //remove actor
+    $('body').on('click', '.btn-remove-actor', function() {
+        $(this).parent('li').remove();
+    });
+    //add director
+    $('body').on('click', '.btn-add-director', function() {
+        $result_li = $(this).parent('li');
+        $director_id = $result_li.children('input').val();
+        $director_name = $result_li.children('span').text();
+        addDirector($director_id, $director_name);
+        $result_li.remove();
+    });
+    //add actor
+    $('body').on('click', '.btn-add-actor', function() {
+        $result_li = $(this).parent('li');
+        $director_id = $result_li.children('input').val();
+        $director_name = $result_li.children('span').text();
+        addActor($director_id, $director_name);
+        //remove chinh no
+        $result_li.remove();
+    });
+    //ajax post director
+    $('.add-film-person-director').click(function() {
+        //job
+        $job = new Array();
+        $('.director_job:checked').each(function() {
+            $job.push($(this).val());
+        });
+        // console.log($job);
+        //goi ajax
+        var data = {
+            //token
+            _token : $('form.form-add-film').children('input[name="_token"]').val(),
+            person_name : $('.director_name').val(),
+            person_full_name : $('.director_full_name').val(),
+            person_birth_name : $('.director_birth_name').val(),
+            person_nick_name : $('.director_nick_name').val(),
+            person_birth_date : $('.director_birth_date').val(),
+            person_height : $('.director_height').val(),
+            person_job : $job,
+            person_info : $('.director_info').val(),
+            person_image : $('.director_image').val()
+        };
+        $.ajax({
+            type : 'POST',
+            dataType : 'json',
+            url : '{!! route('admin.filmPersonAjax.postAdd') !!}',
+            data : data,
+            success : function (result){
+                //
+                if(result['status'] != 1){
+                    var kq = $('.film-director-result');
+                    kq.text(result['content']);
+                }
+                //
+                else if(result['status'] == 1){
+                    //hide modal
+                    $('.modal-add-film-person-director').modal('hide');
+                    //add director to form
+                    addDirector(result['content']['id'], result['content']['person_name']);
+                }
+            },
+            error : function (){
+                console.log('Lỗi xử lý đường truyền');
+            }
+        });
+            
 
-                });
-                //ajax post actor
-                $('.add-film-person-actor').click(function() {
-                    //job
-                    $job = new Array();
-                    $('.actor_job:checked').each(function() {
-                        $job.push($(this).val());
-                    });
-                    //goi ajax
-                    var data = {
-                        //token
-                        _token : $('form.form-add-film').children('input[name="_token"]').val(),
-                        person_name : $('.actor_name').val(),
-                        person_full_name : $('.actor_full_name').val(),
-                        person_birth_name : $('.actor_birth_name').val(),
-                        person_nick_name : $('.ator_nick_name').val(),
-                        person_birth_date : $('.ator_birth_date').val(),
-                        person_height : $('.actor_height').val(),
-                        person_job : $job,
-                        person_info : $('.actor_info').val(),
-                        person_image : $('.actor_image').val()
-                    };
-                    $.ajax({
-                        type : 'POST',
-                        dataType : 'json',
-                        url : '{!! route('admin.filmPersonAjax.postAdd') !!}',
-                        data : data,
-                        success : function (result){
-                            //
-                            if(result['status'] != 1){
-                                var kq = $('.film-actor-result');
-                                kq.text(result['content']);
-                            }
-                            //
-                            else if(result['status'] == 1){
-                                //hide modal
-                                $('.modal-add-film-person-actor').modal('hide');
-                                //add actor to form
-                                addActor(result['content']['id'], result['content']['person_name']);
-                            }
-                        },
-                        error : function (){
-                            console.log('Lỗi xử lý đường truyền');
-                        }
-                    });
-                });
-                function addDirector($director_id, $director_name){
-                    $content = '<li>'+
-                            '<input type="hidden" name="director_id[]" value="'+$director_id+'">'+
-                            '<span>'+$director_name+'</span>'+
-                            '<button type="button" class="btn btn-default btn-remove-director">Xóa</button></li>';
-                    $('.director-list ol').append($content);
+    });
+    //ajax post actor
+    $('.add-film-person-actor').click(function() {
+        //job
+        $job = new Array();
+        $('.actor_job:checked').each(function() {
+            $job.push($(this).val());
+        });
+        //goi ajax
+        var data = {
+            //token
+            _token : $('form.form-add-film').children('input[name="_token"]').val(),
+            person_name : $('.actor_name').val(),
+            person_full_name : $('.actor_full_name').val(),
+            person_birth_name : $('.actor_birth_name').val(),
+            person_nick_name : $('.ator_nick_name').val(),
+            person_birth_date : $('.ator_birth_date').val(),
+            person_height : $('.actor_height').val(),
+            person_job : $job,
+            person_info : $('.actor_info').val(),
+            person_image : $('.actor_image').val()
+        };
+        $.ajax({
+            type : 'POST',
+            dataType : 'json',
+            url : '{!! route('admin.filmPersonAjax.postAdd') !!}',
+            data : data,
+            success : function (result){
+                //
+                if(result['status'] != 1){
+                    var kq = $('.film-actor-result');
+                    kq.text(result['content']);
                 }
-                function addActor($director_id, $director_name){
-                    $content = '<li>'+
-                            '<input type="hidden" name="actor_id[]" value="'+$director_id+'">'+
-                            '<span>'+$director_name+'</span>'+
-                            '<div class="col-sm-4 actor-character">'+
-                                    '<input type="text" class="form-control" name="actor_character[]" value="" placeholder="'+$director_name+' trong vai">'+
-                                '</div>'+
-                            '<button type="button" class="btn btn-default btn-remove-director">Xóa</button></li>';
-                    $('.actor-list ol').append($content);
+                //
+                else if(result['status'] == 1){
+                    //hide modal
+                    $('.modal-add-film-person-actor').modal('hide');
+                    //add actor to form
+                    addActor(result['content']['id'], result['content']['person_name']);
                 }
-                function addSearchResultDirector($director_id, $director_name){
-                    $content = '<li>'+
-                                '<input type="hidden" name="search-result-director-id" value="'+$director_id+'" disabled="true">'+
-                                '<span class="search-result-director-name">'+$director_name+'</span>'+
-                                '<button type="button" class="btn btn-default btn-add-director">Thêm</button>'+
-                            '</li>';
-                    $('.search-result-film-director ol').append($content);
+            },
+            error : function (){
+                console.log('Lỗi xử lý đường truyền');
+            }
+        });
+    });
+    function addDirector($director_id, $director_name){
+        $content = '<li>'+
+                '<input type="hidden" name="director_id[]" value="'+$director_id+'">'+
+                '<span>'+$director_name+'</span>'+
+                '<button type="button" class="btn btn-default btn-remove-director">Xóa</button></li>';
+        $('.director-list ol').append($content);
+    }
+    function addActor($director_id, $director_name){
+        $content = '<li>'+
+                '<input type="hidden" name="actor_id[]" value="'+$director_id+'">'+
+                '<span>'+$director_name+'</span>'+
+                '<div class="col-sm-4 actor-character">'+
+                        '<input type="text" class="form-control" name="actor_character[]" value="" placeholder="'+$director_name+' trong vai">'+
+                    '</div>'+
+                '<button type="button" class="btn btn-default btn-remove-director">Xóa</button></li>';
+        $('.actor-list ol').append($content);
+    }
+    function addSearchResultDirector($director_id, $director_name){
+        $content = '<li>'+
+                    '<input type="hidden" name="search-result-director-id" value="'+$director_id+'" disabled="true">'+
+                    '<span class="search-result-director-name">'+$director_name+'</span>'+
+                    '<button type="button" class="btn btn-default btn-add-director">Thêm</button>'+
+                '</li>';
+        $('.search-result-film-director ol').append($content);
+    }
+    function addSearchResultActor($director_id, $director_name){
+        $content = '<li>'+
+                    '<input type="hidden" name="search-result-actor-id" value="'+$director_id+'" disabled="true">'+
+                    '<span class="search-result-actor-name">'+$director_name+'</span>'+
+                    '<button type="button" class="btn btn-default btn-add-actor">Thêm</button>'+
+                '</li>';
+        $('.search-result-film-actor ol').append($content);
+    }
+    function removeSearchResultDirector(){
+        $('.search-result-film-director ol li').remove();
+    }
+    function removeSearchResultActor(){
+        $('.search-result-film-actor ol li').remove();
+    }
+    //ajax search director
+    //
+    $('.btn-search-ajax-film-director').click(function() {
+        //clear
+        //goi ajax
+        var data = {
+            //token
+            _token : $('form.form-add-film').children('input[name="_token"]').val(),
+            person_name : $('.search-film-director').val()
+        };
+        $.ajax({
+            type : 'POST',
+            dataType : 'json',
+            url : '{!! route('admin.filmPersonAjax.postSearch') !!}',
+            data : data,
+            success : function (result){
+                if(result['status'] != 0){
+                    var dk = result['content'].length;
+                    var i = 0;
+                    //remove result
+                    removeSearchResultDirector();
+                    while(i < dk){  
+                        //add
+                        addSearchResultDirector(result['content'][i]['id'], result['content'][i]['person_name']);                     
+                        i++;
+                    }
                 }
-                function addSearchResultActor($director_id, $director_name){
-                    $content = '<li>'+
-                                '<input type="hidden" name="search-result-actor-id" value="'+$director_id+'" disabled="true">'+
-                                '<span class="search-result-actor-name">'+$director_name+'</span>'+
-                                '<button type="button" class="btn btn-default btn-add-actor">Thêm</button>'+
-                            '</li>';
-                    $('.search-result-film-actor ol').append($content);
-                }
-                function removeSearchResultDirector(){
-                    $('.search-result-film-director ol li').remove();
-                }
-                function removeSearchResultActor(){
-                    $('.search-result-film-actor ol li').remove();
-                }
-                //ajax search director
-                $('.search-film-director').click(function() {
-                        //autocomplete
-                        $('.btn-search-ajax-film-director').click(function() {
-                            //clear
-                            //goi ajax
-                            var data = {
-                                //token
-                                _token : $('form.form-add-film').children('input[name="_token"]').val(),
-                                person_name : $('.search-film-director').val()
-                            };
-                            $.ajax({
-                                type : 'POST',
-                                dataType : 'json',
-                                url : '{!! route('admin.filmPersonAjax.postSearch') !!}',
-                                data : data,
-                                success : function (result){
-                                    if(result['status'] != 0){
-                                        var dk = result['content'].length;
-                                        var i = 0;
-                                        //remove result
-                                        removeSearchResultDirector();
-                                        while(i < dk){  
-                                            //add
-                                            addSearchResultDirector(result['content'][i]['id'], result['content'][i]['person_name']);                     
-                                            i++;
-                                        }
-                                    }
 
-                                },
-                                error : function (){
-                                    console.log('Lỗi xử lý đường truyền');
-                                }
-                            });
-                            
-                        });
+            },
+            error : function (){
+                console.log('Lỗi xử lý đường truyền');
+            }
+        });
+        
+    });
+    //ajax search actor
+    //
+    $('.btn-search-ajax-film-actor').click(function() {
+        //goi ajax
+        var data = {
+            //token
+            _token : $('form.form-add-film').children('input[name="_token"]').val(),
+            person_name : $('.search-film-actor').val()
+        };
+        $.ajax({
+            type : 'POST',
+            dataType : 'json',
+            url : '{!! route('admin.filmPersonAjax.postSearch') !!}',
+            data : data,
+            success : function (result){
+                if(result['status'] != 0){
+                    var dk = result['content'].length;
+                    var i = 0;
+                    //remove result
+                    removeSearchResultActor();
+                    while(i < dk){  
+                        //add
+                        addSearchResultActor(result['content'][i]['id'], result['content'][i]['person_name']);                     
+                        i++;
+                    }
+                }
 
-                    });
-                //ajax search actor
-                $('.search-film-actor').click(function() {
-                        //autocomplete
-                        $('.btn-search-ajax-film-actor').click(function() {
-                            //goi ajax
-                            var data = {
-                                //token
-                                _token : $('form.form-add-film').children('input[name="_token"]').val(),
-                                person_name : $('.search-film-actor').val()
-                            };
-                            $.ajax({
-                                type : 'POST',
-                                dataType : 'json',
-                                url : '{!! route('admin.filmPersonAjax.postSearch') !!}',
-                                data : data,
-                                success : function (result){
-                                    if(result['status'] != 0){
-                                        var dk = result['content'].length;
-                                        var i = 0;
-                                        //remove result
-                                        removeSearchResultActor();
-                                        while(i < dk){  
-                                            //add
-                                            addSearchResultActor(result['content'][i]['id'], result['content'][i]['person_name']);                     
-                                            i++;
-                                        }
-                                    }
+            },
+            error : function (){
+                console.log('Lỗi xử lý đường truyền');
+            }
+        });
+    });
 
-                                },
-                                error : function (){
-                                    console.log('Lỗi xử lý đường truyền');
-                                }
-                            });
-                        });
-
-                    });
-            </script>
+</script>

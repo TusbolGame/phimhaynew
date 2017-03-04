@@ -42,41 +42,38 @@ function addSearchUser($dir, $image, $username, $full_name) {
 function removeSearchUser() {
     $('.user-search-result ul li').remove();
 }
-//khi click vao khoi tao keyup
-$('input#search-key-value').click(function() {
-    $(this).keyup(function() {
-        //goi ajax
-        var data = {
-            _token : $('form.form-search-person').children('input[name="_token"]').val(),
-            person_name : $('input#search-key-value').val()
-        };
-        $.ajax({
-            type : 'POST',
-            dataType : 'json',
-            url : '{!! route('admin.filmPersonAjax.postSearch') !!}',
-            data : data,
-            success : function (result){
-                //call remove
-                //
-                // $person_edit_url = '{!! route('home') !!}/admin/person/edit/';
-                $person_edit_url = '{!! route('admin.person.getEdit', '') !!}/';
-                removeSearchUser();
-                if(result['status'] == 1){
-                    var dk = result['content'].length;
-                    var i = 0;
-                    while(i < dk){
-                        addSearchUser($person_edit_url+result['content'][i]['id'], result['content'][i]['person_image'], result['content'][i]['person_name'], '');                     
-                        i++;
-                    }
-                    //show
-                    showSearchResult();
+$('input#search-key-value').keyup(function() {
+    //goi ajax
+    var data = {
+        _token : $('form.form-search-person').children('input[name="_token"]').val(),
+        person_name : $('input#search-key-value').val()
+    };
+    $.ajax({
+        type : 'POST',
+        dataType : 'json',
+        url : '{!! route('admin.filmPersonAjax.postSearch') !!}',
+        data : data,
+        success : function (result){
+            //call remove
+            //
+            // $person_edit_url = '{!! route('home') !!}/admin/person/edit/';
+            $person_edit_url = '{!! route('admin.person.getEdit', '') !!}/';
+            removeSearchUser();
+            if(result['status'] == 1){
+                var dk = result['content'].length;
+                var i = 0;
+                while(i < dk){
+                    addSearchUser($person_edit_url+result['content'][i]['id'], result['content'][i]['person_image'], result['content'][i]['person_name'], '');                     
+                    i++;
                 }
-
-            },
-            error : function (){
-                console.log('Lỗi xử lý đường truyền');
+                //show
+                showSearchResult();
             }
-        });
+
+        },
+        error : function (){
+            console.log('Lỗi xử lý đường truyền');
+        }
     });
 });
 </script>
