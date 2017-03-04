@@ -45,7 +45,7 @@ class FilmController extends Controller {
 		// 	];
 		// $redis = LRedis::connection();
   //       $redis->publish('film-comment-2', json_encode($payload));
-        return 'ok';
+        // return 'ok';
 		// Schema::table('film_details', function($table) {
 		//     //
 		//     $table->char('film_kind', 10)->default('truyen')->after('film_category');

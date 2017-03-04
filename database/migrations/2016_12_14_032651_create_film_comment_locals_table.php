@@ -19,8 +19,8 @@ class CreateFilmCommentLocalsTable extends Migration {
 			$table->foreign('film_id')->references('id')->on('film_details');
 			$table->integer('user_id')->unsigned();
 			$table->foreign('user_id')->references('id')->on('users');
-			$table->integer('film_comment_parent_id')->unsigned();
-			$table->integer('film_comment_children_id')->unsigned();
+			// $table->integer('film_comment_parent_id')->unsigned();
+			// $table->integer('film_comment_children_id')->unsigned();
 			$table->string('film_comment_content');
 			$table->timestamps();
 		});

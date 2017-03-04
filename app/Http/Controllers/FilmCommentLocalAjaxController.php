@@ -41,9 +41,10 @@ class FilmCommentLocalAjaxController extends Controller {
 				$comment_data['content'] = $film_comment->film_comment_content;
 				$comment_data['time'] = $film_comment->created_at;
 				$comment_data['total'] = $total_commtent;
+				$channel_name = 'film-comment-'.$film_id;
 				$payload = 
 				[	'data' => 
-						['_channel' => 'film-comment-2', 'comment' => $comment_data
+						['_channel' => $channel_name, 'comment' => $comment_data
 						],
 					'event' => 'messages.new'
 				];
@@ -53,11 +54,11 @@ class FilmCommentLocalAjaxController extends Controller {
 				$redis = LRedis::connection();
 		        $redis->publish($channel_name, json_encode($payload));
 				$result['status'] = 1;
-				$result['content'] = 'comment-add-success';
+				$result['content'] = 'Thành công thêm comment';
 				return response()->json($result);
 			}
 		}
-		$result['content'] = 'comment-add-not-success';
+		$result['content'] = 'Lỗi xử lý ....';
 		return response()->json($result);
 	}
 	public function postLoad($film_id){

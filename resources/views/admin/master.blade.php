@@ -30,8 +30,8 @@
     <!-- style chung -->
     <link rel="stylesheet" type="text/css" href="{!! asset('public/phimhay/css/style-chung.css') !!}">
     <!-- jQuery -->
-    {{-- <script src='{!! asset('public/jquery/jquery-1.12.4.min.js') !!}'></script> --}}
-    <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script>
+    <script src='{!! asset('public/jquery/jquery-1.12.4.min.js') !!}'></script>
+    {{-- <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script> --}}
     <!-- <script src='//cdn.tinymce.com/4/tinymce.min.js'></script> -->
     <script src='{!! asset('public/tinymce/tinymce.min.js') !!}'></script>
     <script>
@@ -123,6 +123,15 @@
                                 </li>
                                 <li>
                                     <a href="{!! route('admin.film.getSearch') !!}">Search Film</a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                        <li>
+                            <a href="#"><i class="glyphicon glyphicon-comment"></i> Film Comment<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="{!! route('admin.comment.index') !!}">List Comment</a>
                                 </li>
                             </ul>
                             <!-- /.nav-second-level -->

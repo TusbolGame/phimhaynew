@@ -11,4 +11,7 @@ class FilmCommentLocal extends Model {
 	public function user(){
 		return $this->belongsTo('App\User', 'user_id', 'id');
 	}
+	public function filmList(){
+		return $this->belongsTo('App\FilmList', 'film_id', 'id');
+	}
 }

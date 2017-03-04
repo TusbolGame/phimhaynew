@@ -197,6 +197,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function(
         Route::post('delete-array/{id}',['as'=>'admin.report-error.postDeleteArray', 'uses'=>'FilmReportErrorController@postDeleteArray']);
         Route::post('read-array/{id}',['as'=>'admin.report-error.postReadArray', 'uses'=>'FilmReportErrorController@postReadArray']);
     });
+    //comment
+    Route::resource('comment', 'FilmCommentLocalController', ['only' => ['index', 'destroy']]);
 });
 // phim
 Route::group(['prefix' => 'film'], function() {
@@ -223,6 +225,14 @@ Route::group(['prefix' => 'film'], function() {
         });
 
     });
+    
+});
+//video stream
+Route::group(['prefix' => 'video-stream'], function() {
+    //player
+    Route::get('player', 'VideoStreamController@getPlayer');
+
+    Route::get('streamming/{filename}', ['as' => 'videoStream.getVideoStream', 'uses' => 'VideoStreamController@getVideoStream']);
 });
 //xem phim
 // Route::get('watch/{film_dir}/{film_id}', ['as' => 'film.getFilmWatch', 'uses' => 'FilmController@getFilmWatch']);
