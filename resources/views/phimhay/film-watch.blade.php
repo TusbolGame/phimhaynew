@@ -38,7 +38,7 @@
 			</a></h3>
 		</div>
 		<div class="film-watch-video background-video">
-			{!! $film_process->getFilmVideojs($film_episode_watch, $film_detail->film_poster_video) !!}
+			{!! $film_player->getFilmVideojs($film_episode_watch, $film_detail->film_poster_video, $film_track) !!}
 		</div>
 		<div class="film-watch-option">
 			<ul>

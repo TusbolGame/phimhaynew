@@ -47,6 +47,7 @@
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 <script>
+$(document).ready(function() {
   //report error
   $('.show-modal-report-error').click(function(){
     //
@@ -99,5 +100,5 @@
       }
     });
   });
- 
+});
 </script>

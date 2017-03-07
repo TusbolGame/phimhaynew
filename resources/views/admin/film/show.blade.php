@@ -31,6 +31,9 @@
         <a href="{!! route('admin.film.getEdit', $film_list->id) !!}" class="btn btn-success">Chỉnh sửa thông tin phim và trailer</a>
         <a href="{!! route('film.getFilm', [$film_list->film_dir_name, $film_list->id]) !!}" class="btn btn-info">Xem phim</a>
         <a href="{!! route('admin.film.getCheckLink', $film_list->id) !!}" class="btn btn-primary">Check Link</a>
+        <br><br>
+        <a href="{!! route('admin.film.episode.getList', [$film_list->id]) !!}" class="btn btn-info">Danh sách Source <span class="badge">{!! $total_film_episode !!}</span></a>
+        <a href="{!! route('admin.film.episode.getAdd', [$film_list->id]) !!}" class="btn btn-success">Thêm Source</a>
         <h4>Thông tin phim</h4>
         <table class="table table-striped table-bordered fix-word-break">
             <tbody>
@@ -225,67 +228,9 @@
                     @endif
                     
                 </tr>
-                <tr>
-                    <th>Source Video</th>
-                    <!-- co source trailer -->
-                    @if(count($film_episodes) >= 1)
-                    <td class="bg-success">
-                        Có: <span class="bg-primary"></span> Source
-                    </td>
-                    @else
-                    <!-- ko co -->
-                    <td class="bg-danger">Chưa có source </td>
-                    @endif
-                    <td><button type="button" class="btn btn-success" data-toggle="modal" data-target=".modal-add-film-episode">Thêm Episode</button></td>
-                </tr>
             </tbody>
         </table>
-        <div class="div-overflow">         
-            <table class="table table-bordered table-striped">
-                <caption class="text-danger"><strong>Danh sách source video</strong></caption>
-                <thead>
-                    <tr>
-                        <th>Sửa</th>
-                        <th>Xóa</th>
-                        <th>ID</th>
-                        <th>Link Number</th>
-                        <th>Language</th>
-                        <th>Episode</th>
-                        <th>Source Remote</th>
-                        <th>Source Name</th>
-                        <th>Source Full</th>
-                        <th>Source 360p</th>
-                        <th>Source 480p0p</th>
-                        <th>Source 720p</th>
-                        <th>Source 1080p</th>
-                        <th>Source 216p</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($film_episodes as $film_episode)
-                    <tr>
-                        <td><a href="{!! route('admin.film.getEditFilmEpisode', [$film_id, $film_episode->id]) !!}">Sửa ID {!! $film_episode->id !!}</a></td>
-                        <td><a onclick="return checkDelete('Bạn có muốn xóa Episode_id là {!! $film_episode->id !!} không?');" href="{!! route('admin.film.getDeleteFilmEpisode', [$film_id, $film_episode->id]) !!}"> Xóa ID {!! $film_episode->id !!}</a></td>
-                        <td>{!! $film_episode->id !!}</td>
-                        <td>{!! $film_episode->film_link_number !!}</td>
-                        <td>{!! $film_episode->film_episode_language !!}</td>
-                        <td>{!! $film_episode->film_episode !!}</td>
-                        <td>{!! $film_episode->film_src_remote !!}</td>
-                        <td>{!! $film_episode->film_src_name !!}</td>
-                        <td>{!! $film_episode->film_src_full !!}</td>
-                        <td>{!! $film_episode->film_src_360p !!}</td>
-                        <td>{!! $film_episode->film_src_480p !!}</td>
-                        <td>{!! $film_episode->film_src_720p !!}</td>
-                        <td>{!! $film_episode->film_src_1080p !!}</td>
-                        <td>{!! $film_episode->film_src_2160p !!}</td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
-            {!! $film_episodes->render() !!}
-        </div>
         @include('admin.film.modal-edit-film-trailer', [$film_trailer, $film_id])
-        @include('admin.film.modal-add-film-episode', [$film_id])
     </div>
     
 </div>

@@ -264,7 +264,7 @@
     <!-- /#wrapper -->
 
     <!-- jQuery -->
-    <script src="{{ url('public/admin/bower_components/jquery/dist/jquery.min.js') }}"></script>
+    {{-- <script src="{{ url('public/admin/bower_components/jquery/dist/jquery.min.js') }}"></script> --}}
 
     <!-- Bootstrap Core JavaScript -->
     <script src="{{ url('public/admin/bower_components/bootstrap/dist/js/bootstrap.min.js') }}"></script>

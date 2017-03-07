@@ -207,7 +207,7 @@ class UserController extends Controller {
 		//file
 		$image = $request->file('fileImageUser');
 		if (!empty($image)) {
-            $extension  = $image->getClientOriginalExtension();
+            $extension  = $image->getClientOriginalName();
             $file_name = 'icon-user-'.Auth::user()->id.'.'.$extension;
             $path = public_path('../resources/photos/'.$file_name);
             //check if la icon-user-default.jpg thi not delete

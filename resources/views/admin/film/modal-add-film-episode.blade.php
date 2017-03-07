@@ -6,7 +6,7 @@
         <h4 class="modal-title" id="gridSystemModalLabel">Thêm Source Phim Episode</h4>
       </div>
       <div class="modal-body">
-        <form action="{!! route('admin.film.postAddFilmEpisode', $film_id) !!}" method="post" accept-charset="utf-8">
+        <form action="{!! route('admin.film.episode.postAdd', $film_id) !!}" method="post" accept-charset="utf-8" enctype="multipart/form-data">
           <input type="hidden" name="_token" value="{!! csrf_token() !!}">
           <div class="form-group">           
             <label>Episode</label><br>
@@ -42,13 +42,28 @@
             </div>
           </div>
           <div class="form-group">
+            <label>Track (File Sub): </label>
+            <div class="form-group">
+              <label>Track Type: </label>
+              <select class="form-control" name="film_track_type">
+                <option value="">Chọn track type</option>
+                <option value="vtt" @if(old('film_track_type') == 'vtt') selected @endif>.VTT</option>
+                <option value="ass" @if(old('film_track_type') == 'ass') selected @endif>.ASS</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Track Source: </label>
+              <input type="file" name="film_track_src" value="{!! old('film_track_src') !!}">
+            </div>
+          </div>
+          <div class="form-group">
             <label>Nguồn Episode: </label>
             <div class="form-group">
-                <select class="form-control" name="film_src_name">
-                    <option value="youtube" @if(old('film_src_name') == 'youtube') selected @endif>Youtube</option>
-                    <option value="google photos" @if(old('film_src_name') == 'google photos') selected @endif @if(old('film_src_name') == '') selected @endif>Google Photos</option>
-                    <option value="google drive" @if(old('film_src_name') == 'google drive') selected @endif>Google Drive</option>
-                </select>
+              <select class="form-control" name="film_src_name">
+                <option value="youtube" @if(old('film_src_name') == 'youtube') selected @endif>Youtube</option>
+                <option value="google photos" @if(old('film_src_name') == 'google photos') selected @endif @if(old('film_src_name') == '') selected @endif>Google Photos</option>
+                <option value="google drive" @if(old('film_src_name') == 'google drive') selected @endif>Google Drive</option>
+              </select>
             </div>
           </div>
           <div class="form-group">

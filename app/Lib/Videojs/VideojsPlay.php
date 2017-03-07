@@ -14,70 +14,42 @@ class VideojsPlay
 	protected $src1080 = '';
 	protected $src2160 = '';
 	protected $src_youtube = '';
-	protected $src_track = ''; // file .vtt
-	protected $track_language = 'vi'; //default vi
+	protected $src_track_vtt = ''; // file .vtt
+	protected $track_vtt_language = 'vi'; //default vi
+	protected $src_track_ass = ''; // file .ass .ssa
 	protected $support_not = '<p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that
-				<a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
-    		</p>';
+				<a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>';
     protected $qc_src = '';
     protected $qc_link_chuyen = '';
     protected $src_poster = '';
     //dir_index
     protected $dir_index = ''; //bình thường require ở index
-	// src lib
-	protected $lib_videojs = '/videojs/video.js';
-	protected $lib_videojs_swf = '/videojs/video-js.swf'; // hỗ trợ file flash
-	protected $lib_videojs_reresolution_switcher = '/videojs/videojs-resolution-switcher.js';
-	protected $lib_youtube = '/videojs/youtube.js';
-	//lib qc
-	protected $lib_videojs_ads = '/videojs/videojs.ads.js';
-	protected $lib_videojs_preroll = '/videojs/videojs-preroll.js';
-	protected function setSrcLibIndex(){
-		//set src lib
-		$this->lib_videojs = $this->dir_index.$this->lib_videojs;
-		$this->lib_videojs_swf = $this->dir_index.$this->lib_videojs_swf;
-		$this->lib_videojs_reresolution_switcher = $this->dir_index.$this->lib_videojs_reresolution_switcher;
-		$this->lib_youtube = $this->dir_index.$this->lib_youtube;
-		$this->lib_videojs_ads = $this->dir_index.$this->lib_videojs_ads;
-		$this->lib_videojs_preroll = $this->dir_index.$this->lib_videojs_preroll;
-	}
-	public function setDirIndex($dir){
+
+	public function setDirIndex($dir = ''){
 		$this->dir_index = $dir;
-		$this->setSrcLibIndex();
-		//add lib videojs
 		?>
-		<link href="<?php echo $dir; ?>/videojs/video-js.css" rel="stylesheet">
-  		<link href="<?php echo $dir; ?>/videojs/videojs-resolution-switcher.css" rel="stylesheet">
-  		<link href="<?php echo $dir; ?>/videojs/videojs-preroll.css" rel="stylesheet" type="text/css">
-		<script src="<?php echo $this->lib_videojs; ?>"></script>
-		<script type="javascript/text">
-		    videojs.options.flash.swf = "<?php echo $this->lib_videojs_swf; ?>";
+		<!-- style videojs -->
+		<link rel="stylesheet" type="text/css" href="<?php echo $this->dir_index; ?>videojs/video-js.css">
+		<!-- style resolution switcher -->
+		<link rel="stylesheet" type="text/css" href="<?php echo $this->dir_index; ?>videojs/videojs-resolution-switcher.css">
+		<!-- videojs js -->
+		<script src="<?php echo $this->dir_index; ?>videojs/video.js"></script>
+		<!-- videojs flash -->
+		<script>
+		    videojs.options.flash.swf = "<?php echo $this->dir_index; ?>videojs/video-js.swf";
 		</script>
-		<script src="<?php echo $this->lib_videojs_reresolution_switcher; ?>"></script>
+		<!-- videojs resolution switcher js -->
+		<script src="<?php echo $this->dir_index; ?>videojs/videojs-resolution-switcher.js"></script>
 		<?php
 	}
-	protected function addTrack()
-	{
-		if($this->getSrcTrack()!=''){
-		?>
-			<track kind="captions" src="<?php echo $this->getSrcTrack(); ?>" 
-			<?php if($this->getTrackLanguage() == 'en'){ ?>
-					srclang="en" label="English" 
-					<?php } // end if($this->getTrackLanguage() == 'en')
-					else{ // nguoc lai la vietnamese, default
-						?>
-						srclang="vi" label="Vietnamese"
-						<?php
-					}
-					 ?>
-			default>
-		<?php
-		} // end if($this->getSrcTrack()!='')
+	public function getDirIndex(){
+		return $this->dir_index;
 	}
-	/* video flash ko the add track, chu y */
+	/* ads video error, track ok*/
 	public function videoFlash(){
+		$this->addLibTrackAss();
 		?>
-		<video id="<?php echo $this->getIdVideo(); ?>" class="video-js vjs-default-skin vjs-big-play-centered" data-setup='{"fluid": true}'
+		<video id="<?php echo $this->getIdVideo(); ?>" class="video-js vjs-default-skin vjs-big-play-centered"
 			<?php 
 			//set poster
 			$this->getPosterVideo();
@@ -94,12 +66,17 @@ class VideojsPlay
 				preload: 'auto', // bắt buộc khi dùng flash
 				width: 640,
 				height: 264,
+				"fluid": true,
 				techOrder: ['flash'],
 				plugins: {
 					videoJsResolutionSwitcher: {
 						default: 'low',
 						dynamicLabel: true
 					}
+					// track ass
+			        <?php 
+			        	$this->addTrackASS();
+			        ?>
 				}
 				}, function(){
 					var player = this;
@@ -117,11 +94,14 @@ class VideojsPlay
 		// disable event click mouse right
 		$this->setEventClickDisableMouseRightVideo();
 	}
+	//
 	public function videoYoutubeScript()
 	{
+		//
+		$this->addLibTrackAss();		
 		?>
-		<script src="<?php echo $this->lib_youtube; ?>"></script>
-		<video id="<?php echo $this->getIdVideo(); ?>" class="video-js vjs-default-skin vjs-big-play-centered" data-setup='{"fluid": true}'
+		<script src="<?php echo $this->dir_index; ?>videojs/youtube.js"></script>
+		<video id="<?php echo $this->getIdVideo(); ?>" class="video-js vjs-default-skin vjs-big-play-centered"
 			<?php 
 			//set poster
 			$this->getPosterVideo();
@@ -131,7 +111,7 @@ class VideojsPlay
 		// add not support
 	    echo $this->support_not;
 		// add track, neu co, neu ko thi bo qua
-		$this->addTrack();
+		$this->addTrackVTT();
 		 ?>
 		</video>
 		<script> // error script
@@ -139,13 +119,18 @@ class VideojsPlay
 		        controls: true,
 		        width: 640,
 		        height: 264,
+		        "fluid": true,
 		        techOrder:  ["youtube"],
-		        sources: [{ "type": "video/youtube", "src": "<?php echo $this->src_youtube; ?>"}],
+		        sources: [{ "type": "video/youtube", "src": "<?php echo $this->getSrcYoutube(); ?>"}],
 				plugins: {
 					videoJsResolutionSwitcher: {
 						default: 'low',
 						dynamicLabel: true
 					}
+					// track ass
+			        <?php 
+			        	$this->addTrackASS();
+			        ?>
 				}
 				}, function(){
 					var player = this;
@@ -158,10 +143,11 @@ class VideojsPlay
 		// disable event click mouse right
 		$this->setEventClickDisableMouseRightVideo();
 	}
+	//error ads video, tag video not support ass
 	public function videoYoutubeTagVideo()
 	{
 		?>
-		<script src="<?php echo $this->lib_youtube; ?>"></script>
+		<script src="<?php echo $this->dir_index; ?>videojs/youtube.js"></script>
 		<video
 		    id="<?php echo $this->getIdVideo(); ?>"
 		    class="video-js vjs-default-skin"
@@ -177,7 +163,7 @@ class VideojsPlay
 		// add not support
 	    echo $this->support_not;
 		// add track, neu co, neu ko thi bo qua
-		$this->addTrack();
+		$this->addTrackVTT();
 		 ?>
 		</video>
 		<script>
@@ -185,28 +171,41 @@ class VideojsPlay
 		</script>
 		<?php
 		// disable event click mouse right
-		//$this->setEventClickDisableMouseRightVideo();
+		$this->setEventClickDisableMouseRightVideo();
 	}
+	//tag video is not support track ass
 	public function videoHtml5TagVideo()
 	{
+		// $this->addLibTrackAss();
+		//add lib, if exist --> add, else no
+		$this->addStyleQuangCaoVideo();
+		//
 		?>
-		<video id="<?php echo $this->getIdVideo(); ?>" class="video-js vjs-default-skin vjs-big-play-centered" width="640" height="264" controls data-setup='{"fluid": true}'
+		<video id="<?php echo $this->getIdVideo(); ?>" class="video-js vjs-default-skin vjs-big-play-centered" width="640" height="264" controls
 		<?php 
 			//set poster
 			$this->getPosterVideo();
 		?>
-		data-setup='{}'>
-			<?php 
+		data-setup='{"fluid": true}'>
+		<?php 
 			// hiển thị source
 			$this->addAllSrcTagVideo(); 
     		// add not support
     		echo $this->support_not;
 			// add track, neu co, neu ko thi bo qua
-			$this->addTrack();
-		 ?>
+			$this->addTrackVTT();
+		?>
 		</video>
-		<script>
+		<script>//add lib ass
 	    	videojs('<?php echo $this->getIdVideo(); ?>').videoJsResolutionSwitcher();
+	    	// videojs('<?php echo $this->getIdVideo(); ?>', {
+	    	// 	plugins : {
+	    	// 		ass: {
+	    	// 			src:{"https://sunnyli.github.io/videojs-ass/subs/OuterScienceSubs.ass"}, 
+	    	// 			delay: -0.1
+	    	// 		}
+	    	// 	}
+	    	// });
 		</script>
 		<?php
 		// add quang cao
@@ -214,10 +213,15 @@ class VideojsPlay
 		// disable event click mouse right
 		$this->setEventClickDisableMouseRightVideo();
 	}
+	//good -> all
 	public function videoHtml5Script()
 	{
+		//add lib, if exist --> add, else no
+		$this->addStyleQuangCaoVideo();
+		//
+		$this->addLibTrackAss();
 		?>
-		<video id="<?php echo $this->getIdVideo(); ?>" class="video-js vjs-default-skin vjs-big-play-centered" data-setup='{"fluid": true}'
+		<video id="<?php echo $this->getIdVideo(); ?>" class="video-js vjs-default-skin vjs-big-play-centered"
 			<?php 
 			//set poster
 			$this->getPosterVideo();
@@ -227,7 +231,7 @@ class VideojsPlay
     		// add not support
     		echo $this->support_not;
 			// add track, neu co, neu ko thi bo qua
-			$this->addTrack();
+			$this->addTrackVTT();
 		 	?>
 		</video>
 		<script>
@@ -236,22 +240,27 @@ class VideojsPlay
 					preload: 'auto',
 					width: 640,
 					height: 264,
+					"fluid": true,
 					plugins: {
-					videoJsResolutionSwitcher: {
-		        	default: 'low',
-		        	dynamicLabel: true
-		        }
-		      }
-		    }, function(){
-		      var player = this;
-		      window.player = player;
-		      player.updateSrc([
-		        <?php 
-		        // source
-		        $this->addAllSrcScript();
-		        ?>
-		      ]);
-		    });
+						videoJsResolutionSwitcher: {
+				        	default: 'low',
+				        	dynamicLabel: true
+			        	}
+			        	// track ass
+			        	<?php 
+			        		$this->addTrackASS();
+			        	 ?>
+		      		}
+			    }, function(){
+			      	var player = this;
+			      	window.player = player;
+			      	player.updateSrc([
+				        <?php 
+				        // source
+				        $this->addAllSrcScript();
+				        ?>
+			      	]);
+			    });
 		  </script>
 		<?php
 		//add quang cao
@@ -298,21 +307,64 @@ class VideojsPlay
 		}// end if
 	}
 	// mặc định src là vi
-	public function setSrcTrack($srctrack)
+	public function setSrcTrackVTT($src_track_vtt, $lang = 'vi')
 	{
-		$this->src_track = $srctrack;
+		$this->src_track_vtt = $src_track_vtt;
+		$this->track_vtt_language = $lang;
 	}
-	protected function getSrcTrack()
+	protected function addTrackVTT()
 	{
-		return $this->src_track;
+		if(!empty($this->getSrcTrackVTT())){
+		?>
+			<track kind="captions" src="<?php echo $this->getSrcTrackVTT(); ?>" 
+			<?php if($this->getTrackVTTLanguage() == 'en'){ ?>
+					srclang="en" label="English" 
+					<?php } // end if($this->getTrackVTTLanguage() == 'en')
+					else{ // nguoc lai la vietnamese, default
+						?>
+						srclang="vi" label="Vietnamese"
+						<?php
+					}
+					 ?>
+			default>
+		<?php
+		} // end if($this->getSrcTrackVTT()!='')
 	}
-	public function setTrackLanguage($lang)
-	{
-		$this->track_language = $lang;
+	protected function getSrcTrackVTT(){
+		return $this->src_track_vtt;
 	}
-	protected function getTrackLanguage()
+	protected function getTrackVTTLanguage()
 	{
-		return $this->track_language;
+		return $this->track_vtt_language;
+	}
+	public function setSrcTrackASS($src_track_ass)
+	{
+		$this->src_track_ass = $src_track_ass;
+	}
+	protected function getSrcTrackASS(){
+		return $this->src_track_ass;
+	}
+	protected function addLibTrackAss(){
+		if($this->getSrcTrackASS() != ''){
+			?>
+			<link rel="stylesheet" type="text/css" href="<?php echo $this->getDirIndex(); ?>libjass/libjass.css">
+			<link rel="stylesheet" type="text/css" href="<?php echo $this->getDirIndex(); ?>videojs-ass-master/src/videojs.ass.css">
+			<script src="<?php echo $this->getDirIndex(); ?>libjass/libjass.js"></script>
+			<script src="<?php echo $this->getDirIndex(); ?>videojs-ass-master/src/videojs.ass.js"></script>
+			<?php
+		}
+	}
+	protected function addTrackASS()
+	{
+		if(!empty($this->getSrcTrackASS())){
+			//neu ton tai --> add
+			?>
+			,ass: {
+            	'src': ["<?php echo $this->getSrcTrackASS(); ?>"],
+            	'delay': -0.1,
+          	}
+			<?php
+		}
 	}
 	protected function setEventClickDisableMouseRightVideo()
 	{
@@ -344,26 +396,34 @@ class VideojsPlay
 		$this->qc_src = $src;
 		$this->qc_link_chuyen = $link_chuyen;
 	}
+	protected function addStyleQuangCaoVideo()
+	{
+		if($this->qc_src != ''){
+			?>
+			<link rel="stylesheet" type="text/css" href="<?php echo $this->getDirIndex(); ?>videojs/videojs.ads.css">
+			<link rel="stylesheet" type="text/css" href="<?php echo $this->getDirIndex(); ?>videojs/videojs-preroll.css">
+			<?php
+		}
+	}
 	protected function addQuangCaoVideo()
 	{
 		//neu ton tai add qc
-		if($this->qc_src!=''){
+		if($this->qc_src != ''){
 			?>
 			<!-- lib quang cao -->
-			<link href="../../videojs/videojs.ads.css" rel="stylesheet">
-			<script src="<?php echo $this->lib_videojs_ads; ?>"></script>
-			<script src="<?php echo $this->lib_videojs_preroll; ?>"></script>
+			<script src="<?php echo $this->dir_index; ?>videojs/videojs.ads.js"></script>
+			<script src="<?php echo $this->dir_index; ?>videojs/videojs-preroll.js"></script>
 
-			    <script>
-			    	videojs('<?php echo $this->getIdVideo(); ?>').preroll({
-				    	// link video quảng cáo
-					    src:{src:"<?php echo $this->qc_src; ?>",type:"video/mp4"},
-					    // trang sẽ chuyển đến khi click
-					    href:"<?php echo $this->qc_link_chuyen; ?>",
-					    // tắt chế độ thông báo
-					    adsOptions: {debug:true}
-			    		});
-			    </script>
+		    <script>
+		    	videojs('<?php echo $this->getIdVideo(); ?>').preroll({
+			    	// link video quảng cáo
+				    src:{src:"<?php echo $this->qc_src; ?>",type:"video/mp4"},
+				    // trang sẽ chuyển đến khi click
+				    href:"<?php echo $this->qc_link_chuyen; ?>",
+				    // tắt chế độ thông báo
+				    adsOptions: {debug:true}
+		    		});
+		    </script>
 			<?php
 		}
 	}
@@ -427,4 +487,28 @@ class VideojsPlay
 		return $this->src2160;
 	}
 }
+//use
+// require 'VideojsPlay.php';
+// $video = new VideojsPlay();
+// $video->setDirIndex(''); //set dir lib
+// //add poster
+// $video->setPosterVideo('http://taihinhanhdep.xyz/wp-content/uploads/2016/03/anh-dep-tinh-yeu-lang-man-hoat-hinh.jpg');
+// //set source
+// $video->setSrc144('oceans.mp4');
+// //... 360, 480...
+// or video source youtube
+// $video->setSrcYoutube('https://www.youtube.com/watch?v=AZ4Nihe6aKo');
+// $video->videoYoutubeScript();
+// //add track vtt
+// $video->setSrcTrackVTT('track.vtt', 'en');
+// //or add track ass
+// $video->setSrcTrackASS('The.Pursuit.Of.Happyness.2006.720p.BrRip.x264.YIFY.ass');
+// //set ads video
+// $video->setQuangCaoVideo('https://www.localhost/videojs/oceans.mp4', 'google.com');
+// //
+// $video->videoHtml5Script();// script --> good all
+
+
+
+
  ?>

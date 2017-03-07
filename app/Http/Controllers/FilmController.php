@@ -6,14 +6,15 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 //
-use App\Lib\Videojs\VideojsPlay;
 use App\Lib\GetLinkVideo\GetLinkVideo;
+use App\Lib\Videojs\VideojsPlay;
 
 use App\FilmRelate;
 use App\FilmDetail;
 use App\FilmList;
 use App\FilmTrailer;
 use App\FilmEpisode;
+use App\FilmEpisodeTrack;
 use App\PhimHayConfig;
 use App\FilmUserTick;
 use App\FilmUserWatch;
@@ -31,21 +32,16 @@ use App\Lib\FilmProcess\FilmProcess;
 use App\Lib\CaptchaImages\CaptchaSessionDownloadFilm;
 use App\Lib\SessionTimeouts\SessionDownloadFilm;
 use App\Lib\CheckLinks\HttpResponseCode;
+use App\Lib\FilmPlayers\FilmPlayer;
 use Input;
 use Auth;
-use Schema;
-use LRedis;
+use File;
 
 class FilmController extends Controller {
 
 	public function getTest(){
-		// $payload = ['data' => ['_channel' => 'film-comment-2s', 'comment' => 'content'
-		// ],
-		// 	'event' => 'messages.new'
-		// 	];
-		// $redis = LRedis::connection();
-  //       $redis->publish('film-comment-2', json_encode($payload));
-        // return 'ok';
+
+		// 
 		// Schema::table('film_details', function($table) {
 		//     //
 		//     $table->char('film_kind', 10)->default('truyen')->after('film_category');
@@ -215,7 +211,9 @@ class FilmController extends Controller {
 			}])->get();
 			//channel redis
 			$channel_name = 'film-comment-'.$film_id;
-			return view('phimhay.film-info', compact('film_list', 'film_detail', 'film_trailer', 'ticked', 'film_episode_id', 'film_relates', 'film_relate_adds', 'film_comments', 'directors', 'actors', 'film_detail_type', 'film_detail_country', 'film_comment_local_count', 'channel_name', 'film_comment_local_id_last'));
+			//film player
+			$film_player = new FilmPlayer();
+			return view('phimhay.film-info', compact('film_list', 'film_detail', 'film_trailer', 'ticked', 'film_episode_id', 'film_relates', 'film_relate_adds', 'film_comments', 'directors', 'actors', 'film_detail_type', 'film_detail_country', 'film_comment_local_count', 'channel_name', 'film_comment_local_id_last', 'film_player'));
 		}
 		//not found
 		return redirect()->route('404');	
@@ -256,10 +254,12 @@ class FilmController extends Controller {
 			//get episode
 			$film_episode_list = null;
 			$film_episode_watch = null;
+			$film_track = null;
 			if($film_episode_id != 0){
 				$film_episode_watch = FilmEpisode::find($film_episode_id);
 				$film_episode_list = FilmEpisode::where('film_id', $film_id)->select('id', 'film_link_number', 'film_episode_language', 'film_episode')->get();
 				// dump($film_episode_list);
+				$film_track = FilmEpisodeTrack::where('film_episode_id', $film_episode_id)->first();
 			}
 			//
 			$film_detail = FilmDetail::find($film_id);
@@ -299,7 +299,9 @@ class FilmController extends Controller {
 			$film_comments = FilmCommentLocal::where('film_id', $film_id)->orderBy('id', 'DESC')->take(10)->with('user')->get();
 			//channel redis
 			$channel_name = 'film-comment-'.$film_id;
-			return view('phimhay.film-watch', compact('film_list', 'film_detail', 'ticked', 'film_episode_list', 'film_episode_watch', 'film_relates', 'film_relate_adds', 'film_comments', 'film_comment_local_count', 'channel_name', 'film_comment_local_id_last'));
+			//
+			$film_player = new FilmPlayer();
+			return view('phimhay.film-watch', compact('film_list', 'film_detail', 'ticked', 'film_episode_list', 'film_episode_watch', 'film_relates', 'film_relate_adds', 'film_comments', 'film_comment_local_count', 'channel_name', 'film_comment_local_id_last', 'film_player', 'film_track'));
 		}
 		//not found
 		return redirect()->route('404');
@@ -607,8 +609,6 @@ class FilmController extends Controller {
 		}
 		$film_list = FilmList::find($film_id);
 		$film_trailer = FilmTrailer::find($film_id);
-		$film_episodes = FilmEpisode::where('film_id', $film_id)->paginate(12);
-		$film_episodes->setPath(route('admin.film.getShow', $film_id));
 		$film_director = FilmDirector::where('film_id', $film_id)->with(['filmPerson' => 
 			function ($query){
 			$query->select('id', 'person_name', 'person_dir_name');
@@ -625,7 +625,8 @@ class FilmController extends Controller {
 			function ($query){
 			$query->select('id', 'type_name');
 		}])->get();
-		return view('admin.film.show', compact('film_detail', 'film_list', 'film_trailer', 'film_id', 'film_episodes', 'film_director', 'film_actor', 'film_detail_country', 'film_detail_type'));
+		$total_film_episode = FilmEpisode::where('film_id', $film_id)->count();
+		return view('admin.film.show', compact('film_detail', 'film_list', 'film_trailer', 'film_id', 'film_director', 'film_actor', 'film_detail_country', 'film_detail_type', 'total_film_episode'));
 	}
 	public function postEditFilmTrailer($film_id, Request $request){
 		$film_trailer = FilmTrailer::find($film_id);
@@ -664,6 +665,27 @@ class FilmController extends Controller {
 		return redirect()->route('admin.film.getShow', $film_id);
 	}
 	public function postAddFilmEpisode($film_id, Request $request){
+		//check track
+		if($request->film_track_type != ''){
+			$track_src = $request->file('film_track_src');
+			if(!empty($track_src)){
+				//get extension
+				$track_extension = $track_src->getClientOriginalExtension();
+				if($request->film_track_type == 'vtt'){
+					if($track_extension != 'vtt'){
+						return redirect()->back()->withErrors('Lỗi chọn sai file Track .vtt !!');
+					}
+				}
+				else if($request->film_track_type == 'ass'){
+					if($track_extension != 'ass'){
+						return redirect()->back()->withErrors('Lỗi chọn sai file Track .ass !!');
+					}
+				}else{
+					return redirect()->back()->withErrors('Lỗi chọn sai file Track, File Track phải là .vtt or .ass  !!');
+				}
+			}
+		}
+		//
 		$film_episode = new FilmEpisode();
 		$film_episode->film_id = $film_id;
 		$film_episode->film_link_number = $request->film_link_number;
@@ -704,6 +726,23 @@ class FilmController extends Controller {
 			$film_episode->film_src_2160p = ($get_link_video->getSrc2160()) ? $get_link_video->getSrc2160() : null;
 		}
 		$film_episode->save();
+		//track
+		//check
+		if($request->film_track_type != ''){
+			$track_src = $request->file('film_track_src');
+			if(!empty($track_src)){
+				//is file
+				$file_name  = $track_src->getClientOriginalName();
+	            $track_src->move('resources/phim/tracks/', $file_name);
+			}
+			$film_track = new FilmEpisodeTrack();
+			$film_track->film_episode_id = $film_episode->id;
+			$film_track->film_track_type = $request->film_track_type;
+			$film_track->film_track_src = $file_name;
+			$film_track->save();
+
+		}
+		
 		//change -- status
 		$film_process = new FilmProcess();
 		$film_list = FilmList::find($film_id);
@@ -795,6 +834,17 @@ class FilmController extends Controller {
 		$film_list = FilmList::find($film_id);
 		if(count($film_episode) == 0 && count($film_episode) == 0){
 			return redirect()->route('admin.film.getList')->withErrors('Lỗi! Xóa Episode không thành công, không có episode_id '.$id.' ở film_id '.$film_id.' để xóa');
+		}
+		$film_track = FilmEpisodeTrack::where('film_episode_id', $id)->first();
+		if(count($film_track) == 1){
+			//xoa file track
+			if($film_track->film_track_src != ''){
+				$src_track = asset('resources/phim').'/'.$film_track->film_track_src;
+				if(File::exists($src_track)){
+					File::delete($src_track);
+				}
+			}
+			$film_track->delete();
 		}
 		$film_episode->delete();
 		return redirect()->route('admin.film.getShow', $film_id)->with(['flash_message' => 'Thành công! Đã xóa episode_id '.$id.' ở film_id '.$film_id]);

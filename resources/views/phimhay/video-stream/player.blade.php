@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <title>{{$title}}</title>
 
-    <link href="//vjs.zencdn.net/4.12/video-js.css" rel="stylesheet">
+    {{-- <link href="//vjs.zencdn.net/4.12/video-js.css" rel="stylesheet"> --}}
+    <link href="{!! asset('public/videojs/video-js.min.css') !!}" rel="stylesheet">
 </head>
 <body>
 
@@ -14,12 +15,12 @@
         <source src="{{route('videoStream.getVideoStream', $video)}}" type="{{$mime}}" />
     </video>
 
-    <script src="//vjs.zencdn.net/4.12/video.js"></script>
-
+    {{-- <script src="//vjs.zencdn.net/4.12/video.js"></script> --}}
+    <script src="{!! asset('public/videojs/video-js.min.js') !!}"></script>
     <script>
-        videojs(document.getElementById('example_video_1'), {}, function() {
-            // This is functionally the same as the previous example.
-        });
+        // videojs(document.getElementById('example_video_1'), {}, function() {
+        //     // This is functionally the same as the previous example.
+        // });
     </script>
 </body>
 </html>

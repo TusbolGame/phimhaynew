@@ -14,5 +14,8 @@ class FilmEpisode extends Model {
 	public function filmList(){
 		return $this->belongsTo('App\FilmList', 'film_id', 'id');
 	}
+	public function filmEpisodeTrack(){
+		return $this->hasOne('App\FilmEpisodeTrack', 'film_episode_id', 'id');
+	}
 
 }
