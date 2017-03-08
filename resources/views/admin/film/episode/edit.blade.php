@@ -104,10 +104,139 @@
                         <option value="youtube" @if($film_episode->film_src_name == 'youtube') selected @endif>Youtube</option>
                         <option value="google photos" @if($film_episode->film_src_name == 'google photos') selected @endif>Google Photos</option>
                         <option value="google drive" @if($film_episode->film_src_name == 'google drive') selected @endif>Google Drive</option>
+                        <option value="local" @if($film_episode->film_src_name == 'local') selected @endif>Local</option>
                     </select>
                 </div>
             </div>
-            
+            <div class="select-source-local @if($film_episode->film_src_name == 'local') show @else hidden @endif">
+                <div class="form-group">
+                  <label>Source 360p (.mp4)</label>
+                  <input type="file" class="file-select-video-upload" accept="video/mp4">
+                  <textarea class="file_src_upload form-control" name="film_src_360p" placeholder="Tên Src 320p">{!! $film_episode->film_src_360p !!}</textarea>
+                  <div class="file-upload-info">
+                    <p>Tên file: <span class="file-upload-name"></span></p>
+                    <p>Dung lượng: <span class="file-upload-size"></span></p>
+                    <div class="file-upload-progress">
+                      <div class="col-sm-7">
+                        <div class="progress">
+                          <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">0%</div>
+                        </div>
+                      </div>
+                      <div class="file-upload-option col-sm-5">
+                        <button type="button" class="btn btn-success btn-upload-file-cancel">Cancel</button>
+                        <button type="button" class="btn btn-danger btn-upload-file-delete">Delete</button>
+                      </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="file-upload-result bg-success">
+                      <p class="file-upload-result-error text-danger"></p>
+                      <p class="file-upload-result-success text-success"></p>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label>Source 480p</label>
+                  <input type="file" class="file-select-video-upload" accept="video/mp4">
+                  <textarea class="file_src_upload form-control" name="film_src_480p" placeholder="Tên Src 480p">{!! $film_episode->film_src_480p !!}</textarea>
+                  <div class="file-upload-info">
+                    <p>Tên file: <span class="file-upload-name"></span></p>
+                    <p>Dung lượng: <span class="file-upload-size"></span></p>
+                    <div class="file-upload-progress">
+                      <div class="col-sm-7">
+                        <div class="progress">
+                          <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">0%</div>
+                        </div>
+                      </div>
+                      <div class="file-upload-option col-sm-5">
+                        <button type="button" class="btn btn-success btn-upload-file-cancel">Cancel</button>
+                        <button type="button" class="btn btn-danger btn-upload-file-delete">Delete</button>
+                      </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="file-upload-result bg-success">
+                      <p class="file-upload-result-error text-danger"></p>
+                      <p class="file-upload-result-success text-success"></p>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label>Source 720p</label>
+                  <input type="file" class="file-select-video-upload" accept="video/mp4">
+                  <textarea class="file_src_upload form-control" name="film_src_720p" placeholder="Tên Src 720p">{!! $film_episode->film_src_720p !!}</textarea>
+                  <div class="file-upload-info">
+                    <p>Tên file: <span class="file-upload-name"></span></p>
+                    <p>Dung lượng: <span class="file-upload-size"></span></p>
+                    <div class="file-upload-progress">
+                      <div class="col-sm-7">
+                        <div class="progress">
+                          <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">0%</div>
+                        </div>
+                      </div>
+                      <div class="file-upload-option col-sm-5">
+                        <button type="button" class="btn btn-success btn-upload-file-cancel">Cancel</button>
+                        <button type="button" class="btn btn-danger btn-upload-file-delete">Delete</button>
+                      </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="file-upload-result bg-success">
+                      <p class="file-upload-result-error text-danger"></p>
+                      <p class="file-upload-result-success text-success"></p>
+                    </div>
+                  </div>
+                  
+                </div>
+                <div class="clearfix"></div>
+                <div class="form-group">
+                  <label>Source 1080p</label>
+                  <input type="file" class="file-select-video-upload" accept="video/mp4">
+                  <textarea class="file_src_upload form-control" name="film_src_1080p" placeholder="Tên Src 1080p">{!! $film_episode->film_src_1080p !!}</textarea>
+                  <div class="file-upload-info">
+                    <p>Tên file: <span class="file-upload-name"></span></p>
+                    <p>Dung lượng: <span class="file-upload-size"></span></p>
+                    <div class="file-upload-progress">
+                      <div class="col-sm-7">
+                        <div class="progress">
+                          <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">0%</div>
+                        </div>
+                      </div>
+                      <div class="file-upload-option col-sm-5">
+                        <button type="button" class="btn btn-success btn-upload-file-cancel">Cancel</button>
+                        <button type="button" class="btn btn-danger btn-upload-file-delete">Delete</button>
+                      </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="file-upload-result bg-success">
+                      <p class="file-upload-result-error text-danger"></p>
+                      <p class="file-upload-result-success text-success"></p>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label>Source 2160p</label>
+                  <input type="file" class="file-select-video-upload" accept="video/mp4">
+                  <textarea class="file_src_upload form-control" name="film_src_2160p" placeholder="Tên Src 2160p">{!! $film_episode->film_src_2160p !!}</textarea>
+                  <div class="file-upload-info">
+                    <p>Tên file: <span class="file-upload-name"></span></p>
+                    <p>Dung lượng: <span class="file-upload-size"></span></p>
+                    <div class="file-upload-progress">
+                      <div class="col-sm-7">
+                        <div class="progress">
+                          <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">0%</div>
+                        </div>
+                      </div>
+                      <div class="file-upload-option col-sm-5">
+                        <button type="button" class="btn btn-success btn-upload-file-cancel">Cancel</button>
+                        <button type="button" class="btn btn-danger btn-upload-file-delete">Delete</button>
+                      </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="file-upload-result bg-success">
+                      <p class="file-upload-result-error text-danger"></p>
+                      <p class="file-upload-result-success text-success"></p>
+                    </div>
+                  </div>
+                </div>
+            </div>
             <div class="form-group">
                 <label>Source Episode</label>
                 <div>
@@ -126,17 +255,5 @@
 
     </div>
 </div>
-<script>
-    $('.show-select-track').click(function(){
-        $track = $('.track-edit');
-        if($(this).is(':checked')){
-            $track.removeClass('hidden');
-            $track.addClass('show');
-        }else{
-            $track.removeClass('show');
-            $track.addClass('hidden');
-        }
-        
-    });
-</script>
+@include('admin.film.episode.js-episode')
 @endsection

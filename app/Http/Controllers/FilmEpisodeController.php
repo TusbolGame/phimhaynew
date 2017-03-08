@@ -52,7 +52,7 @@ class FilmEpisodeController extends Controller {
 		$film_episode->film_src_remote = $request->film_src_remote;
 		//
 		//getlink, youtube ko can getlink
-		if($request->film_src_name != 'youtube'){
+		if($request->film_src_name == 'google drive' || $request->film_src_name == 'google photos'){
 			//reset src
 			$film_episode->film_src_360p = null;
 			$film_episode->film_src_480p = null;
@@ -79,7 +79,14 @@ class FilmEpisodeController extends Controller {
 			$film_episode->film_src_720p = ($get_link_video->getSrc720()) ? $get_link_video->getSrc720() : null;
 			$film_episode->film_src_1080p = ($get_link_video->getSrc1080()) ? $get_link_video->getSrc1080() : null;
 			$film_episode->film_src_2160p = ($get_link_video->getSrc2160()) ? $get_link_video->getSrc2160() : null;
+		}else if($request->film_src_name == 'local'){
+			$film_episode->film_src_360p = $request->film_src_360p;
+			$film_episode->film_src_480p = $request->film_src_480p;
+			$film_episode->film_src_720p = $request->film_src_720p;
+			$film_episode->film_src_1080p = $request->film_src_1080p;
+			$film_episode->film_src_2160p = $request->film_src_2160p;
 		}
+		//
 		$film_episode->save();
 		//track
 		//check
@@ -132,7 +139,7 @@ class FilmEpisodeController extends Controller {
 	//test lai
 	public function postEdit($film_id, $id, Request $request){
 		$film_track = FilmEpisodeTrack::where('film_episode_id', $id)->first();
-
+		//track
 		if(count($film_track) == 1){
 			if($request->film_track_delete != ''){
 				//is delete
@@ -197,6 +204,7 @@ class FilmEpisodeController extends Controller {
 				}
 			}
 		}
+		//end track
 		$film_episode = FilmEpisode::find($id);
 		$film_episode->film_src_name = $request->film_src_name;
 		$film_episode->film_src_full = $request->film_src_full;
@@ -207,7 +215,7 @@ class FilmEpisodeController extends Controller {
 		$film_episode->film_src_remote = $request->film_src_remote;
 		//
 		//getlink, youtube ko can getlink
-		if($request->film_src_name != 'youtube'){
+		if($request->film_src_name == 'google drive' || $request->film_src_name == 'google photos'){
 			//reset src
 			$film_episode->film_src_360p = null;
 			$film_episode->film_src_480p = null;
@@ -234,6 +242,12 @@ class FilmEpisodeController extends Controller {
 			$film_episode->film_src_720p = ($get_link_video->getSrc720()) ? $get_link_video->getSrc720() : null;
 			$film_episode->film_src_1080p = ($get_link_video->getSrc1080()) ? $get_link_video->getSrc1080() : null;
 			$film_episode->film_src_2160p = ($get_link_video->getSrc2160()) ? $get_link_video->getSrc2160() : null;
+		}else if($request->film_src_name == 'local'){
+			$film_episode->film_src_360p = $request->film_src_360p;
+			$film_episode->film_src_480p = $request->film_src_480p;
+			$film_episode->film_src_720p = $request->film_src_720p;
+			$film_episode->film_src_1080p = $request->film_src_1080p;
+			$film_episode->film_src_2160p = $request->film_src_2160p;
 		}
 		$film_episode->save();
 		//change -- status
@@ -259,19 +273,49 @@ class FilmEpisodeController extends Controller {
 	public function getDelete($film_id, $id){
 		$film_episode = FilmEpisode::find($id);
 		$film_list = FilmList::find($film_id);
-		if(count($film_episode) == 0 && count($film_episode) == 0){
+		if(count($film_episode) == 0 && count($film_list) == 0){
 			return redirect()->route('admin.film.episode.getList', $film_id)->with(['flash_message_errors' => 'Lỗi! Xóa Episode không thành công, không có episode_id '.$id.' ở film_id '.$film_id.' để xóa']);
 		}
 		$film_track = FilmEpisodeTrack::where('film_episode_id', $id)->first();
+		//delete track
 		if(count($film_track) == 1){
 			//xoa file track
 			if($film_track->film_track_src != ''){
-				$src_track = asset('resources/phim').'/'.$film_track->film_track_src;
+				$src_track = 'resources/phim/tracks/'.$film_track->film_track_src;
 				if(File::exists($src_track)){
 					File::delete($src_track);
 				}
 			}
 			$film_track->delete();
+		}
+		if($film_episode->film_src_name == 'local'){
+			//delete file local
+			$src_path =  'resources/phim/movies/';
+			if(!empty($film_episode->film_src_360p)){
+				if(File::exists($src_path.$film_episode->film_src_360p)){
+					File::delete($src_path.$film_episode->film_src_360p);
+				}
+			}
+			if(!empty($film_episode->film_src_480p)){
+				if(File::exists($src_path.$film_episode->film_src_480p)){
+					File::delete($src_path.$film_episode->film_src_480p);
+				}
+			}
+			if(!empty($film_episode->film_src_720p)){
+				if(File::exists($src_path.$film_episode->film_src_720p)){
+					File::delete($src_path.$film_episode->film_src_720p);
+				}
+			}
+			if(!empty($film_episode->film_src_1080p)){
+				if(File::exists($src_path.$film_episode->film_src_1080p)){
+					File::delete($src_path.$film_episode->film_src_1080p);
+				}
+			}
+			if(!empty($film_episode->film_src_2160p)){
+				if(File::exists($src_path.$film_episode->film_src_2160p)){
+					File::delete($src_path.$film_episode->film_src_2160p);
+				}
+			}
 		}
 		$film_episode->delete();
 		return redirect()->route('admin.film.episode.getList', $film_id)->with(['flash_message' => 'Thành công! Đã xóa episode_id '.$id.' ở Film_id '.$film_id]);

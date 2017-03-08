@@ -247,7 +247,7 @@ Route::group(['prefix' => 'film'], function() {
 //video stream
 Route::group(['prefix' => 'video-stream'], function() {
     //player
-    Route::get('player', 'VideoStreamController@getPlayer');
+    Route::get('player/{filename}', ['as' => 'videoStream.getVideoPlayer', 'uses' => 'VideoStreamController@getPlayer']);
 
     Route::get('streamming/{filename}', ['as' => 'videoStream.getVideoStream', 'uses' => 'VideoStreamController@getVideoStream']);
 });

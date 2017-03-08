@@ -33,6 +33,7 @@ use App\Lib\CaptchaImages\CaptchaSessionDownloadFilm;
 use App\Lib\SessionTimeouts\SessionDownloadFilm;
 use App\Lib\CheckLinks\HttpResponseCode;
 use App\Lib\FilmPlayers\FilmPlayer;
+use App\Lib\FilmCookies\CookieVideoStream;
 use Input;
 use Auth;
 use File;
@@ -257,6 +258,30 @@ class FilmController extends Controller {
 			$film_track = null;
 			if($film_episode_id != 0){
 				$film_episode_watch = FilmEpisode::find($film_episode_id);
+				if($film_episode_watch->film_src_name == 'local'){
+					//set cookie video stream
+					$cookie_video = null;
+					if(!empty($film_episode_watch->film_src_360p)){
+						$cookie_video = new CookieVideoStream($film_episode_watch->film_src_360p);
+						$cookie_video->createCookie();
+					}
+					if(!empty($film_episode_watch->film_src_480p)){
+						$cookie_video = new CookieVideoStream($film_episode_watch->film_src_480p);
+						$cookie_video->createCookie();
+					}
+					if(!empty($film_episode_watch->film_src_720p)){
+						$cookie_video = new CookieVideoStream($film_episode_watch->film_src_720p);
+						$cookie_video->createCookie();
+					}
+					if(!empty($film_episode_watch->film_src_1080p)){
+						$cookie_video = new CookieVideoStream($film_episode_watch->film_src_1080p);
+						$cookie_video->createCookie();
+					}
+					if(!empty($film_episode_watch->film_src_2160p)){
+						$cookie_video = new CookieVideoStream($film_episode_watch->film_src_2160p);
+						$cookie_video->createCookie();
+					}
+				}
 				$film_episode_list = FilmEpisode::where('film_id', $film_id)->select('id', 'film_link_number', 'film_episode_language', 'film_episode')->get();
 				// dump($film_episode_list);
 				$film_track = FilmEpisodeTrack::where('film_episode_id', $film_episode_id)->first();

@@ -45,7 +45,7 @@ class FilmPlayer
 				$video->videoHtml5Script();
 			}elseif($film_video->film_src_name == 'local'){
 				//
-				$path = route('videoStream.getVideoStream', '');
+				$path = route('videoStream.getVideoStream', '').'/';
 				if($film_video->film_src_360p != null){
 				$video->setSrc360($path.$film_video->film_src_360p);
 				}

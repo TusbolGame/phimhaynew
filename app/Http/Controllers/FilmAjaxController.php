@@ -52,7 +52,7 @@ class FilmAjaxController extends Controller {
 		{
 		    //6lan lien tiep tren 1bo - cookie 30p
 		    $film_id = (int)Request::get('film_id');
-		    // check... security.. chua lam
+		    // check... security..
 		    if(Request::cookie('film_tick_'.$film_id)){
 		    	// $result['content'] = Request::cookie('film_tick_'.$film_id);
 			    	// return response()->json($result);
