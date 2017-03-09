@@ -44,7 +44,7 @@
 			<ul>
 				<li>
 					@if ($film_list->film_category == 'bo')
-						<a href="" title=""><span class="glyphicon glyphicon-forward"></span>Tập kế tiếp</a>
+						<a href="" class="film-watch-option-next" title=""><span class="glyphicon glyphicon-forward"></span>Tập kế tiếp</a>
 					@else
 						<a href="javascript:void(0);" title="Không có tập kế tiếp"><span class="glyphicon glyphicon-forward"></span>Không có tập kế tiếp</a></a>
 					@endif
@@ -189,6 +189,35 @@
 	<!-- end film commnet -->
 	<script>
 		$(document).ready(function () {
+			//option next
+			function filmWatchOptionNext($category){
+				if($category == 'bo'){
+					//get episode
+					$episode_selected = $('.film-watch-source-selected');
+					$episode_next = $episode_selected.parent().next().children('a');
+					$episode_last = $episode_selected.parent().last().children('a');
+					//check last
+					if($episode_selected.text() == $episode_last.text()){
+						$tag_a = $('.film-watch-option-next');
+						$tag_a.attr({
+							href: 'javascript:void(0);',
+							title: 'Không có tập kế tiếp'
+						});
+					}
+					else if($episode_next){
+						$tag_a = $('.film-watch-option-next');
+						//get href
+						$temp_href = $episode_next.attr('href');
+						$temp_episode = $episode_next.text();
+						$tag_a.attr({
+							href: $temp_href,
+							title: 'Tập '+$temp_episode
+						});
+					}
+				}
+				//
+			}
+			filmWatchOptionNext('{!! $film_list->film_category !!}');
 			//fix active onclick
 			$('.select-comment-local').click(function() {
 				//neu exist active of fb, remove
