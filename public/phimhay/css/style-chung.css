@@ -379,6 +379,10 @@ div.vote a{
 
 
 /* footer */
+.footer{
+    background-color: #ebebeb;
+    padding: 10px;
+}
 .footer-logo img{
 	width: 100%;
 	height: 100%;

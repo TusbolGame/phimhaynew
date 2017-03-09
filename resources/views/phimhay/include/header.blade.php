@@ -10,7 +10,7 @@
 			<form action="{!! route('film.getSearch') !!}" class="form-search-film" method="GET" accept-charset="utf-8">
 				<input type="hidden" name="_token" value="{!! csrf_token() !!}">
 				<div class="input-group">
-				    <input type="text" id="search-key-value" class="form-control" name="name"placeholder="Tìm tên phim" value="@if(isset($name)) {!! $name !!} @endif">
+				    <input type="text" id="search-key-value" class="form-control" name="name"placeholder="Tìm tên phim" value="@if(isset($name)){!! $name !!}@endif">
 				    	<span class="input-group-btn">
 				        <button class="btn btn-default film-btn-search" type="submit">Tìm Kiếm</button>
 				     	</span>

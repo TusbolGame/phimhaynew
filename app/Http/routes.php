@@ -115,12 +115,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function(
         Route::get('check-link/{film_id}',['as'=>'admin.film.getCheckLink', 'uses'=>'FilmController@getCheckLink']);
         Route::post('trailer/edit/{film_id}',['as'=>'admin.film.postEditFilmTrailer', 'uses'=>'FilmController@postEditFilmTrailer']);
         //
-        // Route::post('episode/add/{film_id}',['as'=>'admin.film.postAddFilmEpisode', 'uses'=>'FilmController@postAddFilmEpisode']);
-        // //
-        // Route::get('episode/edit/{film_id}/{id}',['as'=>'admin.film.getEditFilmEpisode', 'uses'=>'FilmController@getEditFilmEpisode']);
-        // Route::post('episode/edit/{film_id}/{id}',['as'=>'admin.film.postEditFilmEpisode', 'uses'=>'FilmController@postEditFilmEpisode']);
-        // Route::get('episode/delete/{film_id}/{id}',['as'=>'admin.film.getDeleteFilmEpisode', 'uses'=>'FilmController@getDeleteFilmEpisode']);
-        //
         Route::get('search',['as'=>'admin.film.getSearch', 'uses'=>'FilmController@getSearchAdmin']);
         // //delete
         Route::get('delete/{id}',['as'=>'admin.film.getDelete', 'uses'=>'FilmController@getDelete']);
@@ -220,7 +214,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function(
 // phim
 Route::group(['prefix' => 'film'], function() {
     //list phim auto, or search
-    Route::get('/', ['as' => 'film.getSearch', 'uses' => 'FilmController@getSearch']);
+    Route::get('/', ['as' => 'film.getSearch', 'uses' => 'FilmSearchController@getSearch']);
     //film info
     Route::get('{film_dir}/{film_id}', ['as' => 'film.getFilm', 'uses' => 'FilmController@getFilmInfo']);
     //ajax processing film
