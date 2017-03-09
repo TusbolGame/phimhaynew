@@ -28,21 +28,7 @@
 	  								</button>
 							  		<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
 							  			@if($episode->film_src_name == 'local')
-										    @if(!empty($episode->film_src_360p))
-										    	<li><a href="{!! route('videoStream.getVideoStream', $episode->film_src_360p) !!}" download="true" target="_blank">360p</a></li>
-										    @endif
-										    @if(!empty($episode->film_src_480p))
-										    	<li><a href="{!! route('videoStream.getVideoStream', $episode->film_src_480p) !!}" download="true" target="_blank">480p</a></li>
-										    @endif
-										    @if(!empty($episode->film_src_720p))
-										    	<li><a href="{!! route('videoStream.getVideoStream', $episode->film_src_720p) !!}" download="true" target="_blank">720p</a></li>
-										    @endif
-										    @if(!empty($episode->film_src_1080p))
-										    	<li><a href="{!! route('videoStream.getVideoStream', $episode->film_src_1080p) !!}" download="true" target="_blank">1080p</a></li>
-										    @endif
-										    @if(!empty($episode->film_src_2160p))
-										    	<li><a href="{!! route('videoStream.getVideoStream', $episode->film_src_2160p) !!}" download="true" target="_blank">2160p</a></li>
-										    @endif
+										    <p>Không thể download, vui lòng xem và chọn download</p>
 									    @elseif($episode->film_src_name == 'google drive' || $episode->film_src_name == 'google photos')
 										    @if(!empty($episode->film_src_360p))
 										    	<li><a href="{!! $episode->film_src_360p !!}" download="true" target="_blank">360p</a></li>
@@ -85,21 +71,7 @@
   								</button>
 						  		<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
 						  				@if($episode->film_src_name == 'local')
-										    @if(!empty($episode->film_src_360p))
-										    	<li><a href="{!! route('videoStream.getVideoStream', $episode->film_src_360p) !!}" download="true" target="_blank">360p</a></li>
-										    @endif
-										    @if(!empty($episode->film_src_480p))
-										    	<li><a href="{!! route('videoStream.getVideoStream', $episode->film_src_480p) !!}" download="true" target="_blank">480p</a></li>
-										    @endif
-										    @if(!empty($episode->film_src_720p))
-										    	<li><a href="{!! route('videoStream.getVideoStream', $episode->film_src_720p) !!}" download="true" target="_blank">720p</a></li>
-										    @endif
-										    @if(!empty($episode->film_src_1080p))
-										    	<li><a href="{!! route('videoStream.getVideoStream', $episode->film_src_1080p) !!}" download="true" target="_blank">1080p</a></li>
-										    @endif
-										    @if(!empty($episode->film_src_2160p))
-										    	<li><a href="{!! route('videoStream.getVideoStream', $episode->film_src_2160p) !!}" download="true" target="_blank">2160p</a></li>
-										    @endif
+										    <p>Không thể download, vui lòng xem và chọn download</p>
 									    @elseif($episode->film_src_name == 'google drive' || $episode->film_src_name == 'google photos')
 										    @if(!empty($episode->film_src_360p))
 										    	<li><a href="{!! $episode->film_src_360p !!}" download="true" target="_blank">360p</a></li>
