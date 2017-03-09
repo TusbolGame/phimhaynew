@@ -17,8 +17,6 @@ class PhimHayConfigServiceProvider extends ServiceProvider {
 	 */
 	public function boot()
 	{
-		$phim_hay_config = PhimHayConfig::find(1);
-		view()->share('phim_hay_config', $phim_hay_config);
 		$film_process = new FilmProcess();
 		$film_hots = [];
 		$film_hots['hh'] = FilmList::whereHas('filmDetail', function($query){

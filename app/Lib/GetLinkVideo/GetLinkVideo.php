@@ -39,8 +39,8 @@ class GetLinkVideo
 	    }
 	    return $link;
 	}
-	//get link mp4 youtube
-	function getLinkVideoYoutube($link) {
+	//get link mp4 youtube, error
+	protected function getLinkVideoYoutube($link) {
 	    $id = getIdYoutube($link);
 	    $getlink = "https://www.youtube.com/watch?v=".$id;
 	    if ($get = $this->curl($getlink )) {
@@ -64,10 +64,10 @@ class GetLinkVideo
 	    }
 	}
 	/*
-	Xin lỗi vì mình chậm trễ, bạn print_r cái $data[1] ra là thấy đó:
-$title = $jsonData[‘args’][‘title’];
-$thumbnail = $jsonData[‘args’][‘thumbnail_url’];
-*/
+	print_r cái $data[1] ra là thấy đó:
+	$title = $jsonData[‘args’][‘title’];
+	$thumbnail = $jsonData[‘args’][‘thumbnail_url’];
+	*/
 	function getLinkVideoGooglePhotos($link){
 	    $get = $this->curl($link);
 	    $data = explode('url\u003d', $get);
@@ -104,8 +104,8 @@ $thumbnail = $jsonData[‘args’][‘thumbnail_url’];
 	Dùng hàm nó sẽ chuyển: https://drive.google.com/file/d/ID/view thì nó sẽ trả về https://googledrive.com/host/ID
 	//link nay se bi ngung suport den het ngay 31-8-2016
 	*/
-
-	function getLinkVideoGoogleDriveReturnLinkVideo($link)
+	//ko dung dc
+	protected function getLinkVideoGoogleDriveReturnLinkVideo($link)
 	{
 	    if(preg_match('/.*drive.google.com\/.*\/(.*?)\/.*/is', $link, $id)){
 	        return 'https://googledrive.com/host/'.$id[1];
@@ -120,6 +120,7 @@ $thumbnail = $jsonData[‘args’][‘thumbnail_url’];
 		var_dump($data);
 
 	}
+	//error
 	function getLinkVideoGoogleDrive($curl){ 
 	    $get = file_get_contents($curl); 
 	    $cat = explode(',["fmt_stream_map","', $get); 
@@ -195,7 +196,10 @@ $thumbnail = $jsonData[‘args’][‘thumbnail_url’];
 	}],
 	*/
 	}
-	//get remote server blogit
+	//get remote server blogit, 
+	//https://api.blogit.vn/getlink.php?lin
+	//https://videoapi.io/api/get/?link=
+	//error chua fix-->difference response return, ko co status...
 	 public function getLinkVideoByBlogIt($link_api, $link){
     	$this->setSrcVideoJsonNull();
     	//
@@ -216,7 +220,7 @@ $thumbnail = $jsonData[‘args’][‘thumbnail_url’];
 			return true;
 		}
 		return false;
-		// 		Lúc trả về kết quả cần chú ý
+		// Lúc trả về kết quả cần chú ý
 		// status:
 		// 1: get link thành công
 		// 0: get link lỗi

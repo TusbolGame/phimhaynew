@@ -1,9 +1,6 @@
 @extends('admin.master')
 @section('header')
 <div class="col-lg-12">
-    <h1 class="page-header">Film Episode
-        <small>List</small>
-    </h1>
     <h2 class="page-header">{!! $film_process->getFilmNameVnEn($film_list->film_name_vn, $film_list->film_name_en) !!}</h2>
 </div>
 @endsection

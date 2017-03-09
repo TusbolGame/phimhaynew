@@ -15,7 +15,6 @@ use App\FilmList;
 use App\FilmTrailer;
 use App\FilmEpisode;
 use App\FilmEpisodeTrack;
-use App\PhimHayConfig;
 use App\FilmUserTick;
 use App\FilmUserWatch;
 use App\FilmCommentLocal;
@@ -417,8 +416,7 @@ class FilmController extends Controller {
 			$film_trailer->film_src_2160p = null;
 			//gg drive
 			$get_link_video = new GetLinkVideo();
-			$phim_hay_config = PhimHayConfig::find(1);
-			if($phim_hay_config->get_link_local == 1){
+			if((int)env('GET_LINK_LOCAL') == 1){
 				if($request->film_src_name == 'google drive'){
 					$get_link_video->getLinkVideoGoogleDrive($request->film_src_full);
 					
@@ -427,7 +425,7 @@ class FilmController extends Controller {
 				}
 			}else{
 				//remote blogit
-				$get_link_video->getLinkVideoByBlogIt($phim_hay_config->get_link_remote_api, $request->film_src_full);
+				$get_link_video->getLinkVideoByBlogIt(env('GET_LINK_REMOTE_API'), $request->film_src_full);
 			}
 			$film_trailer->film_src_360p = ($get_link_video->getSrc360()) ? $get_link_video->getSrc360() : null;
 			$film_trailer->film_src_480p = ($get_link_video->getSrc480()) ? $get_link_video->getSrc480() : null;
@@ -581,8 +579,7 @@ class FilmController extends Controller {
 			$film_trailer->film_src_2160p = null;
 			//gg drive
 			$get_link_video = new GetLinkVideo();
-			$phim_hay_config = PhimHayConfig::find(1);
-			if($phim_hay_config->get_link_local == 1){
+			if((int)env('GET_LINK_LOCAL') == 1){
 				if($request->film_src_name == 'google drive'){
 					$get_link_video->getLinkVideoGoogleDrive($request->film_src_full);
 					
@@ -591,7 +588,7 @@ class FilmController extends Controller {
 				}
 			}else{
 				//remote blogit
-				$get_link_video->getLinkVideoByBlogIt($phim_hay_config->get_link_remote_api, $request->film_src_full);
+				$get_link_video->getLinkVideoByBlogIt(env('GET_LINK_REMOTE_API'), $request->film_src_full);
 			}
 			$film_trailer->film_src_360p = ($get_link_video->getSrc360()) ? $get_link_video->getSrc360() : null;
 			$film_trailer->film_src_480p = ($get_link_video->getSrc480()) ? $get_link_video->getSrc480() : null;
@@ -667,8 +664,7 @@ class FilmController extends Controller {
 			$film_trailer->film_src_2160p = null;
 			//gg drive
 			$get_link_video = new GetLinkVideo();
-			$phim_hay_config = PhimHayConfig::find(1);
-			if($phim_hay_config->get_link_local == 1){
+			if((int)env('GET_LINK_LOCAL') == 1){
 				if($request->film_src_name == 'google drive'){
 					$get_link_video->getLinkVideoGoogleDrive($request->film_src_full);
 					
@@ -677,7 +673,7 @@ class FilmController extends Controller {
 				}
 			}else{
 				//remote blogit
-				$get_link_video->getLinkVideoByBlogIt($phim_hay_config->get_link_remote_api, $request->film_src_full);
+				$get_link_video->getLinkVideoByBlogIt(env('GET_LINK_REMOTE_API'), $request->film_src_full);
 			}
 			$film_trailer->film_src_360p = ($get_link_video->getSrc360()) ? $get_link_video->getSrc360() : null;
 			$film_trailer->film_src_480p = ($get_link_video->getSrc480()) ? $get_link_video->getSrc480() : null;

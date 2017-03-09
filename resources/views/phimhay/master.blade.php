@@ -5,8 +5,8 @@
 	<meta http-equiv="X-UA-Compatible" username="IE=edge">
 	<title>@yield('title')</title>
 	<meta name="description" content="@yield('description')">
-	<meta property="fb:app_id" content="{!! $phim_hay_config->fb_app_id !!}" />
-	<meta property="fb:admins" content="{!! $phim_hay_config->fb_admins !!}"/>
+	<meta property="fb:app_id" content="{!! env('FB_APP_ID') !!}" />
+	<meta property="fb:admins" content="{!! env('FB_ADMINS') !!}"/>
 	<link rel="icon" type="image/png" href="{!! asset('public/favicon.ico') !!}">
 	<!-- extends css -->
 	@yield('css')
