@@ -65,23 +65,41 @@
 					    	<span class="caret"></span>
 					  	</a>
 					  	<ul class="dropdown-menu">
-					  	@if($film_episode_watch->film_src_name != 'youtube')
-					  		@if(!empty($film_episode_watch->film_src_360p))
-						    <li><a href="{!! $film_episode_watch->film_src_360p !!}" download="true" target="_blank">360p</a></li>
+					  		@if($film_episode_watch->film_src_name == 'local')
+							    @if(!empty($film_episode_watch->film_src_360p))
+							    <li><a href="{!! route('videoStream.getVideoStream', $film_episode_watch->film_src_360p) !!}" download="true" target="_blank">360p</a></li>
+							    @endif
+							    @if(!empty($film_episode_watch->film_src_480p))
+							    <li><a href="{!! route('videoStream.getVideoStream', $film_episode_watch->film_src_480p) !!}" download="true" target="_blank">480p</a></li>
+							    @endif
+							    @if(!empty($film_episode_watch->film_src_720p))
+							    <li><a href="{!! route('videoStream.getVideoStream', $film_episode_watch->film_src_720p) !!}" download="true" target="_blank">720p</a></li>
+							    @endif
+							    @if(!empty($film_episode_watch->film_src_1080p))
+							    <li><a href="{!! route('videoStream.getVideoStream', $film_episode_watch->film_src_1080p) !!}" download="true" target="_blank">1080p</a></li>
+							    @endif
+							    @if(!empty($film_episode_watch->film_src_2160p))
+							    <li><a href="{!! route('videoStream.getVideoStream', $film_episode_watch->film_src_2160p) !!}" download="true" target="_blank">2160p</a></li>
+							    @endif
+						    @elseif($film_episode_watch->film_src_name == 'google drive' || $film_episode_watch->film_src_name == 'google photos')
+							    @if(!empty($film_episode_watch->film_src_360p))
+							    <li><a href="{!! $film_episode_watch->film_src_360p !!}" download="true" target="_blank">360p</a></li>
+							    @endif
+							    @if(!empty($film_episode_watch->film_src_480p))
+							    <li><a href="{!! $film_episode_watch->film_src_480p !!}" download="true" target="_blank">480p</a></li>
+							    @endif
+							    @if(!empty($film_episode_watch->film_src_720p))
+							    <li><a href="{!! $film_episode_watch->film_src_720p !!}" download="true" target="_blank">720p</a></li>
+							    @endif
+							    @if(!empty($film_episode_watch->film_src_1080p))
+							    <li><a href="{!! $film_episode_watch->film_src_1080p !!}" download="true" target="_blank">1080p</a></li>
+							    @endif
+							    @if(!empty($film_episode_watch->film_src_2160p))
+							    <li><a href="{!! $film_episode_watch->film_src_2160p !!}" download="true" target="_blank">2160p</a></li>
+							    @endif
+						    @elseif($film_episode_watch->film_src_name == 'youtube')
+						    	<p>Không có source để download</p>
 						    @endif
-						    @if(!empty($film_episode_watch->film_src_480p))
-						    <li><a href="{!! $film_episode_watch->film_src_480p !!}" download="true" target="_blank">480p</a></li>
-						    @endif
-						    @if(!empty($film_episode_watch->film_src_720p))
-						    <li><a href="{!! $film_episode_watch->film_src_720p !!}" download="true" target="_blank">720p</a></li>
-						    @endif
-						    @if(!empty($film_episode_watch->film_src_1080p))
-						    <li><a href="{!! $film_episode_watch->film_src_1080p !!}" download="true" target="_blank">1080p</a></li>
-						    @endif
-						    @if(!empty($film_episode_watch->film_src_2160p))
-						    <li><a href="{!! $film_episode_watch->film_src_2160p !!}" download="true" target="_blank">2160p</a></li>
-						    @endif
-						@endif
 					  	</ul>
 					</div>
 				</li>

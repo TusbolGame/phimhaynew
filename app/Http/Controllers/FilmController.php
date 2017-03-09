@@ -716,7 +716,7 @@ class FilmController extends Controller {
 		//check
 		if($session_download_film->checkSessionUses()){
 			// ton tai
-			$film_episode = FilmEpisode::where('film_id', $film_id)->where('film_link_number', 1)->paginate(5);
+			$film_episode = FilmEpisode::where('film_id', $film_id)->where('film_link_number', 1)->paginate(20);
 			$film_episode->setPath(route('film.getFilmDownload', [$film_dir, $film_id]));
 			return view('phimhay.film-download', compact('film_episode', 'film_list'));
 			
