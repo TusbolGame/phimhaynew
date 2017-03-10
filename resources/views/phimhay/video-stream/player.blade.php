@@ -13,7 +13,7 @@
 <body>
 
     <video id="video" class="video-js vjs-default-skin vjs-big-play-centered"
-           controls preload="auto">
+           controls autoplay preload="auto">
         <source src="{!! route('videoStream.getVideoStream', $filename) !!}" type="video/mp4">
     </video>
 

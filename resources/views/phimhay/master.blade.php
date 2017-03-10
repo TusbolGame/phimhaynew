@@ -8,10 +8,7 @@
 	<meta property="fb:app_id" content="{!! env('FB_APP_ID') !!}" />
 	<meta property="fb:admins" content="{!! env('FB_ADMINS') !!}"/>
 	<link rel="icon" type="image/png" href="{!! asset('public/favicon.ico') !!}">
-	<!-- extends css -->
-	@yield('css')
-	<!-- end extends css -->
-	 <!-- Bootstrap -->
+	<!-- Bootstrap -->
     <link href="{!! asset('public/bootstrap/css/bootstrap.min.css') !!}" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -25,11 +22,15 @@
 	
 	<!-- style chung -->
 	<link rel="stylesheet" type="text/css" href="{!! asset('public/phimhay/css/style-chung.css') !!}">
+	<!-- extends css -->
+	@yield('css')
+	<!-- end extends css -->
 
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <!-- <script src="{!! asset('public/jquery/jquery-1.5.2.min.js') !!}"></script> -->
     <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script> -->
     <script src="{!! asset('public/jquery/jquery-1.12.4.min.js') !!}"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="{!! asset('public/bootstrap/js/bootstrap.min.js') !!}"></script>
     <!-- extends js -->
     @yield('js')
     <!-- end extends js -->
@@ -87,8 +88,7 @@
 	<!-- pace js -->
 	<script src="{!! asset('public/pace/pace-v1.0.2.min.js') !!}"></script>
 	
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="{!! asset('public/bootstrap/js/bootstrap.min.js') !!}"></script>
+    
     
 </body>
 </html>

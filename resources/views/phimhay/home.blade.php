@@ -1,31 +1,55 @@
 @extends('phimhay.master')
 @section('title', 'Phimhay | PhimHay Website Xem Phim Trực Tuyến')
 @section('description', 'PhimHay xem phim online')
-@section('css')
-	<!-- nivo -->
-	<link rel="stylesheet" type="text/css" href="{!! asset('public/nivo-slider-v3.2/nivo-style.css') !!}">
-	<link rel="stylesheet" type="text/css" href="{!! asset('public/nivo-slider-v3.2/themes/default/default.css') !!}">
-	<link rel="stylesheet" type="text/css" href="{!! asset('public/nivo-slider-v3.2/nivo-slider.css') !!}">
-	<link rel="stylesheet" type="text/css" href="{!! asset('public/nivo-slider-v3.2/style-set-nivo-slider.css') !!}">
-@stop
-@section('js')
-	<!-- set nivo slider jquery-->
-	<script src="{!! asset('public/nivo-slider-v3.2/jquery.nivo.slider.js') !!}"></script>
-	
-@stop
 @section('slider')
-	<script src="{!! asset('public/nivo-slider-v3.2/jquery-set-nivo-slider.js') !!}"></script>
-	<div class="nivo childContentCenter">
-		<div id="slider" class="nivoSlider">
-	        <!-- <a href=""><img src="http://4.bp.blogspot.com/-WUUhPQ2TCKM/WG8jgqr47xI/AAAAAAAAA6Y/yOfsgyy1VLkyl8_AnWDOFWo7E3JiFH19gCK4B/s1600/guilty-crown-2012-content.jpg" alt="" title="Uilty Crown 2012"/></a> -->
-	       	@foreach ($film_sliders as $slider)
-	       		 <a href="{!! $slider->slider_dir !!}"><img src="{!! $slider->slider_image !!}" alt="" title="{!! $slider->slider_name !!}"/></a>
-	       	@endforeach
-	    </div>
-	    <div id="caption" class="nivo-html-caption">
-	        <strong>This</strong> is madness with <a href="#">a link</a>
-	    </div>
+	<div class="home-slider">
+		<div id="carousel-home-slider" class="carousel slide" data-ride="carousel">
+		  	<!-- Indicators -->
+		  	<ol class="carousel-indicators">
+		  		<?php 
+		  			$i = 0;
+		  			$dk = count($film_sliders);
+		  		?>
+		  		@while($i < $dk)		  		
+			    	<li data-target="#carousel-home-slider" data-slide-to="{!! $i !!}" class="@if($i == 0) active @endif"></li>
+			    	<?php $i++;  ?>
+			   	@endwhile
+		  	</ol>
+
+		  	<!-- Wrapper for slides -->
+		  	<div class="carousel-inner" role="listbox">
+		  		<?php 
+		  			$the_active = true;
+		  		?>
+		  		@foreach($film_sliders as $slider)
+				    <div class="item @if($the_active) active @endif">
+				    	<?php $the_active = false;  ?>
+				    	<a href="{!! $slider->slider_dir !!}" title="">
+				      		<img src="{!! $slider->slider_image !!}" class="home-slider-item-img" alt="Error image slider">
+				      		<div class="carousel-caption">
+				      			<h3 class="home-slider-item-name">{!! $slider->slider_name !!}</h3>
+				      		</div>
+				      	</a>
+				    </div>
+			    @endforeach
+		  	</div>
+
+		  	<!-- Controls -->
+		  	<a class="left carousel-control" href="#carousel-home-slider" role="button" data-slide="prev">
+			    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+			    <span class="sr-only">Previous</span>
+		  	</a>
+		  	<a class="right carousel-control" href="#carousel-home-slider" role="button" data-slide="next">
+			    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+			    <span class="sr-only">Next</span>
+		  	</a>
+		</div>
 	</div>
+	<script>
+		$('#carousel-home-slider').carousel({
+  			interval: 4000
+		})
+	</script>
 @stop
 @section('content')
 	<!-- film new -->

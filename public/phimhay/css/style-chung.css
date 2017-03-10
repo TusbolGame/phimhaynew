@@ -142,6 +142,17 @@ div.vote a{
 .childContentCenter {
     margin: 5px auto;
 }
+.home-slider{
+    margin: 5px auto 20px;
+    width: 80%;
+    height: 80%;
+}
+.home-slider-item-name{
+    color: aqua;
+}
+.home-slider-item-img{
+    width: 100%;
+}
 /* end home */
 .logo{
 	width: 300px;
@@ -1107,7 +1118,7 @@ div.vote a{
 
 } */
 .film-relate-item-img{
-    height: 80%;
+    height: 238px;
     width: 100%;
 }
 .film-relate-item-img img{
