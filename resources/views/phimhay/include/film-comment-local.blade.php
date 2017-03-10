@@ -40,7 +40,7 @@
 					<input type="hidden" class="comment-id" value="{!! $comment->id !!}">
 					<span class="comment-username">{!! $comment->user->first_name.' '.$comment->user->last_name !!}</span>
 					<span class="comment-content">{!! $comment->film_comment_content !!}</span>
-					<span class="comment-time">{!! $comment->created_at !!}</span>
+					<span class="comment-time" title="{!! $comment->created_at !!}">{!! $comment->created_at !!}</span>
 				</div>
 			</li>
 		@endforeach
@@ -50,9 +50,19 @@
 		<button type="button" id="btn-load-comment-local" data-loading-text="Loading..." class="btn btn-primary form-control">Tải thêm 10 bình luận</button>
 	@endif
 </div>
+<script src="{!! asset('public/momentjs/moment.js') !!}" type="text/javascript" charset="utf-8" async defer></script>
+<script src="{!! asset('public/momentjs/moment-timezone-with-data.js') !!}" type="text/javascript" charset="utf-8" async defer></script>
 
 <script type="text/javascript" charset="utf-8" async defer>
 	$(document).ready(function () {
+		//comment time with moment
+		$timezone_default = '{!! env('TIMEZONE_DEFAULT') !!}';
+		$('.comment-local-list .comment-time').each(function(){		
+			$comment_time = $(this).text();
+			var temp = moment.tz($comment_time, $timezone_default);
+			$(this).text(temp.fromNow());
+		});
+		//
 		function showAndGetCommentCheck($content){
 			$('.comment-check').text($content).show();
 		}
@@ -65,6 +75,7 @@
 			if($image.substring(0, 4) == 'icon'){
 				$image_data = '{!! url('resources/photos/') !!}/'+$image;
 			}
+			$time_comment_moment = moment.tz($time, $timezone_default).fromNow();
 			$str = '<li>'+
 				'<div class="comment-avata col-sm-1 col-xs-3">'+
 				'<img src="'+$image_data+'" alt="error image avata">'+
@@ -73,7 +84,7 @@
 				'<input type="hidden" class="comment-id" value="'+$comment_id+'">'+
 				'<span class="comment-username">'+$username+'</span>'+
 				'<span class="comment-content">'+$content+'</span>'+
-				'<span class="comment-time">'+$time+'</span>'+
+				'<span class="comment-time" title="'+$time+'">'+$time_comment_moment+'</span>'+
 				'</div>'+
 				'</li>';
 				$comment_list.append($str);
@@ -127,7 +138,7 @@
 				_token : $('form.form-comment-local-add').children('input[name="_token"]').val(),
 	            comment_id : $('.comment-local-list ul li:last').find('input.comment-id').val()
 	        };
-	        console.log(data['comment_id']);
+	        // console.log(data['comment_id']);
 	        if(data['comment_id'] === undefined || data['comment_id'] === null){
 	        	//don't comment to load
 	        }else if(data['comment_id'] == 1){
@@ -193,7 +204,7 @@ function addCommentLocalUserPrepend($comment_id, $user_name, $image, $content, $
 				$image_data = '{!! url('resources/photos/') !!}/'+$image;
 			}
 			//time
-			$time_data = new Date($time['date']);
+			$time_comment_moment = moment.tz($time, $timezone_default).fromNow();
 			$str = '<li>'+
 				'<div class="comment-avata col-sm-1 col-xs-3">'+
 				'<img src="'+$image_data+'" alt="error image avata">'+
@@ -202,7 +213,7 @@ function addCommentLocalUserPrepend($comment_id, $user_name, $image, $content, $
 				'<input type="hidden" class="comment-id" value="'+$comment_id+'">'+
 				'<span class="comment-username">'+$username+'</span>'+
 				'<span class="comment-content">'+$content+'</span>'+
-				'<span class="comment-time">'+$time_data.toUTCString()+'</span>'+
+				'<span class="comment-time" title="'+$time+'">'+$time_comment_moment+'</span>'+
 				'</div>'+
 				'</li>';
 				$comment_list.prepend($str);
@@ -226,7 +237,8 @@ socket.on('connect', function () {
     socket.on('messages.new', function (data) {
         // console.log('NEW PRIVATE MESSAGE', data)
         // alert(data['comment']);
-        addCommentLocalUserPrepend(data['comment']['user_id'], data['comment']['username'], data['comment']['image'], data['comment']['content'], data['comment']['time']);
+        // console.log(data['comment']['time']['date']);
+        addCommentLocalUserPrepend(data['comment']['user_id'], data['comment']['username'], data['comment']['image'], data['comment']['content'], data['comment']['time']['date']);
         //set total
         setCommentLocalTotal(data['comment']['total']);
         // console.log(data['comment']['time']);

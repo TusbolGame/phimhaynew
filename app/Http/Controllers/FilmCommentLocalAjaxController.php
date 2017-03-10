@@ -33,6 +33,7 @@ class FilmCommentLocalAjaxController extends Controller {
 				$film_comment->user_id = Auth::user()->id;
 				$film_comment->film_comment_content = Request::get('comment_content');
 				$film_comment->save();
+				//
 				$total_commtent = FilmCommentLocal::where('film_id', $film_id)->count();
 				$comment_data = [];
 				$comment_data['user_id'] = Auth::user()->id;
@@ -40,6 +41,7 @@ class FilmCommentLocalAjaxController extends Controller {
 				$comment_data['image'] = (substr(Auth::user()->image, 0, 4) == 'icon') ? url('resources/photos/'.Auth::user()->image) : Auth::user()->image;
 				$comment_data['content'] = $film_comment->film_comment_content;
 				$comment_data['time'] = $film_comment->created_at;
+				//$film_comment->created_at return 1 array: date, timezone_type, timezone
 				$comment_data['total'] = $total_commtent;
 				$channel_name = 'film-comment-'.$film_id;
 				$payload = 

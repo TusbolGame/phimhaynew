@@ -59,7 +59,9 @@ io.adapter(ioredis({host: 'localhost', port: 6379}))
   //
   // Handle messages from channels we're subscribed to
   redisClient.on('message', function (channel, payload) {
-    console.log('INCOMING MESSAGE', channel, payload)
+    // console.log('INCOMING MESSAGE', channel, payload)
+    //message
+    console.log('---INCOMING MESSAGE')
     payload = JSON.parse(payload)
     
     // Merge channel into payload
