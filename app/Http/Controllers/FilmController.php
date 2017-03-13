@@ -36,11 +36,18 @@ use App\Lib\FilmCookies\CookieVideoStream;
 use Input;
 use Auth;
 use File;
+//
+use App\Sessions;
 
 class FilmController extends Controller {
 
 	public function getTest(){
 
+		//
+		$time = time() - 180;
+		$user_login = Sessions::where('last_activity', '>=', $time)->count();
+		$guest_login = Sessions::where('last_activity', '>=', $time)->count();
+		var_dump($user_login);
 		// 
 		// Schema::table('film_details', function($table) {
 		//     //
@@ -216,7 +223,8 @@ class FilmController extends Controller {
 			return view('phimhay.film-info', compact('film_list', 'film_detail', 'film_trailer', 'ticked', 'film_episode_id', 'film_relates', 'film_relate_adds', 'film_comments', 'directors', 'actors', 'film_detail_type', 'film_detail_country', 'film_comment_local_count', 'channel_name', 'film_comment_local_id_last', 'film_player'));
 		}
 		//not found
-		return redirect()->route('404');	
+		// return redirect()->route('404');	
+		return redirect()->view('phimhay.include.404');	
 	}
 	public function getFilmWatch($film_dir, $film_id, $film_episode_id){
 		$film_id = (int)$film_id;
@@ -328,7 +336,8 @@ class FilmController extends Controller {
 			return view('phimhay.film-watch', compact('film_list', 'film_detail', 'ticked', 'film_episode_list', 'film_episode_watch', 'film_relates', 'film_relate_adds', 'film_comments', 'film_comment_local_count', 'channel_name', 'film_comment_local_id_last', 'film_player', 'film_track'));
 		}
 		//not found
-		return redirect()->route('404');
+		// return redirect()->route('404');
+		return redirect()->view('phimhay.include.404');	
 	}
 
 	//admin

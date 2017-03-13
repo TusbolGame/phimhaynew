@@ -33,7 +33,8 @@ class FilmPersonController extends Controller {
 			return view('phimhay.person.profile', compact('person', 'film_actor', 'film_director', 'film_person_job', 'total_director', 'total_actor'));
 		}
 		//not found
-		return redirect()->route('404');
+		// return redirect()->route('404');
+		return redirect()->view('phimhay.include.404');
 	}
 	public function getPersonDirector($id){
 		$person = FilmPerson::find($id);
@@ -43,7 +44,8 @@ class FilmPersonController extends Controller {
 			return view('phimhay.person.person-director', compact('person', 'film_director'));
 		}
 		//not found
-		return redirect()->route('404');
+		// return redirect()->route('404');
+		return redirect()->view('phimhay.include.404');
 	}
 	public function getPersonActor($id){
 		$person = FilmPerson::find($id);
@@ -53,7 +55,8 @@ class FilmPersonController extends Controller {
 			return view('phimhay.person.person-actor', compact('person', 'film_actor'));
 		}
 		//not found
-		return redirect()->route('404');
+		// return redirect()->route('404');
+		return redirect()->view('phimhay.include.404');	
 	}
 	//search person
 	public function getPersonList(Request $request){

@@ -96,9 +96,7 @@ Route::group(['prefix' => 'captcha'], function() {
 
 //admin
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function() {
-    Route::get('/', function(){
-        return view('admin.master');
-    });
+    Route::get('/', ['as' => 'admin.getHome', 'uses' => 'AdminHomeController@getHome']);
     //film
     Route::group(['prefix' => 'film'], function() {
     	//add

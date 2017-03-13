@@ -7,74 +7,57 @@ use Illuminate\Database\Eloquent\Builder;
 
 class UserSession extends Model 
 {
+    protected $hidden = ['payload'];
+
     /**
-     * {@inheritdoc}
+     * The database table used by the model.
+     *
+     * @var string
      */
     public $table = 'sessions';
 
-    /**
-     * {@inheritdoc}
-     */
     public $timestamps = false;
 
     /**
      * Returns the user that belongs to this entry.
-     *
-     * @return \Cartalyst\Sentinel\Users\EloquentUser
      */
-    // public function user()
-    // {
-    //     return $this->belongsTo('Cartalyst\Sentinel\Users\EloquentUser');
-    // }
+    public function user()
+    {
+        return $this->belongsTo('App\User', 'user_id', 'id');
+    }
 
-    // /**
-    //  * Returns all the users within the given activity.
-    //  *
-    //  * @param  \Illuminate\Database\Eloquent\Builder  $query
-    //  * @param  int  $limit
-    //  * @return \Illuminate\Database\Eloquent\Builder
-    //  */
-    // public function scopeActivity($query, $limit = 10)
-    // {
-    //     $lastActivity = strtotime(Carbon::now()->subMinutes($limit));
+    /**
+     * Returns all the guest users.
+     *
+     * @param  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeGuests($query)
+    {
+        return $query->whereNull('user_id')->where('last_activity', '>=', strtotime(Carbon::now()->subMinutes(Config::get('custom.activity_limit'))));
+    }
 
-    //     return $query->where('last_activity', '>=', $lastActivity);
-    // }
+    /**
+     * Returns all the registered users.
+     *
+     * @param  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeRegistered($query)
+    {
+        return $query->whereNotNull('user_id')->where('last_activity', '>=', strtotime(Carbon::now()->subMinutes(Config::get('custom.activity_limit'))))->with('user');
+    }
 
-    // /**
-    //  * Returns all the guest users.
-    //  *
-    //  * @param  \Illuminate\Database\Eloquent\Builder  $query
-    //  * @return \Illuminate\Database\Eloquent\Builder
-    //  */
-    // public function scopeGuests(Builder $query)
-    // {
-    //     return $query->whereNull('user_id');
-    // }
-
-    // /**
-    //  * Returns all the registered users.
-    //  *
-    //  * @param  \Illuminate\Database\Eloquent\Builder  $query
-    //  * @return \Illuminate\Database\Eloquent\Builder
-    //  */
-    // public function scopeRegistered(Builder $query)
-    // {
-    //     return $query->whereNotNull('user_id')->with('user');
-    // }
-
-    // /**
-    //  * Updates the session of the current user.
-    //  *
-    //  * @param  \Illuminate\Database\Eloquent\Builder  $query
-    //  * @return \Illuminate\Database\Eloquent\Builder
-    //  */
-    // public function scopeUpdateCurrent(Builder $query)
-    // {
-    //     $user = Sentinel::check();
-
-    //     return $query->where('id', Session::getId())->update([
-    //         'user_id' => $user ? $user->id : null
-    //     ]);
-    // }
+    /**
+     * Updates the session of the current user.
+     *
+     * @param  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeUpdateCurrent($query)
+    {
+        return $query->where('id', Session::getId())->update([
+            'user_id' => ! empty(Auth::user()) ? Auth::id() : null
+        ]);
+    }
 }
