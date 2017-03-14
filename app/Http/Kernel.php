@@ -28,7 +28,7 @@ class Kernel extends HttpKernel {
 		'auth.basic' => 'Illuminate\Auth\Middleware\AuthenticateWithBasicAuth',
 		'guest' => 'App\Http\Middleware\RedirectIfAuthenticated',
 		'admin' => 'App\Http\Middleware\Admin',
-		'Tracker' => 'PragmaRX\Tracker\Vendor\Laravel\Facade',
+		'phimhay' => 'App\Http\Middleware\PhimHay',
 	];
 
 }

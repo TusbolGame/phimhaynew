@@ -7,7 +7,7 @@ use App\FilmList;
 use App\FilmCountry;
 use App\FilmType;
 use App\Lib\FilmProcess\FilmProcess;
-use DB;
+
 class PhimHayConfigServiceProvider extends ServiceProvider {
 
 	/**

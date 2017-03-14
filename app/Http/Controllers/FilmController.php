@@ -38,16 +38,26 @@ use Auth;
 use File;
 //
 use App\Sessions;
+use App\Lib\GuestInfo;
 
 class FilmController extends Controller {
 
-	public function getTest(){
+	public function getTest(Request $request){
+		$guest_info = new GuestInfo();
+		$guest_info->setIp($request->ip());
+		var_dump($guest_info->getBrowser());
+		var_dump($guest_info->getLocationInfoByIp());
+		var_dump($guest_info->getIp());
+		var_dump($guest_info->getHttpReferer());
+		var_dump($request->server('HTTP_REFERER'));
+		var_dump($request->ip());
 
 		//
-		$time = time() - 180;
-		$user_login = Sessions::where('last_activity', '>=', $time)->count();
-		$guest_login = Sessions::where('last_activity', '>=', $time)->count();
-		var_dump($user_login);
+		// $time = time() - 180;
+		// $user_login = Sessions::where('last_activity', '>=', $time)->count();
+		// $guest_login = Sessions::where('last_activity', '>=', $time)->count();
+		// var_dump($user_login);
+
 		// 
 		// Schema::table('film_details', function($table) {
 		//     //
