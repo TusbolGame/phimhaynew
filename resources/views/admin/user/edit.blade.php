@@ -75,7 +75,7 @@
             </label>
         </div>
         @endif
-        <button type="submit" class="btn btn-primary">User Edit</button>
+        <button type="submit" class="btn btn-primary">Sửa thành viên</button>
         <button type="reset" class="btn btn-default">Reset</button>
     <form>
 </div>
