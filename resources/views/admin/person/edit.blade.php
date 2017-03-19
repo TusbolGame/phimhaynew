@@ -2,7 +2,7 @@
 @section('header')
 <div class="col-lg-12">
     <h1 class="page-header bg-primary">Person
-        <small>Edit</small>
+        <small class="text-danger">Edit</small>
     </h1>
 </div>
 @endsection
@@ -60,7 +60,7 @@
               <textarea class="form-control" name="person_image" required="true" placeholder="Nhập đường dẫn ảnh">{!! old('person_image', $person->person_image) !!}</textarea>
             </div>
             <div class="text-center">
-                <input type="submit" name="submit" class="btn btn-primary" value="Cập nhật Person">
+                <input type="submit" name="submit" class="btn btn-primary" value="Chỉnh sửa nhân vật">
                 <button type="reset" class="btn btn-default">Reset</button>
             </div>
         </div>

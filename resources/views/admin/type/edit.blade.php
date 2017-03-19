@@ -2,7 +2,7 @@
 @section('header')
 <div class="col-lg-12">
     <h1 class="page-header bg-primary">Type
-        <small>Edit</small>
+        <small class="text-danger">Edit</small>
     </h1>
 </div>
 @endsection
@@ -19,7 +19,7 @@
               <input type="text" class="form-control" name="type_name" placeholder="Nhập tên thể loại" required="true" value="{!! old('type_name', $film_type->type_name) !!}" autocomplete="off">
             </div>
             <div class="text-center">
-                <input type="submit" name="submit" class="btn btn-primary" value="Cập nhât Type">
+                <input type="submit" name="submit" class="btn btn-primary" value="Sửa thể loại">
                 <button type="reset" class="btn btn-default">Reset</button>
             </div>
         </div>

@@ -2,7 +2,7 @@
 @section('header')
 <div class="col-lg-12">
     <h1 class="page-header bg-primary">Person
-        <small>Add</small>
+        <small  class="text-danger">Add</small>
     </h1>
 </div>
 @endsection
@@ -54,7 +54,7 @@
               <textarea class="form-control" name="person_image" placeholder="Nhập đường dẫn ảnh">{!! old('person_image') !!}</textarea>
             </div>
             <div class="text-center">
-                <input type="submit" name="submit" class="btn btn-primary" value="Thêm Person">
+                <input type="submit" name="submit" class="btn btn-primary" value="Thêm nhân vật">
                 <button type="reset" class="btn btn-default">Reset</button>
             </div>
         </div>

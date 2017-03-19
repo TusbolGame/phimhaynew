@@ -2,7 +2,7 @@
 @section('header')
 <div class="col-lg-12">
     <h1 class="page-header bg-primary">Country
-        <small>Add</small>
+        <small class="text-danger">Add</small>
     </h1>
 </div>
 @endsection
@@ -18,7 +18,7 @@
               <input type="text" class="form-control" name="country_name" placeholder="Nhập tên quốc gia" required="true" value="{!! old('country_name') !!}" autocomplete="off">
             </div>
             <div class="text-center">
-                <input type="submit" name="submit" class="btn btn-primary" value="Thêm Country">
+                <input type="submit" name="submit" class="btn btn-primary" value="Thêm quốc gia">
                 <button type="reset" class="btn btn-default">Reset</button>
             </div>
         </div>

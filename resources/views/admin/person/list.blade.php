@@ -2,7 +2,7 @@
 @section('header')
 <div class="col-lg-12">
     <h1 class="page-header">Person
-        <small>List</small>
+        <small class="text-danger">List</small>
     </h1>
 </div>
 @endsection
@@ -12,8 +12,8 @@
         <thead>
             <tr align="center">
                 <th>ID</th>
-                <th>Edit</th>
-                <th>Delete</th>
+                <th>Chỉnh Sửa</th>
+                <th>Xóa</th>
                 <th>Tên nhân vật</th>
                 <th>Tên đầy đủ</th>
                 <th>Tên khai sinh</th>
@@ -30,8 +30,8 @@
              @foreach($film_person as $data)
                 <tr title="Person ID: {{ $data->id }}">
                     <td>{{ $data->id }}</td>
-                    <td class="center"><i class="fa fa-pencil fa-fw"></i> <a href="{!! route('admin.person.getEdit', $data->id) !!}">Edit</a></td>
-                    <td class="center"><i class="fa fa-trash-o  fa-fw"></i><a onclick="return checkDelete('Bạn có muốn xóa Person id là {!! $data->id !!} không');" href="{!! route('admin.person.getDelete', $data->id) !!}"> Delete</a></td> 
+                    <td class="center"><i class="fa fa-pencil fa-fw"></i> <a href="{!! route('admin.person.getEdit', $data->id) !!}">Sửa</a></td>
+                    <td class="center"><i class="fa fa-trash-o  fa-fw"></i><a onclick="return checkDelete('Bạn có muốn xóa Person id là {!! $data->id !!} không');" href="{!! route('admin.person.getDelete', $data->id) !!}"> Xóa</a></td> 
                     <td>{{ $data->person_name }}</td>
                     <td>{{ $data->person_full_name }}</td>
                     <td>{{ $data->person_birth_name }}</td>

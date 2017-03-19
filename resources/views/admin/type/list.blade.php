@@ -16,8 +16,8 @@
                 <th>Tên Alias</th>               
                 <th>Created_at</th>
                 <th>Updated_at</th>
-                <th>Delete</th>
-                <th>Edit</th>
+                <th>Xóa</th>
+                <th>Chỉnh Sửa</th>
             </tr>
         </thead>
         <tbody>
@@ -28,7 +28,7 @@
                     <td>{{ $data->type_alias }}</td>                    
                     <td title="{!! $data->created_at !!}">{{ $data->created_at  }}</td>
                     <td title="{!! $data->updated_at !!}">{{ $data->updated_at  }}</td>
-                    <td class="center"><i class="fa fa-trash-o  fa-fw"></i>
+                    <td class="center">
                         <form action="{!! route('admin.type.destroy', $data->id) !!}" method="POST" accept-charset="utf-8">
                             <input type="hidden" name="_token" value="{!! csrf_token() !!}">
                             <input type="hidden" name="_method" value="DELETE">
@@ -36,7 +36,7 @@
                             <button type="submit" onclick="return checkDelete('Bạn có muốn xóa Type name là {!! $data->type_name !!} không');">Xóa</button>
                         </form>
                     </td>
-                    <td class="center"><i class="fa fa-pencil fa-fw"></i> <a href="{!! route('admin.type.edit', $data->id) !!}">Edit</a></td>
+                    <td class="center"><i class="fa fa-pencil fa-fw"></i> <a href="{!! route('admin.type.edit', $data->id) !!}">Sửa</a></td>
                 </tr>
             @endforeach
         </tbody>

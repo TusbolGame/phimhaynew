@@ -2,7 +2,7 @@
 @section('header')
 <div class="col-lg-12">
     <h1 class="page-header bg-primary">Country
-        <small>Edit</small>
+        <small class="text-danger">Edit</small>
     </h1>
 </div>
 @endsection
@@ -19,7 +19,7 @@
               <input type="text" class="form-control" name="country_name" placeholder="Nhập tên quốc gia" required="true" value="{!! old('country_name', $film_country->country_name) !!}" autocomplete="off">
             </div>
             <div class="text-center">
-                <input type="submit" name="submit" class="btn btn-primary" value="Cập nhât Country">
+                <input type="submit" name="submit" class="btn btn-primary" value="Sửa quốc gia">
                 <button type="reset" class="btn btn-default">Reset</button>
             </div>
         </div>

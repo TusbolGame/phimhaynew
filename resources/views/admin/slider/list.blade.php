@@ -2,7 +2,7 @@
 @section('header')
 <div class="col-lg-12">
     <h1 class="page-header">Slider
-        <small>List</small>
+        <small class="text-danger">List</small>
     </h1>
 </div>
 @endsection
@@ -16,8 +16,8 @@
             <th>Slider Image</th>
             <th>Created_at</th>
             <th>Updated_at</th>
-            <th>Delete</th>
-            <th>Edit</th>
+            <th>Xóa</th>
+            <th>Chỉnh Sửa</th>
         </tr>
     </thead>
     <tbody>
@@ -29,8 +29,8 @@
                 <td>{{ $data->slider_image }}</td>
                 <td title="{!! $data->created_at !!}">{{ $data->created_at  }}</td>
                 <td title="{!! $data->updated_at !!}">{{ $data->updated_at  }}</td>
-                <td class="center"><i class="fa fa-trash-o  fa-fw"></i><a onclick="return checkDelete('Bạn có muốn xóa Slider id là {!! $data->id !!} không');" href="{!! route('admin.slider.getDelete', $data->id) !!}"> Delete</a></td>
-                <td class="center"><i class="fa fa-pencil fa-fw"></i> <a href="{!! route('admin.slider.getEdit', $data->id) !!}">Edit</a></td>
+                <td class="center"><i class="fa fa-trash-o  fa-fw"></i><a onclick="return checkDelete('Bạn có muốn xóa Slider id là {!! $data->id !!} không');" href="{!! route('admin.slider.getDelete', $data->id) !!}"> Xóa</a></td>
+                <td class="center"><i class="fa fa-pencil fa-fw"></i> <a href="{!! route('admin.slider.getEdit', $data->id) !!}">Sửa</a></td>
             </tr>
         @endforeach
     </tbody>

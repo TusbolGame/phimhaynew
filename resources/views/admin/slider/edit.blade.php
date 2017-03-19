@@ -2,7 +2,7 @@
 @section('header')
 <div class="col-lg-12">
     <h1 class="page-header bg-primary">Slider
-        <small>Edit</small>
+        <small class="text-danger">Edit</small>
     </h1>
 </div>
 @endsection
