@@ -23,11 +23,11 @@ class AdminAddUserRequest extends Request {
 	{
 		return [
 			'txtUsername' => 'required|unique:users,username',
-			'txtPass' => 'required',
+			'txtPass' => 'required|min:8|max:30',
 			'txtRePass' => 'required|same:txtPass',
 			'txtFirstName' => 'required',
 			'txtLastName' => 'required',
-			'txtEmail' => 'required|email',
+			'txtEmail' => 'required|email|unique:users,email',
 			'rdoLevel' => 'required',
 			'rdoActived' => 'required',
 			'rdoBlocked' => 'required',
@@ -35,18 +35,21 @@ class AdminAddUserRequest extends Request {
 	}
 	public function messages(){
 		return [
-			'txtUsername.required' => 'Please enter the Username',
-			'txtUser.unique' => 'The Username has already been taken',
-			'txtPass.required' => 'Please enter the Password',
-			'txtRePass.required' => 'Please enter the Re Password',
-			'txtRePass.same' => 'The RePassword not same Password',
-			'txtFirstName.required' => 'Please enter the First Name',
-			'txtLastName.required' => 'Please enter the Last Name',
-			'txtEmail.required' => 'Please enter the Email',
-			'txtEmail.email' => 'This the Email is not email',
-			'rdoLevel.required' => 'Please enter the User Level',
-			'rdoActived.required' => 'Please enter the Actived',
-			'rdoBlocked.required' => 'Please enter the Blocked',
+			'txtUsername.required' => 'Chưa nhập Tên tài khoản',
+			'txtUser.unique' => 'Tên tài khoản đã tồn tại',
+			'txtPass.required' => 'Chưa nhập Mật khẩu',
+			'txtPass.min' => 'Mật khẩu tối thiểu 8 ký tự',
+			'txtPass.max' => 'Mật khẩu tối đa 30 ký tự',
+			'txtRePass.required' => 'Chưa nhập xác nhận mật khẩu',
+			'txtRePass.same' => 'Mật khẩu xác nhận không đúng',
+			'txtFirstName.required' => 'Chưa nhập Tên',
+			'txtLastName.required' => 'Chưa nhập Họ',
+			'txtEmail.required' => 'Chưa nhập Email',
+			'txtEmail.email' => 'Đây không phải là Email',
+			'txtEmail.unique' => 'Email đã tồn tại',
+			'rdoLevel.required' => 'Chưa nhập Level',
+			'rdoActived.required' => 'Chưa nhập Actived',
+			'rdoBlocked.required' => 'Chưa nhập Blocked',
 		];
 	}
 }

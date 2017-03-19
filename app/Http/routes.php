@@ -70,6 +70,7 @@ Route::group(['prefix' => '/', 'middleware' => 'phimhay'], function(){
         Route::get('film-watch/{id}', ['as' => 'user.getFilmUserWatch', 'uses' => 'UserController@getFilmUserWatch']);
         Route::post('change-password', ['as' => 'user.postChangePassword', 'uses' => 'UserController@postChangePassword']);
         Route::post('change-info', ['as' => 'user.postChangeInfo', 'uses' => 'UserController@postChangeInfo']);
+        Route::post('delete-account', ['as' => 'user.postDelete', 'uses' => 'UserController@postDelete']);
     });
     //person 
     Route::group(['prefix' => 'person'], function() {

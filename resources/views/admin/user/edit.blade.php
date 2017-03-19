@@ -55,8 +55,7 @@
             <label class="radio-inline">
                 <input name="rdoLevel" value="2" type="radio" @if(old('rdoLevel', $user['level']) == 2) checked @endif>Member
             </label>
-        </div>
-        @endif
+        </div>       
         <div class="form-group">
             <label>Kích hoạt</label>
             <label class="radio-inline">
@@ -75,7 +74,8 @@
                 <input name="rdoBlocked" value="0" type="radio" @if(old('rdoBlocked', $user['blocked']) == 0) checked @endif>False
             </label>
         </div>
-        <button type="submit" class="btn btn-default">User Edit</button>
+        @endif
+        <button type="submit" class="btn btn-primary">User Edit</button>
         <button type="reset" class="btn btn-default">Reset</button>
     <form>
 </div>

@@ -23,7 +23,7 @@ class RegisterRequest extends Request {
 	{
 		return [
 			'txtUsername' => 'required|unique:users,username',
-			'txtPass' => 'required',
+			'txtPass' => 'required|min:8|max:30',
 			'txtRePass' => 'required|same:txtPass',
 			'txtFirstName' => 'required',
 			'txtLastName' => 'required',
@@ -33,11 +33,13 @@ class RegisterRequest extends Request {
 	}
 	public function messages(){
 		return [
-			'txtUsername.required' => 'Chưa nhập Tài khoản',
-			'txtUser.unique' => 'Tên Tài khoản đã tồn tại',
+			'txtUsername.required' => 'Chưa nhập Tên tài khoản',
+			'txtUser.unique' => 'Tên tài khoản đã tồn tại',
 			'txtPass.required' => 'Chưa nhập Mật khẩu',
-			'txtRePass.required' => 'Chưa nhập nhập lại mật khẩu',
-			'txtRePass.same' => 'Mật khẩu nhập lại không đúng',
+			'txtPass.min' => 'Mật khẩu tối thiểu 8 ký tự',
+			'txtPass.max' => 'Mật khẩu tối đa 30 ký tự',
+			'txtRePass.required' => 'Chưa nhập xác nhận mật khẩu',
+			'txtRePass.same' => 'Mật khẩu xác nhận không đúng',
 			'txtFirstName.required' => 'Chưa nhập Tên',
 			'txtLastName.required' => 'Chưa nhập Họ',
 			'txtEmail.required' => 'Chưa nhập Email',

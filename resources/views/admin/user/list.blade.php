@@ -2,54 +2,74 @@
 @section('header')
 <div class="col-lg-12">
     <h1 class="page-header">User
-        <small>List</small>
+        <small class="text-danger">List</small>
     </h1>
 </div>
 @endsection
 @section('content')
-<table class="table table-striped table-bordered table-hover" id="dataTables-example">
+<table class="table table-striped table-bordered table-hover">
     <thead>
         <tr align="center">
             <th>ID</th>
-            <th>Username</th>
+            <th>Tên tài khoản</th>
             <th>Level</th>
-            <th>First Name</th>
-            <th>Last Name</th>
+            <th>Tên</th>
+            <th>Họ</th>
             <th>Email</th>
-            <th>Actived</th>
-            <th>Blocked</th>
+            <th>Account</th>
+            <th>Kích hoạt</th>
+            <th>Chặn</th>
             <th>Created_at</th>
             <th>Updated_at</th>
-            <th>Delete</th>
-            <th>Edit</th>
+            <th>Xóa</th>
+            <th>Chỉnh sửa</th>
         </tr>
     </thead>
     <tbody>
-         @foreach($data as $user)
+         @foreach($users as $data)
             <tr class="odd gradeX" align="center">
-                <td>{{ $user['id'] }}</td>
-                <td>{{ $user['username'] }}</td>
+                <td>{!! $data->id !!}</td>
+                <td>{!! $data->username !!}</td>
                 <!-- level -->
                 <td>
-                    @if($user['id'] == 1)
+                    @if($data->id == 1)
                         Supperadmin
-                    @elseif($user['level'] == 1)
+                    @elseif($data->level == 1)
                         Admin
-                    @elseif($user['level'] == 2)
+                    @elseif($data->level == 2)
                         Member
                     @endif
                 </td>
-                <td>{{ $user['first_name'] }}</td>
-                <td>{{ $user['last_name'] }}</td>
-                <td>{{ $user['email'] }}</td>
-                <td>{{ $user['actived'] }}</td>
-                <td>{{ $user['blocked'] }}</td>
-                <td title="{!! $user['created_at'] !!}">{{ \Carbon\Carbon::createFromTimestamp(strtotime($user['created_at']))->diffForHumans()  }}</td>
-                <td title="{!! $user['updated_at'] !!}">{{ \Carbon\Carbon::createFromTimestamp(strtotime($user['updated_at']))->diffForHumans()  }}</td>
-                <td class="center"><i class="fa fa-trash-o  fa-fw"></i><a onclick="return checkDelete('Bạn có muốn xóa User id là {!! $user['id'] !!} không');" href="{!! route('admin.user.getDelete', $user['id']) !!}"> Delete</a></td>
-                <td class="center"><i class="fa fa-pencil fa-fw"></i> <a href="{!! route('admin.user.getEdit', $user['id']) !!}">Edit</a></td>
+                <td>{!! $data->first_name !!}</td>
+                <td>{!! $data->last_name !!}</td>
+                <td>
+                    <?php 
+                        //hash email
+                        if (!empty($data->email)) {
+                            $temp = explode('@', $data->email);
+                            if(count($temp) == 2){
+                                $name_hash_star = str_repeat('*', strlen($temp[0])-2);
+                                echo substr($temp[0], 0, 2).$name_hash_star.'@'.$temp[1];
+                            }
+                        }
+                     ?>
+                </td>
+                <td>
+                    @if(count($data->socialAccount) == 0)
+                        local
+                    @else
+                        {!! $data->socialAccount->provider !!}
+                    @endif
+                </td>
+                <td>{!! $data->actived !!}</td>
+                <td>{!! $data->blocked !!}</td>
+                <td title="{!! $data->created_at !!}">{!! \Carbon\Carbon::createFromTimestamp(strtotime($data->created_at))->diffForHumans()  !!}</td>
+                <td title="{!! $data->updated_at !!}">{!! \Carbon\Carbon::createFromTimestamp(strtotime($data->updated_at))->diffForHumans()  !!}</td>
+                <td class="center"><i class="fa fa-trash-o  fa-fw"></i><a onclick="return checkDelete('Bạn có muốn xóa User id là {!! $data->id !!} không');" href="{!! route('admin.user.getDelete', $data->id) !!}">Xóa</a></td>
+                <td class="center"><i class="fa fa-pencil fa-fw"></i> <a href="{!! route('admin.user.getEdit', $data->id) !!}">Sửa</a></td>
             </tr>
         @endforeach
     </tbody>
 </table>
+{!! $users->render() !!}
 @endsection

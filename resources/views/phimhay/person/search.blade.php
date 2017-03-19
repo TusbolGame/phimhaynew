@@ -1,6 +1,6 @@
 @extends('phimhay.master')
-@section('title', 'Tìm Kiếm Phim | PhimHay')
-@section('description', 'Tìm Kiếm Phim | PhimHay xem phim online')
+@section('title', 'Tìm Kiếm Nhân Vật | PhimHay')
+@section('description', 'Tìm Kiếm Nhân Vật | PhimHay')
 @section('css')
 
 @stop

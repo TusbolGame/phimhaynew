@@ -11,13 +11,14 @@ use App\Http\Requests\AdminAddUserRequest;
 use App\User;
 use App\FilmUserTick;
 use App\FilmUserWatch;
+use App\SocialAccount;
 use Hash;
 use Auth;
 use Validator;
 use Input;
 use File;
 use Intervention\Image\Facades\Image;
-// use Intervention\Image\Facades\Image;
+
 class UserController extends Controller {
 
 	//
@@ -38,12 +39,14 @@ class UserController extends Controller {
 		//remember
 		$user->remember_token = $request->_token;
 		$user->save();
-		return redirect()->route('admin.user.getList')->with(['flash_message'=>'Success ! Complete Add Cate new']);
+		return redirect()->route('admin.user.getList')->with(['flash_message'=>'Thành công ! Thêm thành viên mới: '.$request->txtUsername]);
 	}
 	//list
 	public function getList(){
-		$data = User::select('id', 'username', 'first_name', 'last_name', 'email', 'level', 'actived', 'blocked', 'created_at', 'updated_at')->orderBy('id', 'DESC')->get()->toArray();
-		return view('admin.user.list', compact('data'));
+		$users = User::select('id', 'username', 'first_name', 'last_name', 'email', 'level', 'actived', 'blocked', 'created_at', 'updated_at')->orderBy('id', 'DESC')->with('socialAccount')->paginate(10);
+		// dump($users);die();
+		$users->setPath(route('admin.user.getList'));
+		return view('admin.user.list', compact('users'));
 	}
 	//edit
 	public function getEdit($id){
@@ -54,10 +57,10 @@ class UserController extends Controller {
 		}
 		return view('admin.user.edit', compact('user', 'id'));
 	}
+	//fix lại
 	public function postEdit($id, Request $request){
-		//var_dump($request->chkEditPassword);
-		//die();
-		if(Auth::user()->id != 1 && ($id == 1 || ($user['level'] == 1) && Auth::user()->id != $id)){
+		$user = User::findOrFail($id);
+		if(Auth::user()->id != 1 && ($id == 1 || ($user->level == 1) && Auth::user()->id != $id)){
 			return redirect()->route('admin.user.getList')->with(['flash_message'=>'Lỗi ! Không thể cập nhật user '.$id.'! Bởi vì Admin không thể cập nhật Supperadmin hoặc không thể cập nhật Admin khác']);
 		}
 		$v = null;
@@ -68,49 +71,51 @@ class UserController extends Controller {
 				$v = Validator::make($request->all(), [
 					'txtFirstName' => 'required',
 					'txtLastName' => 'required',
-					'txtEmail' => 'required',
-				 	'txtPass' => 'required',
-				 	'txtPassOld' => 'required',
-				 	'txtRePass' => 'required|same:txtPass',
-				 	'rdoActived' => 'required',
-				 	'rdoBlocked' => 'required',
-				], [
-						'txtUsername.required' => 'Please enter the Username',
-						'txtPassOld.required' => 'Please enter the Password',
-						'txtPass.required' => 'Please enter the Password',
-						'txtRePass.required' => 'Please enter the Re Password',
-						'txtRePass.same' => 'The RePassword not same Password',
-						'txtFirstName.required' => 'Please enter the First Name',
-						'txtLastName.required' => 'Please enter the Last Name',
-						'txtEmail.required' => 'Please enter the Email',
-						'txtEmail.email' => 'This the Email is not email',
-						'rdoLevel.required' => 'Please enter the User Level',
-						'rdoActived.required' => 'Please enter the Actived',
-						'rdoBlocked.required' => 'Please enter the Blocked',
+					'txtEmail' => 'required|email',
+					'txtPassOld' => 'required',
+				 	'txtPass' => 'required|min:8|max:30',
+				 	'txtRePass' => 'required|same:txtPass'
+				], 
+				[
+					'txtPassOld.required' => 'Chưa nhập Mật khẩu cũ',
+					'txtPass.required' => 'Chưa nhập Mật khẩu',
+					'txtPass.min' => 'Mật khẩu tối thiểu 8 ký tự',
+					'txtPass.max' => 'Mật khẩu tối đa 30 ký tự',
+					'txtRePass.required' => 'Chưa nhập xác nhận mật khẩu',
+					'txtRePass.same' => 'Mật khẩu xác nhận không đúng',
+					'txtFirstName.required' => 'Chưa nhập Tên',
+					'txtLastName.required' => 'Chưa nhập Họ',
+					'txtEmail.required' => 'Chưa nhập Email',
+					'txtEmail.email' => 'Đây không phải là Email'
 				]);
 			}else{
 				$v = Validator::make($request->all(), [
 					'txtFirstName' => 'required',
 					'txtLastName' => 'required',
-					'txtEmail' => 'required',
-				 	'rdoActived' => 'required',
-				 	'rdoBlocked' => 'required',
+					'txtEmail' => 'required|email',
 				], [
-						'txtFirstName.required' => 'Please enter the First Name',
-						'txtLastName.required' => 'Please enter the Last Name',
-						'txtEmail.required' => 'Please enter the Email',
-						'txtEmail.email' => 'This the Email is not email',
-						'rdoLevel.required' => 'Please enter the User Level',
-						'rdoActived.required' => 'Please enter the Actived',
-						'rdoBlocked.required' => 'Please enter the Blocked',
+						'txtFirstName.required' => 'Chưa nhập Tên',
+						'txtLastName.required' => 'Chưa nhập Họ',
+						'txtEmail.required' => 'Chưa nhập Email',
+						'txtEmail.email' => 'Đây không phải là Email'
 				]);
+			}
+			//check email		
+			if($request->txtEmail != '' && $request->txtEmail != Auth::user()->email){
+				//
+				$tt = User::where('id', '!=', Auth::user()->id)->where('email', $request->txtEmail)->get();
+				if(count($tt) >= 1){
+					return redirect()->back()->withErrors('Email đã tồn tại');
+				}
+				unset($tt);
+				$user->email = $request->txtEmail;
 			}
 		}
 		//hiển thị thông báo lỗi
-		if ($v->fails()) {
+		if ($v != null && $v->fails()) {
 			return redirect()->back()->withErrors($v->errors());
 		}
-		$user = User::find($id);
+		
 		if(Auth::user()->id == $id){
 			if(Input::has('chkEditPassword')){
 				if(!Hash::check($request->txtPassOld, $user->password)){
@@ -123,7 +128,7 @@ class UserController extends Controller {
 			$user->email = $request->txtEmail;
 		}
 		//is admin -> not edit level of chinh minh
-		if(Auth::user()->id != $id){
+		if(Auth::user()->id != $id && $id != 1){
 			$user->level = $request->rdoLevel;	
 			$user->actived = $request->rdoActived;
 			$user->blocked = $request->rdoBlocked;
@@ -190,20 +195,19 @@ class UserController extends Controller {
 		return redirect()->back()->with(['success' => 'Thay đổi mật khẩu thành công']);
 	}
 	public function postChangeInfo(ChangeInfoUserRequest $request){
-		//check email
-		if($request->txtEmail != Auth::user()->email){
+		$user = User::find(Auth::user()->id);
+		//check email		
+		if($request->txtEmail != '' && $request->txtEmail != Auth::user()->email){
 			//
-			$tt = User::where('email',$request->txtEmail)->get();
-			if(count($tt) == 1){
+			$tt = User::where('id', '!=', Auth::user()->id)->where('email', $request->txtEmail)->get();
+			if(count($tt) >= 1){
 				return redirect()->back()->withErrors('Email đã tồn tại');
 			}
 			unset($tt);
+			$user->email = $request->txtEmail;
 		}
-		$user = User::find(Auth::user()->id);
 		$user->first_name = (Auth::user()->first_name != $request->txtFirstName) ? $request->txtFirstName : Auth::user()->first_name; 
 		$user->last_name = (Auth::user()->last_name != $request->txtLastName) ? $request->txtLastName : Auth::user()->last_name;
-
-		$user->email = (Auth::user()->email != $request->txtEmail) ? $request->txtEmail : Auth::user()->email;
 		//file
 		$image = $request->file('fileImageUser');
 		if (!empty($image)) {
@@ -222,6 +226,22 @@ class UserController extends Controller {
 		}
 		$user->save();
 		return redirect()->back()->with(['success' => 'Thay đổi thông tin thành công']);
+	}
+	public function postDelete(Request $request){		
+		//check 
+		if($request->password == ''){
+			return redirect()->back()->withErrors('Chưa nhập mật khẩu');
+		}
+		//
+		if(!Hash::check($request->password, Auth::user()->password)){
+			return redirect()->back()->withErrors('Mật khẩu không đúng');
+		}
+		$user = User::find(Auth::user()->id);
+		//logout
+		Auth::logout();
+		//delete
+		$user->delete();
+		return redirect()->route('home');
 	}
 	public function getFilmUserTick($id){
 		if($id != Auth::user()->id){

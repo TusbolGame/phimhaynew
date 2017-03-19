@@ -24,17 +24,15 @@ class ChangeInfoUserRequest extends Request {
 		return [
 			'txtFirstName' => 'required',
 			'txtLastName' => 'required',
-			'txtEmail' => 'required|email',
-			'fileImageUser' => 'image|max:1024'
+			'fileImageUser' => 'image|min:1|max:1024'
 		];
 	}
 	public function messages(){
 		return [
 			'txtFirstName.required' => 'Chưa nhập Tên',
 			'txtLastName.required' => 'Chưa nhập Họ',
-			'txtEmail.required' => 'Chưa nhập Email',
-			'txtEmail.email' => 'Đây không phải Email',
 			'fileImageUser.image' => 'Không phải là hình ảnh',
+			'fileImageUser.min' => 'Hình ảnh quá nhỏ < 1KB',
 			'fileImageUser.max' => 'Hình ảnh quá lớn > 1MB'
 			];
 	}

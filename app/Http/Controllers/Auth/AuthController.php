@@ -18,7 +18,8 @@ use App\Lib\SessionTimeouts\SessionTimeout;
 use App\Lib\RandomGenerates\RandomGenerate;
 use App\User;
 use Mail;
-use Request;
+// use Request;
+use Illuminate\Http\Request;
 use App\UserSession;
 class AuthController extends Controller {
 

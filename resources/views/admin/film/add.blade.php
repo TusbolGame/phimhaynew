@@ -2,7 +2,7 @@
 @section('header')
 <div class="col-lg-12">
     <h1 class="page-header bg-primary">Film
-        <small>Edit</small>
+        <small class="text-danger">Add</small>
     </h1>
 </div>
 @endsection
