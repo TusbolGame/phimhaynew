@@ -16,8 +16,7 @@ class FilmCommentLocalController extends Controller {
 	public function index()
 	{
 		//
-		$film_comment = FilmCommentLocal::orderBy('id', 'DESC')->paginate(10);
-		$film_comment->setPath(route('admin.comment.index'));
+		$film_comment = FilmCommentLocal::orderBy('id', 'DESC')->paginate(20);
 		return view('admin.comment.index', compact('film_comment'));
 	}
 

@@ -41,6 +41,5 @@
             @endforeach
         </tbody>
     </table>
-    {!! $film_comment->render() !!}
 </div>
 @endsection
