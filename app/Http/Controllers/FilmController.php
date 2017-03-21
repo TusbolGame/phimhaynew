@@ -760,7 +760,7 @@ class FilmController extends Controller {
 			}
 		}
 		//ko ton tai session
-		// return redirect()->route('film.getFilmDownloadCaptcha', [$film_dir, $film_id])->withErrors('Lỗi! Hết thời gian timeout!');
+		return redirect()->route('film.getFilmDownloadCaptcha', [$film_dir, $film_id])->withErrors('Lỗi! Hết thời gian timeout!');
 		
 	}
 	//
