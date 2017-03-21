@@ -2,7 +2,7 @@
 @section('header')
 <div class="col-lg-12">
     <h1 class="page-header">Type
-        <small>List</small>
+        <small class="text-danger">List</small>
     </h1>
 </div>
 @endsection
@@ -14,8 +14,6 @@
                 <th class="sorting_desc">ID</th>
                 <th>Tên Thể loại</th>
                 <th>Tên Alias</th>               
-                <th>Created_at</th>
-                <th>Updated_at</th>
                 <th>Xóa</th>
                 <th>Chỉnh Sửa</th>
             </tr>
@@ -26,8 +24,6 @@
                     <td>{{ $data->id }}</td>
                     <td>{{ $data->type_name }}</td>
                     <td>{{ $data->type_alias }}</td>                    
-                    <td title="{!! $data->created_at !!}">{{ $data->created_at  }}</td>
-                    <td title="{!! $data->updated_at !!}">{{ $data->updated_at  }}</td>
                     <td class="center">
                         <form action="{!! route('admin.type.destroy', $data->id) !!}" method="POST" accept-charset="utf-8">
                             <input type="hidden" name="_token" value="{!! csrf_token() !!}">

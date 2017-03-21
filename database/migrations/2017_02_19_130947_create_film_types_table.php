@@ -17,7 +17,7 @@ class CreateFilmTypesTable extends Migration {
 			$table->increments('id');
 			$table->string('type_name', 100)->unique();
 			$table->string('type_alias', 100)->unique();
-			$table->timestamps();
+			// $table->timestamps();
 		});
 	}
 

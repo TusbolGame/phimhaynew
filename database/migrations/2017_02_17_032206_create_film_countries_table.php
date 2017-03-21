@@ -17,7 +17,7 @@ class CreateFilmCountriesTable extends Migration {
 			$table->increments('id');
 			$table->string('country_name',100)->unique();
 			$table->string('country_alias',100)->unique();
-			$table->timestamps();
+			// $table->timestamps();
 		});
 	}
 

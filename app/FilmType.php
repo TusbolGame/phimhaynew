@@ -7,7 +7,7 @@ class FilmType extends Model {
 	//
 	protected $table = 'film_types';
 	protected $fillable = ['id', 'type_name', 'type_alias'];
-	public $timestamps = true;
+	public $timestamps = false;
 
 	public function filmDetailType(){
 		return $this->hasMany('App\FilmDetailType', 'type_id', 'id');

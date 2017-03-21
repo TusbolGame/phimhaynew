@@ -60,7 +60,7 @@
               <textarea class="form-control" name="person_image" required="true" placeholder="Nhập đường dẫn ảnh">{!! old('person_image', $person->person_image) !!}</textarea>
             </div>
             <div class="text-center">
-                <input type="submit" name="submit" class="btn btn-primary" value="Chỉnh sửa nhân vật">
+                <input type="submit" name="submit" class="btn btn-primary" value="Sửa nhân vật">
                 <button type="reset" class="btn btn-default">Reset</button>
             </div>
         </div>
