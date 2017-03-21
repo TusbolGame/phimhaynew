@@ -30,15 +30,15 @@ class FilmReportErrorAjaxController extends Controller {
 				$captcha_report_error->forgetCaptchaSessionUses();
 				//check exist content
 				$data = '';
-				if(empty(Request::get('report_error_content_2'))){
+				if(Request::get('report_error_content_2') == ''){
 					if(empty(Request::get('report_error_content_1'))){
 						$result['content'] = 'Lỗi! Nội dung báo lỗi trống!';
 						return response()->json($result);
 					}
 					//content_1 is array-->check
 					if(count(Request::get('report_error_content_1')) == 1){
-						$data = Request::get('report_error_content_1');
-					}else{
+						$data = Request::get('report_error_content_1')[0];
+					}else if(count(Request::get('report_error_content_1')) > 1){
 						$data = implode(',', Request::get('report_error_content_1'));
 					}
 				}else{
@@ -59,13 +59,13 @@ class FilmReportErrorAjaxController extends Controller {
 				$film_report_error->film_id = $film_id;
 				$film_report_error->user_id = Auth::user()->id;
 				$film_report_error->save();
-				$result['content'] = 'Đã thêm báo lỗi! Cảm ơn bạn đã báo lỗi!';
+				$result['content'] = 'Cảm ơn bạn đã báo lỗi!';
 				$result['status'] = 1;
 				return response()->json($result);
 			}else{
 				//forget session
 				$captcha_report_error->forgetCaptchaSessionUses();
-				$result['content'] = 'Sai mã bảo vệ, hoặc thời gian timeout';
+				$result['content'] = 'Sai mã bảo vệ, hoặc mã bảo vệ hết hạn';
 				return response()->json($result);
 			}
 		}

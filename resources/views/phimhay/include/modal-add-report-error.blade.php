@@ -96,6 +96,9 @@ $(document).ready(function() {
         }
       },
       error : function (){
+          $('.modal-report-error-add-result').text('Lỗi mạng! Lỗi xử lý đường truyền!');
+          //load captcha
+          loadCaptchReportErrorAdd();
           console.log('Lỗi xử lý đường truyền');
       }
     });

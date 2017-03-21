@@ -2,7 +2,7 @@
 @section('header')
 <div class="col-lg-12">
     <h1 class="page-header">User
-        <small>Edit</small>
+        <small class="text-danger">Edit</small>
     </h1>
 </div>
 @endsection
@@ -75,7 +75,7 @@
             </label>
         </div>
         @endif
-        <button type="submit" class="btn btn-primary">User Edit</button>
+        <button type="submit" class="btn btn-primary">Sửa thành viên</button>
         <button type="reset" class="btn btn-default">Reset</button>
     <form>
 </div>
