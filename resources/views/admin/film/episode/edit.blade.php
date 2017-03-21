@@ -243,10 +243,6 @@
                     <textarea name="film_src_full" class="form-control" placeholder="Nhập URL trailer">{!! $film_episode->film_src_full !!}</textarea>
                 </div>
             </div>
-            <div class="form-group">
-                <label>Source phim remote (không bắt buộc)</label>
-                <textarea name="film_src_remote" class="form-control" placeholder="Nhập URL Remote">{!! $film_episode->film_src_remote !!}</textarea>
-            </div>
             <div class="text-right">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
                 <button type="submit" class="btn btn-primary">Sửa Episode</button>

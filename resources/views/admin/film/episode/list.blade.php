@@ -21,7 +21,6 @@
                 <th>Language</th>
                 <th>Episode</th>
                 <th>Track</th>
-                <th>Source Remote</th>
                 <th>Source Name</th>
                 <th>Source Full</th>
                 <th>Source 360p</th>
@@ -41,7 +40,6 @@
                 <td>{!! $film_episode->film_episode_language !!}</td>
                 <td>{!! $film_episode->film_episode !!}</td>
                 <td>@if(count($film_episode->filmEpisodeTrack) == 1) Yes @else No @endif</td>
-                <td>{!! $film_episode->film_src_remote !!}</td>              
                 <td>{!! $film_episode->film_src_name !!}</td>
                 <td>{!! $film_episode->film_src_full !!}</td>
                 <td>{!! $film_episode->film_src_360p !!}</td>

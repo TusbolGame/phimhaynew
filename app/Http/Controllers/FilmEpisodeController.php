@@ -48,7 +48,6 @@ class FilmEpisodeController extends Controller {
 		$film_episode->film_src_full = $request->film_src_full;
 		$film_episode->film_episode_language = $request->film_episode_language;
 		$film_episode->film_episode_quality = $request->film_episode_quality;
-		$film_episode->film_src_remote = $request->film_src_remote;
 		//
 		//getlink, youtube ko can getlink
 		if($request->film_src_name == 'google drive' || $request->film_src_name == 'google photos'){
@@ -210,7 +209,6 @@ class FilmEpisodeController extends Controller {
 		$film_episode->film_episode = $request->film_episode;
 		$film_episode->film_episode_language = $request->film_episode_language;
 		$film_episode->film_episode_quality = $request->film_episode_quality;
-		$film_episode->film_src_remote = $request->film_src_remote;
 		//
 		//getlink, youtube ko can getlink
 		if($request->film_src_name == 'google drive' || $request->film_src_name == 'google photos'){

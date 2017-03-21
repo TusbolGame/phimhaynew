@@ -21,7 +21,6 @@ class CreateFilmEpisodesTable extends Migration {
 			$table->char('film_episode_language', 3)->default('vs'); // vs, es, tm, raw
 			$table->char('film_episode_quality', 6)->default('720p'); // 360p, 480p, 720p, 1080p, 2160p
 			$table->integer('film_episode')->default(0); // 0 - phim bo, 1-2-3..-phim le
-			$table->string('film_src_remote', 300)->nullable(); //link in website anime47.com, phimmoi.net...
 			$table->string('film_src_name', 20)->nullable();
 			$table->string('film_src_full', 300)->nullable();
 			$table->string('film_src_360p', 600)->nullable();
