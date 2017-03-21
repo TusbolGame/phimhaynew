@@ -1063,6 +1063,7 @@ div.vote a{
 .film-watch-source-list ul li{
     float: left;
     padding-right: 10px;
+    margin-bottom: 10px;
 }
 .film-watch-source-list ul li a{
         display: block;
@@ -1076,16 +1077,16 @@ div.vote a{
     border-radius: 3px;
 }
 .film-watch-source-list ul li a:hover{
-    background-color: #ea8f99;
+    background-color: #ea8f99; /* color red */
     color: #702526;
     text-decoration: none;
 }
 .film-watch-source-selected{
-    background-color: #337ab7 !important;
+    background-color: #ea8f99 !important; /* color red */
     color: #fff !important;
 }
 .film-watch-source-list ul li a:visited{
-    background-color: #ea8f99;
+    background-color: rgb(119, 76, 33);
     color: #702526;
     text-decoration: none;
 }
