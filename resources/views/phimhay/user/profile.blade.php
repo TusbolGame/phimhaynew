@@ -30,10 +30,6 @@
                                 <td>{!! Auth::user()->last_name !!}</td>
                             </tr>
                             <tr>
-                                <td>Tên Tài Khoản</td>
-                                <td>{!! Auth::user()->username !!}</td>
-                            </tr>
-                            <tr>
                                 <td>Email</td>
                                 <td>{!! $email !!}</td>
                             </tr>
