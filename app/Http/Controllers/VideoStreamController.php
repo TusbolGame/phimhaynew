@@ -21,10 +21,10 @@ class VideoStreamController extends Controller {
 	    $path = 'resources/phim/movies/'.$filename;
 	    $cookie_video = new CookieVideoStream($filename);
 	    //check cookie
-	    if(!$cookie_video->checkCookie()){
-			return response('Unauthorized action.', 403);
-			exit;
-		}
+	 //    if(!$cookie_video->checkCookie()){
+		// 	return response('Unauthorized action.', 403);
+		// 	exit;
+		// }
 	    //
 	    // $path = $filename;
 	    //http://stackoverflow.com/questions/35278486/memory-allocation-problems-while-using-a-stream-through-php

@@ -26,7 +26,7 @@
                         <option value="vs" @if($film_episode->film_episode_language == 'vs') selected @endif>VietSub</option>
                         <option value="tm" @if($film_episode->film_episode_language == 'tm') selected @endif>Thuyết Minh</option>
                         <option value="lt" @if($film_episode->film_episode_language == 'lt') selected @endif>Lồng Tiếng</option>
-                        <option value="es" @if($film_episode->film_episode_language == 'es') selected @endif>EnlishSub</option>
+                        <option value="es" @if($film_episode->film_episode_language == 'es') selected @endif>EnglishSub</option>
                         <option value="raw" @if($film_episode->film_episode_language == 'raw') selected @endif>Raw</option>
                     </select>
                 </div>

@@ -68,8 +68,8 @@ class FilmEpisodeController extends Controller {
 					$get_link_video->getLinkVideoGooglePhotos($request->film_src_full);	
 				}
 			}else{
-				//remote blogit
-				$get_link_video->getLinkVideoByBlogIt(env('GET_LINK_REMOTE_API'), $request->film_src_full);
+				//remote video.io
+				$get_link_video->getLinkVideoIo($request->film_src_full);
 			}
 			$film_episode->film_src_360p = ($get_link_video->getSrc360()) ? $get_link_video->getSrc360() : null;
 			$film_episode->film_src_480p = ($get_link_video->getSrc480()) ? $get_link_video->getSrc480() : null;
@@ -229,8 +229,8 @@ class FilmEpisodeController extends Controller {
 					$get_link_video->getLinkVideoGooglePhotos($request->film_src_full);	
 				}
 			}else{
-				//remote blogit
-				$get_link_video->getLinkVideoByBlogIt(env('GET_LINK_REMOTE_API'), $request->film_src_full);
+				//remote video.io
+				$get_link_video->getLinkVideoIo($request->film_src_full);
 			}
 			$film_episode->film_src_360p = ($get_link_video->getSrc360()) ? $get_link_video->getSrc360() : null;
 			$film_episode->film_src_480p = ($get_link_video->getSrc480()) ? $get_link_video->getSrc480() : null;

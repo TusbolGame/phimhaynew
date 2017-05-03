@@ -200,7 +200,7 @@ class GetLinkVideo
 	//https://api.blogit.vn/getlink.php?lin
 	//https://videoapi.io/api/get/?link=
 	//error chua fix-->difference response return, ko co status...
-	 public function getLinkVideoByBlogIt($link_api, $link){
+	public function getLinkVideoByBlogIt($link_api, $link){
     	$this->setSrcVideoJsonNull();
     	//
     	$api = $link_api.$link;
@@ -230,6 +230,27 @@ class GetLinkVideo
 		// time_request: thời gian gửi lên api
 		// link: link gốc gửi lên api
 		// error(nếu có): Thông báo lỗi nếu có
+    }
+    public function getLinkVideoIo($link){
+    	$this->setSrcVideoJsonNull();
+    	//
+    	$api_video_io = env('GET_LINK_REMOTE_API').$link;
+		$curl = @file_get_contents($api_video_io);
+		$data = json_decode($curl);
+		// var_dump($data);die();
+		// echo "<pre>";
+		// print_r($data);
+		// echo "</pre>";
+		if(count($data) >= 1){
+			//get link thanh cong
+			foreach ($data as $src_item) {
+				
+				$this->src_video_json[$src_item->label.'p'] = $src_item->file;
+			}
+			var_dump($this->src_video_json);die();
+			return true;
+		}
+		return false;
     }
     protected function setSrcVideoJsonNull(){
     	$this->src_video_json = null;
