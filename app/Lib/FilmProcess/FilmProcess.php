@@ -31,18 +31,24 @@ class FilmProcess
 	public function getTitleInfo($film_name_vn, $film_name_en, $film_years, $film_quality){
 		return $this->getFilmNameVnEn($film_name_vn, $film_name_en).' '.$film_years.' '.$film_quality;
 	}
-	public function getTitleWatch($film_name_vn, $film_name_en, $film_years, $film_quality, $film_category, $film_episode = 'Trailer'){
-		if($film_category == 'le'){
-			return $this->getTitleInfo($film_name_vn, $film_name_en, $film_years, $film_quality);
+	public function getTitleWatch($film_list, $film_episode_watch){
+		if($film_list->film_status == 'Trailer'){
+			return $this->getFilmNameVnEn($film_list->film_name_vn, $film_list->film_name_en).' '.$film_list->film_years.' Trailer';
 		}else{
-			//phim bo
-			//if episode =0 => trailer
-			if($film_episode == 'Trailer'){
-				return $this->getFilmNameVnEn($film_name_vn, $film_name_en).' '.$film_episode.' '.$film_years;
+			if($film_list->film_category == 'le'){
+				//le
+				return $this->getTitleInfo($film_list->film_name_vn, $film_list->film_name_en, $film_list->film_years, $film_list->film_quality);
 			}else{
-				return $this->getFilmNameVnEn($film_name_vn, $film_name_en).' tập '.$film_episode.' '.$film_years.' '.$film_quality;
+				//phim bo
+				//if episode =0 => trailer
+				if($film_episode_watch->film_episode == 0){
+					return $this->getFilmNameVnEn($film_list->film_name_vn, $film_list->film_name_en).' '.$film_list->film_episode.' '.$film_years;
+				}else{
+					return $this->getFilmNameVnEn($film_list->film_name_vn, $film_list->film_name_en).' tập '.$film_episode_watch->film_episode.' '.$film_list->film_years.' '.$film_list->film_quality;
+				}
 			}
 		}
+		
 	}
 	public function getFilmDescriptionInfo($film_info){
 		$kq_info = null;

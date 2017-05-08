@@ -1,8 +1,8 @@
 @extends('phimhay.master')
 @if($film_list->film_status != 'Trailer') 
-	@section('title', $film_process->getTitleWatch($film_list->film_name_vn, $film_list->film_name_en, $film_list->film_years, $film_list->film_quality, $film_list->film_category, $film_list->film_status))
+	@section('title', $film_process->getTitleWatch($film_list, $film_episode_watch))
 @else
-	@section('title', $film_process->getTitleWatch($film_list->film_name_vn, $film_list->film_name_en, $film_list->film_years, $film_list->film_quality, $film_list->film_category, $film_list->film_status))
+	{{-- @section('title', $film_process->getTitleWatch($film_list->film_name_vn, $film_list->film_name_en, $film_list->film_years, $film_list->film_quality, $film_list->film_category, $film_list->film_status)) --}}
 @endif
 @section('description', $film_process->getFilmDescriptionInfo($film_detail->film_info))
 @section('css')
@@ -190,12 +190,15 @@
 	<script>
 		$(document).ready(function () {
 			//option next
-			function filmWatchOptionNext($category){
+			function filmWatchOptionNext($category, $episode_watch_id){
 				if($category == 'bo'){
 					//get episode
 					$episode_selected = $('.film-watch-source-selected');
 					$episode_next = $episode_selected.parent().next().children('a');
-					$episode_last = $episode_selected.parent().last().children('a');
+					//error
+					// $episode_last = $episode_selected.parent().last().children('a'); 
+					//fix
+					$episode_last = $('.film-watch-source-list ul li:last').children('a');					
 					//check last
 					if($episode_selected.text() == $episode_last.text()){
 						$tag_a = $('.film-watch-option-next');
@@ -217,7 +220,7 @@
 				}
 				//
 			}
-			filmWatchOptionNext('{!! $film_list->film_category !!}');
+			filmWatchOptionNext('{!! $film_list->film_category !!}', 37);
 			//fix active onclick
 			$('.select-comment-local').click(function() {
 				//neu exist active of fb, remove

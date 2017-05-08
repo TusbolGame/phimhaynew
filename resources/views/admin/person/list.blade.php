@@ -18,7 +18,7 @@
                 <th>Tên đầy đủ</th>
                 <th>Tên khai sinh</th>
                 <th>Biệt hiệu</th>
-                <th>Địa chỉ</th>
+                <th>Ngày sinh</th>
                 <th>Nghề nghiệp</th>
                 <th>Chiều cao (m)</th>
                 <th>Thông tin</th>

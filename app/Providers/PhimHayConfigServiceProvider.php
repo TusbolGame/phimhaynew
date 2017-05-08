@@ -6,6 +6,7 @@ use App\PhimHayConfig;
 use App\FilmList;
 use App\FilmCountry;
 use App\FilmType;
+use Cache;
 use App\Lib\FilmProcess\FilmProcess;
 
 class PhimHayConfigServiceProvider extends ServiceProvider {
@@ -31,7 +32,7 @@ class PhimHayConfigServiceProvider extends ServiceProvider {
 		->whereHas('filmDetail', function($query){
 			$query->select('id')->where('film_kind', 'truyen');
 		})->orderBy('film_viewed', 'DESC')->take(6)->get();
-		$film_country = FilmCountry::all();
+		$film_country = FilmCountry::orderBy('country_name', 'ASC')->get();
 		$film_type = FilmType::orderBy('type_name', 'ASC')->get();
 		view()->share('film_hots', $film_hots);
 		view()->share('film_process', $film_process);
