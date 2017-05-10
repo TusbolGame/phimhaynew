@@ -29,7 +29,7 @@ class FilmProcess
 	}
 
 	public function getTitleInfo($film_name_vn, $film_name_en, $film_years, $film_quality){
-		return $this->getFilmNameVnEn($film_name_vn, $film_name_en).' '.$film_years.' '.$film_quality;
+		return $this->getFilmNameVnEn($film_name_vn, $film_name_en).' '.$film_years.' '.$this->xulyGetFilmQuality($film_quality);
 	}
 	public function getTitleWatch($film_list, $film_episode_watch){
 		if($film_list->film_status == 'Trailer'){
@@ -44,7 +44,7 @@ class FilmProcess
 				if($film_episode_watch->film_episode == 0){
 					return $this->getFilmNameVnEn($film_list->film_name_vn, $film_list->film_name_en).' '.$film_list->film_episode.' '.$film_years;
 				}else{
-					return $this->getFilmNameVnEn($film_list->film_name_vn, $film_list->film_name_en).' tập '.$film_episode_watch->film_episode.' '.$film_list->film_years.' '.$film_list->film_quality;
+					return $this->getFilmNameVnEn($film_list->film_name_vn, $film_list->film_name_en).' tập '.$film_episode_watch->film_episode.' '.$film_list->film_years.' '.$this->xulyGetFilmQuality($film_list->film_quality);
 				}
 			}
 		}

@@ -88,7 +88,8 @@ $('.show-select-track').click(function(){
             $upload_result.children('.file-upload-result-success').html('Hoàn thành');
             //add even delete
             //set add src
-            setFileSourceUpload($this, $file_name)
+            setFileSourceUpload($this, $file_name);
+            //
             deleleUpload($this);
           }else{
             $upload_result.children('.file-upload-result-success').html('');

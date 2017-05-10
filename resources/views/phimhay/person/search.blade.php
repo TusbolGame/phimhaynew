@@ -9,8 +9,8 @@
 @stop
 @section('content')
 	<div class="film-filter">
-		<form class="form-inline" action="{!! route('person.getList') !!}" method="post" accept-charset="utf-8">
-			<input type="hidden" name="_token" value="{!! csrf_token() !!}">
+		<form class="form-inline" action="{!! route('person.getList') !!}" method="GET" accept-charset="utf-8">
+			{{-- <input type="hidden" name="_token" value="{!! csrf_token() !!}"> --}}
 			<div class="form-group">
 				<label>Sắp xếp</label>
 				<input type="text" class="form-control" name="person_name" value="{!! $person_name !!}" placeholder="Tên nhân vật">
@@ -46,7 +46,7 @@
 					</li>
 					@endforeach
 				</ol>
-				{!! $film_person->render() !!}
+				{!! $film_person->appends(['person_name' => $person_name, 'person_job' => $person_job])->render() !!}
 			</div>
 
 		</div>

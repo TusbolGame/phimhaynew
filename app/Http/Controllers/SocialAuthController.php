@@ -5,7 +5,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Socialite;
-
+use Auth;
 use App\SocialAccountService;
 class SocialAuthController extends Controller {
 
@@ -20,7 +20,8 @@ class SocialAuthController extends Controller {
         if($user->blocked == 1){
             return redirect()->route('auth.getLogin')->withErrors(['Tài khoản đã bị khóa! Vui lòng liên hệ Admin để biết thêm chi tiết']);
         }
-        auth()->login($user);
+        // auth()->login($user);
+        Auth::login($user);
 
         return redirect()->route('home');
     }

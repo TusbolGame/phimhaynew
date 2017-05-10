@@ -142,9 +142,6 @@ return [
 		'Intervention\Image\ImageServiceProvider',
 		/* socialite fb login */
 		'Laravel\Socialite\SocialiteServiceProvider',
-		/*google analytics */
-		'Spatie\LaravelAnalytics\LaravelAnalyticsServiceProvider',
-
 		/*
 		 * Application Service Providers...
 		 */
@@ -205,7 +202,6 @@ return [
 		'View'      => 'Illuminate\Support\Facades\View',
 		'Image' => 'Intervention\Image\Facades\Image',
 		'Socialite' => 'Laravel\Socialite\Facades\Socialite',
-		'LaravelAnalytics' => 'Spatie\LaravelAnalytics\LaravelAnalyticsFacade',
 		'LRedis' => 'Illuminate\Support\Facades\Redis',
 	],
 

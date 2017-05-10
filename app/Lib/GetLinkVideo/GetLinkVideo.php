@@ -247,7 +247,7 @@ class GetLinkVideo
 				
 				$this->src_video_json[$src_item->label.'p'] = $src_item->file;
 			}
-			var_dump($this->src_video_json);die();
+			// var_dump($this->src_video_json);die();
 			return true;
 		}
 		return false;
