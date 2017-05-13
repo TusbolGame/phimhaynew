@@ -43,6 +43,61 @@ use App\Lib\GuestInfo;
 class FilmController extends Controller {
 
 	public function getTest(Request $request){
+		// $real_file_location_path_or_url = 'http://vjs.zencdn.net/v/oceans.mp4';
+		$real_file_location_path_or_url = 'https://r15---sn-i3b7kn7y.googlevideo.com/videoplayback?id=3f8223b3c0aa7362&itag=18&source=picasa&begin=0&requiressl=yes&mm=30&mn=sn-i3b7kn7y&ms=nxu&mv=m&pl=21&sc=yes&ei=1LkVWabHBsvkoQPtnryACg&mime=video/mp4&lmt=1488386430735990&mt=1494595940&ip=1.52.35.213&ipbits=8&expire=1494624852&sparams=ip,ipbits,expire,id,itag,source,requiressl,mm,mn,ms,mv,pl,sc,ei,mime,lmt&signature=662BB58A6BEAD760F22A377940194C98F99B3332.3F330ADB3299A75A14E903D084A4B3E6686B1179&key=ck2';
+ini_set('memory_limit','1024M');
+		//check http code
+
+set_time_limit(3600);
+
+ob_start();
+
+// do any user checks here - authentication / ip restriction / max downloads / whatever**
+
+// if check fails, return back error message**
+
+// if check succeeds, proceed with code below**
+
+if( isset($_SERVER['HTTP_RANGE']) )
+
+$opts['http']['header'][0]="Range: ".$_SERVER['HTTP_RANGE'];
+
+$opts['http']['method']= "HEAD";
+$opts['http']['header'][1]= "Cookie: DRIVE_STREAM=vCJp8VJJvTs; path=/; expires=Session; domain=.drive.google.com";
+// $opts['ssl'] = [
+//         'verify_peer'   => false];
+
+$conh=stream_context_create($opts);
+
+$opts['http']['method']= "GET";
+
+$cong= stream_context_create($opts);
+
+$out[]= file_get_contents($real_file_location_path_or_url,false,$conh);
+
+$out[]= $http_response_header;
+
+ob_end_clean();
+
+array_map("header",$http_response_header);
+
+readfile($real_file_location_path_or_url,false,$cong);
+		exit;
+
+
+		//
+		var_dump(parse_url('https://drive.google.com/file/d/0B18baix_ssU1eFR3U3NfYzQ0ZVE/view'));
+		exit;
+		parse_str(file_get_contents('https://drive.google.com/get_video_info?docid=0B18baix_ssU1bE83ZUJuZWo4OFE'), $a);
+		var_dump($a);
+
+		exit;
+		var_dump(urldecode('https://youtube.googleapis.com/embed/?status=ok&hl=en&allow_embed=0&ps=docs&partnerid=30&autoplay=0&docid=0B18baix_ssU1eFR3U3NfYzQ0ZVE&abd=0&public=false&el=leaf&title=ThanhXaBachXa.TheSorcererAndTheWhiteSnake.2011.720p.vs.mp4&BASE_URL=https%3A%2F%2Fdrive.google.com%2F&iurl=https%3A%2F%2Fdrive.google.com%2Fvt%3Fauthuser%3D0%26id%3D0B18baix_ssU1eFR3U3NfYzQ0ZVE&reportabuseurl=https%3A%2F%2Fdrive.google.com%2Fabuse%3Fauthuser%3D0%26id%3D0B18baix_ssU1eFR3U3NfYzQ0ZVE&token=1&plid=V0QUvb97yiBaGA&timestamp=1494561189215&length_seconds=6133&BASE_YT_URL=https%3A%2F%2Fdrive.google.com%2F&cc_load_policy=1&authuser=0&cc3_module=1&wmode=window&override_hl=1&enablecastapi=0&enablepostapi=1&postid=drive-viewer-video-player-object-0&origin=https%3A%2F%2Fdrive.google.com'));
+		exit;
+		$v = new GetLinkVideo();
+		$v->getLinkVideoGooglePhotos('https://photos.google.com/share/AF1QipN6GJMmawu5OezQnWaQ57gq1vKCliAZAXbUXPgkvdP2-k8emJOM0GIudOR__6hw1w/photo/AF1QipNpIeistAMpgZ9oTfR4Hz568VFHzkeVobFEP3Xg?key=MVJWV21SbDV0N1EyZXQ5TW5fQXd6a1JneXp1TzZB');
+		// $v->getLinkVideoGooglePhotos('https://photos.google.com/share/AF1QipN6GJMmawu5OezQnWaQ57gq1vKCliAZAXbUXPgkvdP2-k8emJOM0GIudOR__6hw1w?key=MVJWV21SbDV0N1EyZXQ5TW5fQXd6a1JneXp1TzZB');
+		exit;
 		$guest_info = new GuestInfo();
 		$guest_info->setIp($request->ip());
 		var_dump($guest_info->getBrowser());
@@ -52,43 +107,7 @@ class FilmController extends Controller {
 		var_dump($request->server('HTTP_REFERER'));
 		var_dump($request->ip());
 
-		//
-		// $time = time() - 180;
-		// $user_login = Sessions::where('last_activity', '>=', $time)->count();
-		// $guest_login = Sessions::where('last_activity', '>=', $time)->count();
-		// var_dump($user_login);
-
-		// 
-		// Schema::table('film_details', function($table) {
-		//     //
-		//     $table->char('film_kind', 10)->default('truyen')->after('film_category');
-		// });
-		// Schema::table('film_lists', function($table) {
-		//     //
-		//     $table->char('film_category', 2)->default('le')->after('film_name_vn');
-		// });
-		// $film_detail = FilmDetail::all();
-		// foreach ($film_detail as $data) {
-		// 	if ($data->film_category == 'hhle' || $data->film_category == 'hhbo') {
-		// 		$data->film_kind = 'hoat-hinh';
-		// 		$data->save();
-		// 	}		
-		// 	if($data->film_category == 'hhbo' || $data->film_category == 'bo'){
-		// 		$film_list = FilmList::find($data->id);
-		// 		$film_list->film_category = 'bo';
-		// 		$film_list->save();
-		// 	}
-		// }
-		//nam7, nu 8
-		// $arr = [87, 88, 91];
-		// $film_person = FilmPerson::whereIn('id', $arr)->get();
-		// foreach ($film_person as $data) {
-		// 	$job = new FilmPersonJob();
-		// 	$job->film_person_id = $data->id;
-		// 	// $job->film_job_id = 8;
-		// 	$job->film_job_id = 7;
-		// 	$job->save();
-		// }
+		
 	}
 	//check link
 	public function getCheckLink($film_id){

@@ -24,11 +24,16 @@ class FilmPersonAjaxController extends Controller {
 		}
 		if (Request::ajax())
 		{
+			//check require person name
+			if(Request::get('person_name') == ''){
+				$result['content'] = 'Chưa nhập tên';
+				return response()->json($result);
+			}
 			//check 
 			$check = FilmPerson::where('person_name', Request::get('person_name'))->select('id')->get();
 			if(count($check) == 0){
 				//check job
-				if(count(Request::get('person_info')) == 0){
+				if(count(Request::get('person_job')) == 0){
 					$result['content'] = 'Chưa nhập nghề nghiệp';
 					return response()->json($result);
 				}

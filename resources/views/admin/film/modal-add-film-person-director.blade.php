@@ -10,7 +10,7 @@
           <input type="hidden" name="_token" value="{!! csrf_token() !!}">
             <div class="form-group">
               <label>Tên đạo diễn</label>
-              <input type="text" class="form-control director_name" name="director_name" placeholder="Nhập tên đạo diễn" value="" maxlength="100">
+              <input type="text" class="form-control director_name" name="director_name" placeholder="Nhập tên đạo diễn" value="" maxlength="100" >
             </div>
             <div class="form-group">
               <label>Tên đạo diễn (đầy đủ)</label>

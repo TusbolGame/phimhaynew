@@ -286,7 +286,10 @@ class FilmProcess
 			if($film_video->film_src_name == 'youtube'){
 				$video->setSrcYoutube($film_video->film_src_full);
 				$video->videoYoutubeScript();
-			}elseif ($film_video->film_src_name == 'google photos' || $film_video->film_src_name == 'google drive') {
+			}elseif ($film_video->film_src_name == 'google drive') {
+				$video->setSrcYoutube($film_video->film_src_full);
+				$video->videoIframe();
+			}elseif ($film_video->film_src_name == 'google photos') {
 				if($film_video->film_src_360p != null){
 				$video->setSrc360($film_video->film_src_360p);
 				}

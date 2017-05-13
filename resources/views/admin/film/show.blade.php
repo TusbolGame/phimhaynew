@@ -29,8 +29,8 @@
 <div class="col-lg-12 admin-detail">
     <div class="col-lg-6">
         <a href="{!! route('admin.film.getEdit', $film_list->id) !!}" class="btn btn-success">Chỉnh sửa thông tin phim và trailer</a>
-        <a href="{!! route('film.getFilm', [$film_list->film_dir_name, $film_list->id]) !!}" class="btn btn-info">Xem phim</a>
-        <a href="{!! route('admin.film.getCheckLink', $film_list->id) !!}" class="btn btn-primary">Check Link</a>
+        <a href="{!! route('film.getFilm', [$film_list->film_dir_name, $film_list->id]) !!}" class="btn btn-info">Xem phim</a><br><br>
+        <a href="{!! route('admin.film.getCheckLink', $film_list->id) !!}" class="btn btn-primary">Check Link Poster</a>
         <br><br>
         <a href="{!! route('admin.film.episode.getList', [$film_list->id]) !!}" class="btn btn-info">Danh sách Source <span class="badge">{!! $total_film_episode !!}</span></a>
         <a href="{!! route('admin.film.episode.getAdd', [$film_list->id]) !!}" class="btn btn-success">Thêm Source</a>

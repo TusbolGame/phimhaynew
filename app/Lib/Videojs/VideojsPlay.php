@@ -268,6 +268,11 @@ class VideojsPlay
 		// disable event click mouse right
 		$this->setEventClickDisableMouseRightVideo();
 	} // end function videoScriptStart
+	public function videoIframe(){
+		?>
+		<iframe src="<?php echo $this->src_youtube; ?>" width="100%" height="315px" frameborder="0" allowfullscreen></iframe>
+		<?php
+	}
 	protected function addAllSrcScript(){
 		$this->setSrcScript($this->getSrc144(), 'video/mp4', '144', 144);
 		$this->setSrcScript($this->getSrc360(), 'video/mp4', '360', 360);

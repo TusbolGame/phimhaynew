@@ -81,7 +81,7 @@
 							    @if(!empty($film_episode_watch->film_src_2160p))
 							    <li><a href="{!! route('videoStream.getVideoStream', $film_episode_watch->film_src_2160p) !!}" download="true" target="_blank">2160p</a></li>
 							    @endif
-						    @elseif($film_episode_watch->film_src_name == 'google drive' || $film_episode_watch->film_src_name == 'google photos')
+						    @elseif($film_episode_watch->film_src_name == 'google photos')
 							    @if(!empty($film_episode_watch->film_src_360p))
 							    <li><a href="{!! $film_episode_watch->film_src_360p !!}" download="true" target="_blank">360p</a></li>
 							    @endif
@@ -96,6 +96,22 @@
 							    @endif
 							    @if(!empty($film_episode_watch->film_src_2160p))
 							    <li><a href="{!! $film_episode_watch->film_src_2160p !!}" download="true" target="_blank">2160p</a></li>
+							    @endif
+							@elseif($film_episode_watch->film_src_name == 'google drive')
+							    @if(!empty($film_episode_watch->film_src_360p))
+							    <li><a href="{!! route('videoStream.getProxy', [$film_episode_watch->id, '360p']) !!}" download="true" target="_blank">360p</a></li>
+							    @endif
+							    @if(!empty($film_episode_watch->film_src_480p))
+							    <li><a href="{!! route('videoStream.getProxy', [$film_episode_watch->id, '480p']) !!}" download="true" target="_blank">480p</a></li>
+							    @endif
+							    @if(!empty($film_episode_watch->film_src_720p))
+							    <li><a href="{!! route('videoStream.getProxy', [$film_episode_watch->id, '720p']) !!}" download="true" target="_blank">720p</a></li>
+							    @endif
+							    @if(!empty($film_episode_watch->film_src_1080p))
+							    <li><a href="{!! route('videoStream.getProxy', [$film_episode_watch->id, '1080p']) !!}" download="true" target="_blank">1080p</a></li>
+							    @endif
+							    @if(!empty($film_episode_watch->film_src_2160p))
+							    <li><a href="{!! route('videoStream.getProxy', [$film_episode_watch->id, '2160p']) !!}" download="true" target="_blank">2160p</a></li>
 							    @endif
 						    @elseif($film_episode_watch->film_src_name == 'youtube')
 						    	<p>Không có source để download</p>
@@ -124,7 +140,7 @@
 					<li><a href="" title="">234</a></li>
 					<li><a href="" title="">234</a></li>
 				</ul> -->
-				<h5 class="film-watch-source-list-title">Server</h5>
+				<h5 class="film-watch-source-list-title">@if($film_list->film_category == 'le') Server @else Episodes @endif</h5>
 				<ul>
 				@if (count($film_episode_list) > 0)
 					@if ($film_list->film_category == 'le')

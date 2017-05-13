@@ -104,7 +104,7 @@ class FilmPersonController extends Controller {
 		$check = FilmPerson::where('person_name', $request->person_name)->select('id')->get();
 		if(count($check) >= 1){
 			//
-			return redirect()->back()->withErrors('Không thành công ! Tên nhân vật đã tồn tại');
+			return redirect()->back()->withErrors('Không thành công ! Tên nhân vật đã tồn tại')->withInput();
 		}
 		//
 		$film_process = new FilmProcess();

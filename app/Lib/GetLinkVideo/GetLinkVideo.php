@@ -10,6 +10,29 @@ class GetLinkVideo
 	protected $src_480 = '480p';
 	protected $src_360 = '360p';
 	protected $src_video_json = null;
+	protected $vidcode = [
+	 	//2D Non-DASH
+        '18'	=> '360p',
+        '59'	=> '480p',
+        '22'	=> '720p',
+        '37'	=> '1080p',
+        //3D Non-DASH
+        '82'	=> '360p',
+        '83'	=> '240p',
+        '84'	=> '720p',
+        '85'	=> '1080p'
+    ];
+    protected $itag = [
+		37,
+		22,
+		59,
+		18
+	];
+	protected $cookie = ['data' => null, 'expires' => 'Session', 'domain' => '.drive.google.com'];
+	//
+	public function getCookie(){
+		return $this->cookie;
+	}
 	protected function curl($url) {
 	    $ch = @curl_init();
 	    curl_setopt($ch, CURLOPT_URL, $url);
@@ -28,6 +51,50 @@ class GetLinkVideo
 	    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Expect:'));
 	    $page = curl_exec($ch);
 	    curl_close($ch);
+	    return $page;
+	}
+	protected function curlGetCookie($url) {
+	    $ch = @curl_init();
+	    curl_setopt($ch, CURLOPT_URL, $url);
+	    $head[] = "Connection: keep-alive";
+	    $head[] = "Keep-Alive: 300";
+	    $head[] = "Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7";
+	    $head[] = "Accept-Language: en-us,en;q=0.5";
+	    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2062.124 Safari/537.36');
+	    curl_setopt($ch, CURLOPT_HEADER, 1); //set get cookie
+	    curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+	    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+	    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+	    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+	    curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+	    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 60);
+	    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
+	    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Expect:'));
+	    $page = curl_exec($ch);
+	    curl_close($ch);
+	    //
+	    // var_dump($page);
+	    // $c = explode('Set-Cookie: ', $page);
+	    // unset($c[0]);
+	    // if(isset($c[2])){
+	    // 	$c1 = explode('HttpOnly', $c[2]);
+	    // 	$c[2] = $c1[0];
+	    // }
+	    
+	    // var_dump($c);
+	    //
+	    preg_match_all('/^Set-Cookie:\s*([^;]*)/mi', $page, $matches);// get cookie
+		$cookies = array();
+		// var_dump($matches);exit;
+		foreach($matches[1] as $item) {
+		    parse_str($item, $cookie);
+		    $cookies = array_merge($cookies, $cookie);
+		}
+		//save cookie
+		foreach ($cookies as $key => $value) {
+			$this->cookie['data'][$key] = $value;
+		}
+		// var_dump($this->cookie);exit;
 	    return $page;
 	}
 	/* get video youtube */
@@ -93,6 +160,7 @@ class GetLinkVideo
 	        $v360p = $decode.'=m18';
 	        $this->src_video_json[$this->src_360] = $v360p;
 	    }
+	    // var_dump($this->src_video_json);
 	    //return $this->src_video_json;
 	    // save data var json
 	    //return $this->src_video_json;
@@ -114,10 +182,55 @@ class GetLinkVideo
 	    }
 	    
 	}
-	function getLinkDrive($url = 'https://drive.google.com/file/d/0B5vaC4qOISLQSTk1ZjNnOUJJVVE/view'){
-		$data = file_get_contents($url);
-		json_encode($data);
-		var_dump($data);
+	public function getDriveIdFromUrlDrive($url){
+		$path = parse_url($url);
+		$path_data = explode('/', $path['path']);
+		// var_dump(count($path_data));
+		if(count($path_data) == 5){
+			//id la 3
+			return $path_data[3];
+		}
+		return false;
+	}
+	public function getLinkDriveUseProxy($url){
+		$id = $this->getDriveIdFromUrlDrive($url);
+		if(!$id){
+			die('Sai id');
+			exit;
+		}
+		$data = $this->curlGetCookie('https://drive.google.com/e/get_video_info?docid='.$id);
+		// var_dump($data);
+		$content = explode('status=ok', $data);
+		if(count($content) == 2){
+			//
+			parse_str($content[1], $tag);
+			// var_dump($tag);
+			// $source_video = null;
+			if(isset($tag['fmt_stream_map'])){
+				$data_source = explode(',', $tag['fmt_stream_map']);
+				foreach ($data_source as $url) {
+					list($itag,$link) = explode('|', $url);
+					if(in_array($itag, $this->itag)){
+						// $source_video[$this->vidcode[$itag]] = $link;
+						// $source_video[$this->vidcode[$itag]] = $link;
+						$this->src_video_json[$this->vidcode[$itag]] = $link;
+					}
+				}
+			}
+			// var_dump($source_video);
+		}
+	}
+	function getLinkDriveEmbedYoutube($url){
+		//https://drive.google.com/file/d/0B5vaC4qOISLQSTk1ZjNnOUJJVVE/view
+		$path = parse_url($url);
+		$path_data = explode('/', $path['path']);
+		// var_dump(count($path_data));
+		if(count($path_data) == 5){
+			//id la 3
+			$drive_id = $path_data[3];
+			return 'https://youtube.googleapis.com/embed/?status=ok&hl=en&allow_embed=0&ps=docs&partnerid=30&autoplay=0&docid='.$drive_id.'&abd=0&public=false&el=leaf&title=Video.mp4';
+		}
+		return null;
 
 	}
 	//error
@@ -150,17 +263,12 @@ class GetLinkVideo
 	    	$this->src_video_json[$this->src_360] = $f360p;
 	    	$this->src_video_json[$this->src_480] = $f480p;
 	    	$this->src_video_json[$this->src_720] = $f720p;
-	        //$AnimeVN = "<source src=\"".$f720p."\" type=\"video/mp4\" data-res=\"720\" />\n<source src=\"".$f480p."\" type=\"video/mp4\" data-res=\"480\" />\n<source src=\"".$f360p."\" type=\"video/mp4\" data-res=\"360\" />"; 
 	    } elseif(isset($f480p)){
 	     	$this->src_video_json[$this->src_360] = $f360p;
 	    	$this->src_video_json[$this->src_480] = $f480p;
-	        //$AnimeVN = "<source src=\"".$f480p."\" type=\"video/mp4\" data-res=\"480\" />\n<source src=\"".$f360p."\" type=\"video/mp4\" data-res=\"360\" />"; 
 	    } elseif(isset($f360p)){ 
 	    	$this->src_video_json[$this->src_360] = $f360p;
-	        //$AnimeVN = "<source src=\"".$f360p."\" type=\"video/mp4\" data-res=\"360\" />"; 
 	    } 
-	    //return $AnimeVN;
-	    //var_dump($AnimeVN);
 	}
 	//http://blog-hxplugin.rhcloud.com/huong-dan-viet-code-get-link-google-picasaweb
 	function getLinkVideoGooglePicasa($link) {

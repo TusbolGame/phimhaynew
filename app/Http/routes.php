@@ -249,6 +249,7 @@ Route::group(['prefix' => '/', 'middleware' => 'phimhay'], function(){
         Route::get('player/{filename}', ['as' => 'videoStream.getVideoPlayer', 'uses' => 'VideoStreamController@getPlayer']);
 
         Route::get('streamming/{filename}', ['as' => 'videoStream.getVideoStream', 'uses' => 'VideoStreamController@getVideoStream']);
+        Route::get('proxy/{id}/{quality}', ['as' => 'videoStream.getProxy', 'uses' => 'VideoStreamController@getProxy']);
     });
     //xem phim
     // Route::get('watch/{film_dir}/{film_id}', ['as' => 'film.getFilmWatch', 'uses' => 'FilmController@getFilmWatch']);

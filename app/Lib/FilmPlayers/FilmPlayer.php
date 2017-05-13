@@ -4,6 +4,8 @@
 * 
 */
 use App\Lib\Videojs\VideojsPlay;
+use App\Lib\GetLinkVideo\GetLinkVideo;
+
 
 class FilmPlayer
 {
@@ -26,7 +28,33 @@ class FilmPlayer
 			if($film_video->film_src_name == 'youtube'){
 				$video->setSrcYoutube($film_video->film_src_full);
 				$video->videoYoutubeScript();
-			}elseif ($film_video->film_src_name == 'google photos' || $film_video->film_src_name == 'google drive') {
+			}
+			elseif ($film_video->film_src_name == 'google drive'){
+				if(env('DRIVE_USE') == 'embeb'){
+					$get_link_video = new GetLinkVideo();
+					$video->setSrcYoutube($get_link_video->getLinkDriveEmbedYoutube($film_video->film_src_full));
+					$video->videoIframe();
+				}elseif(env('DRIVE_USE') == 'proxy'){
+					if($film_video->film_src_360p != null){
+						$video->setSrc360(route('videoStream.getProxy', [$film_video->id, '360p']));
+					}
+					if($film_video->film_src_480p != null){
+						$video->setSrc480(route('videoStream.getProxy', [$film_video->id, '480p']));
+					}
+					if($film_video->film_src_720p != null){
+						$video->setSrc720(route('videoStream.getProxy', [$film_video->id, '720p']));
+					}
+					if($film_video->film_src_1080p != null){
+						$video->setSrc1080(route('videoStream.getProxy', [$film_video->id, '1080p']));
+					}
+					if($film_video->film_src_2160p != null){
+						$video->setSrc2160(route('videoStream.getProxy', [$film_video->id, '2160p']));
+					}
+					$video->videoHtml5Script();
+				}
+			}
+
+			elseif ($film_video->film_src_name == 'google photos') {
 				if($film_video->film_src_360p != null){
 				$video->setSrc360($film_video->film_src_360p);
 				}

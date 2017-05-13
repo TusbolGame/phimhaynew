@@ -6,6 +6,7 @@ use App\FilmList;
 use App\FilmEpisode;
 use App\FilmEpisodeTrack;
 use App\Lib\GetLinkVideo\GetLinkVideo;
+use App\Lib\CheckLinks\HttpResponseCode;
 use App\Lib\FilmProcess\FilmProcess;
 use Illuminate\Http\Request;
 use File;
@@ -50,7 +51,8 @@ class FilmEpisodeController extends Controller {
 		$film_episode->film_episode_quality = $request->film_episode_quality;
 		//
 		//getlink, youtube ko can getlink
-		if($request->film_src_name == 'google drive' || $request->film_src_name == 'google photos'){
+		$get_link_video = new GetLinkVideo();
+		if($request->film_src_name == 'google photos'){
 			//reset src
 			$film_episode->film_src_360p = null;
 			$film_episode->film_src_480p = null;
@@ -58,15 +60,10 @@ class FilmEpisodeController extends Controller {
 			$film_episode->film_src_1080p = null;
 			$film_episode->film_src_2160p = null;
 			//gg drive
-			$get_link_video = new GetLinkVideo();
 			//
 			if((int)env('GET_LINK_LOCAL') == 1){
-				if($request->film_src_name == 'google drive'){
-					$get_link_video->getLinkVideoGoogleDrive($request->film_src_full);
-					
-				}else if($request->film_src_name == 'google photos'){
-					$get_link_video->getLinkVideoGooglePhotos($request->film_src_full);	
-				}
+				//use local
+				$get_link_video->getLinkVideoGooglePhotos($request->film_src_full);	
 			}else{
 				//remote video.io
 				$get_link_video->getLinkVideoIo($request->film_src_full);
@@ -76,6 +73,25 @@ class FilmEpisodeController extends Controller {
 			$film_episode->film_src_720p = ($get_link_video->getSrc720()) ? $get_link_video->getSrc720() : null;
 			$film_episode->film_src_1080p = ($get_link_video->getSrc1080()) ? $get_link_video->getSrc1080() : null;
 			$film_episode->film_src_2160p = ($get_link_video->getSrc2160()) ? $get_link_video->getSrc2160() : null;
+		}else if($request->film_src_name == 'google drive'){
+			//reset src
+			if(env('DRIVE_USE') == 'embeb'){
+				// $film_episode->film_src_360p = $get_link_video->getLinkDriveEmbedYoutube($request->film_src_full);
+			}elseif(env('DRIVE_USE') == 'proxy'){
+				//
+				$get_link_video->getLinkDriveUseProxy($request->film_src_full);
+				$film_episode->film_src_360p = ($get_link_video->getSrc360()) ? $get_link_video->getSrc360() : null;
+				$film_episode->film_src_480p = ($get_link_video->getSrc480()) ? $get_link_video->getSrc480() : null;
+				$film_episode->film_src_720p = ($get_link_video->getSrc720()) ? $get_link_video->getSrc720() : null;
+				$film_episode->film_src_1080p = ($get_link_video->getSrc1080()) ? $get_link_video->getSrc1080() : null;
+				$film_episode->film_src_2160p = ($get_link_video->getSrc2160()) ? $get_link_video->getSrc2160() : null;
+				//add cookie
+				$cookie = $get_link_video->getCookie();
+				if(!empty($cookie['data'])){
+					$film_episode->drive_cookie = json_encode($cookie);
+				}
+			}
+
 		}else if($request->film_src_name == 'local'){
 			$film_episode->film_src_360p = $request->film_src_360p;
 			$film_episode->film_src_480p = $request->film_src_480p;
@@ -83,6 +99,8 @@ class FilmEpisodeController extends Controller {
 			$film_episode->film_src_1080p = $request->film_src_1080p;
 			$film_episode->film_src_2160p = $request->film_src_2160p;
 		}
+
+		// exit;
 		//
 		$film_episode->save();
 		//track
@@ -128,6 +146,7 @@ class FilmEpisodeController extends Controller {
 		return view('admin.film.episode.edit', compact('film_episode', 'film_list', 'film_track', 'film_id'));
 	}
 	public function getList($film_id){
+		$http_response_code = new HttpResponseCode();
 		$film_list = FilmList::find($film_id);
 		$film_episodes = FilmEpisode::where('film_id', $film_id)->with('filmEpisodeTrack')->paginate(10);
 		$film_episodes->setPath(route('admin.film.episode.getList', $film_id));
@@ -211,7 +230,8 @@ class FilmEpisodeController extends Controller {
 		$film_episode->film_episode_quality = $request->film_episode_quality;
 		//
 		//getlink, youtube ko can getlink
-		if($request->film_src_name == 'google drive' || $request->film_src_name == 'google photos'){
+		$get_link_video = new GetLinkVideo();
+		if($request->film_src_name == 'google photos'){
 			//reset src
 			$film_episode->film_src_360p = null;
 			$film_episode->film_src_480p = null;
@@ -219,15 +239,9 @@ class FilmEpisodeController extends Controller {
 			$film_episode->film_src_1080p = null;
 			$film_episode->film_src_2160p = null;
 			//gg drive
-			$get_link_video = new GetLinkVideo();
-			//
 			if((int)env('GET_LINK_LOCAL') == 1){
-				if($request->film_src_name == 'google drive'){
-					$get_link_video->getLinkVideoGoogleDrive($request->film_src_full);
-					
-				}else if($request->film_src_name == 'google photos'){
-					$get_link_video->getLinkVideoGooglePhotos($request->film_src_full);	
-				}
+				//local
+				$get_link_video->getLinkVideoGooglePhotos($request->film_src_full);			
 			}else{
 				//remote video.io
 				$get_link_video->getLinkVideoIo($request->film_src_full);
@@ -237,7 +251,28 @@ class FilmEpisodeController extends Controller {
 			$film_episode->film_src_720p = ($get_link_video->getSrc720()) ? $get_link_video->getSrc720() : null;
 			$film_episode->film_src_1080p = ($get_link_video->getSrc1080()) ? $get_link_video->getSrc1080() : null;
 			$film_episode->film_src_2160p = ($get_link_video->getSrc2160()) ? $get_link_video->getSrc2160() : null;
-		}else if($request->film_src_name == 'local'){
+		}
+		else if($request->film_src_name == 'google drive'){
+			//
+			if(env('DRIVE_USE') == 'embeb'){
+				// $film_episode->film_src_360p = $get_link_video->getLinkDriveEmbedYoutube($request->film_src_full);
+			}elseif(env('DRIVE_USE') == 'proxy'){
+
+				$get_link_video->getLinkDriveUseProxy($request->film_src_full);
+				$film_episode->film_src_360p = ($get_link_video->getSrc360()) ? $get_link_video->getSrc360() : null;
+				$film_episode->film_src_480p = ($get_link_video->getSrc480()) ? $get_link_video->getSrc480() : null;
+				$film_episode->film_src_720p = ($get_link_video->getSrc720()) ? $get_link_video->getSrc720() : null;
+				$film_episode->film_src_1080p = ($get_link_video->getSrc1080()) ? $get_link_video->getSrc1080() : null;
+				$film_episode->film_src_2160p = ($get_link_video->getSrc2160()) ? $get_link_video->getSrc2160() : null;
+				//add cookie
+				$cookie = $get_link_video->getCookie();
+				if(!empty($cookie['data'])){
+					$film_episode->drive_cookie = json_encode($cookie);
+				}
+				
+			}
+		}
+		else if($request->film_src_name == 'local'){
 			$film_episode->film_src_360p = $request->film_src_360p;
 			$film_episode->film_src_480p = $request->film_src_480p;
 			$film_episode->film_src_720p = $request->film_src_720p;

@@ -11,9 +11,9 @@
         <thead>
             <tr>
                 <th>ID</th>
+                <th>Poster</th>
                 <th>Tên Tiếng Việt</th>
                 <th>Tên Tiếng Anh</th>
-                <th>Đường Dẫn</th>
                 <th>Trạng Thái</th>
                 <th>Source Trailer</th>
                 <th>Ngày Update</th>
@@ -27,13 +27,15 @@
             @foreach ($films as $film)
                 <tr>
                     <td>{!! $film->id !!}</td>
+                    <td>
+                        <img src="{!! $film->filmList->film_thumbnail_small !!}" alt="Error Poster" width="100" height="133">
+                    </td>
                     <td>{!! $film->filmList->film_name_vn !!}</td>
                     <td>{!! $film->filmList->film_name_en !!}</td>
-                    <td>{!! $film->filmList->film_dir_name !!}</td>
                     <td>{!! $film->filmList->film_status !!}</td>
-                    <td>{!! $film->filmTrailer->film_src_full !!}</td>
-                    <td>{!! $film->updated_at !!}</td>
-                    <td>{!! $film->created_at !!}</td>
+                    <td>{!! $film->filmTrailer->film_src_name !!}</td>
+                    <td title="{!! $film->updated_at !!}">{!! \Carbon\Carbon::createFromTimestamp(strtotime($film->updated_at))->diffForHumans() !!}</td>
+                    <td title="{!! $film->created_at !!}">{!! \Carbon\Carbon::createFromTimestamp(strtotime($film->created_at))->diffForHumans() !!}</td>
                     <td><a href="{!! route('admin.film.getShow', $film->id) !!}">Xem</a></td>
                     <td><a href="{!! route('admin.film.getEdit', $film->id) !!}">Sửa</a></td>
                     <td>
