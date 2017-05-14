@@ -6,6 +6,7 @@ use App\FilmList;
 use App\FilmEpisode;
 use App\FilmEpisodeTrack;
 use App\Lib\GetLinkVideo\GetLinkVideo;
+use App\Lib\ParseUrlInfo;
 use App\Lib\CheckLinks\HttpResponseCode;
 use App\Lib\FilmProcess\FilmProcess;
 use Illuminate\Http\Request;
@@ -20,6 +21,32 @@ class FilmEpisodeController extends Controller {
 		return view('admin.film.episode.add', compact('film_list', 'film_id'));
 	}
 	public function postAdd($film_id, Request $request){
+		//check domain, status http
+		if($request->film_src_name != 'local'){
+			//check
+			$path_url_info = new ParseUrlInfo($request->film_src_full);
+			if($request->film_src_name == 'google drive'){
+				if($path_url_info->getHost() != 'drive.google.com'){
+					return redirect()->back()->with(['flash_message_error' => 'Source Episode Error! Sai Domain Google Drive'])->withInput();
+				}
+			}elseif($request->film_src_name == 'google photos'){
+				if($path_url_info->getHost() != 'photos.google.com'){
+					return redirect()->back()->with(['flash_message_error' => 'Source Episode Error! Sai Domain Google Photos'])->withInput();
+				}
+			}elseif($request->film_src_name == 'youtube'){
+				if($path_url_info->getHost() != 'www.youtube.com'){
+					return redirect()->back()->with(['flash_message_error' => 'Source Episode Error! Sai Domain Youtube'])->withInput();
+				}
+			}
+			//check http status code film_src_full
+			$http_response_code = new HttpResponseCode();
+			$http_response_code->setUrl($request->film_src_full);
+			if(!$http_response_code->checkHttpResponseCode200()){
+				//error
+				return redirect()->back()->with(['flash_message_error' => 'Source Episode Status '.$http_response_code->getStatusCode().'! '.$http_response_code->getStatusCodeName()])->withInput();
+			}
+		}
+
 		//check track
 		if($request->film_track_type != ''){
 			$track_src = $request->file('film_track_src');
@@ -150,10 +177,37 @@ class FilmEpisodeController extends Controller {
 		$film_list = FilmList::find($film_id);
 		$film_episodes = FilmEpisode::where('film_id', $film_id)->with('filmEpisodeTrack')->paginate(10);
 		$film_episodes->setPath(route('admin.film.episode.getList', $film_id));
-		return view('admin.film.episode.list', compact('film_episodes', 'film_id', 'film_list'));
+		return view('admin.film.episode.list', compact('film_episodes', 'film_id', 'film_list', 'http_response_code'));
 	}
 	//test lai
 	public function postEdit($film_id, $id, Request $request){
+		//check domain, status http
+		if($request->film_src_name != 'local'){
+			//check
+			$path_url_info = new ParseUrlInfo($request->film_src_full);
+			if($request->film_src_name == 'google drive'){
+				if($path_url_info->getHost() != 'drive.google.com'){
+					return redirect()->back()->with(['flash_message_error' => 'Source Episode Error! Sai Domain Google Drive'])->withInput();
+				}
+			}elseif($request->film_src_name == 'google photos'){
+				if($path_url_info->getHost() != 'photos.google.com'){
+					return redirect()->back()->with(['flash_message_error' => 'Source Episode Error! Sai Domain Google Photos'])->withInput();
+				}
+			}elseif($request->film_src_name == 'youtube'){
+				if($path_url_info->getHost() != 'www.youtube.com'){
+					return redirect()->back()->with(['flash_message_error' => 'Source Episode Error! Sai Domain Youtube'])->withInput();
+				}
+			}
+			//check http status code film_src_full
+			//youtube check ko dc
+			$http_response_code = new HttpResponseCode();
+			$http_response_code->setUrl($request->film_src_full);
+			if(!$http_response_code->checkHttpResponseCode200()){
+				//error
+				return redirect()->back()->with(['flash_message_error' => 'Source Episode Status'.$http_response_code->getStatusCode().'!'.$http_response_code->getStatusCodeName()])->withInput();
+			}
+		}
+		//
 		$film_track = FilmEpisodeTrack::where('film_episode_id', $id)->first();
 		//track
 		if(count($film_track) == 1){

@@ -13,6 +13,7 @@ use App\Lib\GetLinkVideo\GetLinkVideo;
 use App\Lib\CheckLinks\HttpResponseCode;
 use App\Lib\ProxyStreamingVideos\ProxyStreamingVideo;
 use App\FilmEpisode;
+use App\FilmTrailer;
 
 class VideoStreamController extends Controller {
 
@@ -77,7 +78,12 @@ class VideoStreamController extends Controller {
 	}
 	public function getProxy($id, $quality){
 		//check
-		$film_episode = FilmEpisode::find($id);
+		$film_episode = null;
+		if(Request::get('trailer') == 'yes'){
+			$film_episode = FilmTrailer::find($id);
+		}else{
+			$film_episode = FilmEpisode::find($id);
+		}
 		if(count($film_episode) != 1){
 			return response('404');
 			exit;

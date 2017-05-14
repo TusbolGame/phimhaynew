@@ -16,11 +16,12 @@
             <tr>
                 <th>Sửa</th>
                 <th>Xóa</th>
-                <th>ID</th>
+                <th>ID</th>               
                 <th>Link Number</th>
                 <th>Language</th>
                 <th>Episode</th>
                 <th>Track</th>
+                <th>Source Full Status</th>
                 <th>Source Name</th>
                 <th>Source Full</th>
                 <th>Source 360p</th>
@@ -35,12 +36,14 @@
             <tr>
                 <td><a href="{!! route('admin.film.episode.getEdit', [$film_id, $film_episode->id]) !!}">Sửa ID {!! $film_episode->id !!}</a></td>
                 <td><a onclick="return checkDelete('Bạn có muốn xóa Episode_id là {!! $film_episode->id !!} không?');" href="{!! route('admin.film.episode.getDelete', [$film_id, $film_episode->id]) !!}"> Xóa ID {!! $film_episode->id !!}</a></td>
-                <td>{!! $film_episode->id !!}</td>
+                <td>{!! $film_episode->id !!}</td> 
                 <td>{!! $film_episode->film_link_number !!}</td>
                 <td>{!! $film_episode->film_episode_language !!}</td>
                 <td>{!! $film_episode->film_episode !!}</td>
                 <td>@if(count($film_episode->filmEpisodeTrack) == 1) Yes @else No @endif</td>
-                <td>{!! $film_episode->film_src_name !!}</td>
+                <?php $http_response_code->setUrl($film_episode->film_src_full);  ?>
+                <td @if($http_response_code->checkHttpResponseCode200()) class="bg-success" @else class="bg-danger"@endif>{!! $http_response_code->getStatusCode() !!}</td>
+                <td>{!! $film_episode->film_src_name !!}</td>                
                 <td>{!! $film_episode->film_src_full !!}</td>
                 <td>{!! $film_episode->film_src_360p !!}</td>
                 <td>{!! $film_episode->film_src_480p !!}</td>

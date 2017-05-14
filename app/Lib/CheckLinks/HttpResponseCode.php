@@ -7,12 +7,15 @@ class HttpResponseCode
 {
 	protected $header = null;
 	protected $status_code = null;
+	protected $status_code_error = ['404' => '', '403' => 'gg', '500' => '', '303' => ''];
 
 	function __construct($url = ''){
 		$this->header = @get_headers($url);
 		$this->status_code = substr($this->header[0], 9, 3);
 	}
 	public function setUrl($url){
+		$this->header = null;
+		$this->status_code = null;
 		$this->header = @get_headers($url);
 		$this->status_code = substr($this->header[0], 9, 3);
 	}
@@ -29,27 +32,20 @@ class HttpResponseCode
 	public function checkHttpResponseCode200(){
 		// if(strpos($this->header[0],'200')===false)
 		// 	return false;
-		if(!empty($this->status_code) && ($this->status_code == '404' || $this->status_code == '403')){
-			return false;
+		if(!empty($this->status_code)){
+			if(isset($this->status_code_error[$this->status_code])){
+				return false;
+			}
 		}
 		return true;
 	}
 	public function getStatusCodeName(){
 		if(!empty($this->status_code)){
-			switch ($this->status_code) {
-				case '200':
-					return 'OK';
-					break;
-				case '404':
-					return 'File Not Found';
-					break;
-				case '403':
-					return 'Permission - Không có quyền truy cập';
-					break;
-				default:
-					return 'Status not found';
-					break;
+			$status_name = array('200' => 'OK', '404' => 'File Not Found', '403' => 'Permission - Không có quyền truy cập');
+			if(isset($status_name[$this->status_code])){
+				return $status_name[$this->status_code];
 			}
+			return 'Dont know status...';
 		}
 	}
 }

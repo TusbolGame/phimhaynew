@@ -130,7 +130,7 @@
                     </select>
                 </div>
                 <div class="col-xs-3">
-                    <input type="text" class="form-control" name="film_release_date_year" value="" required="true" placeholder="Nhập năm">
+                    <input type="text" class="form-control" name="film_release_date_year" value="{!! old('film_release_date_year') !!}" required="true" placeholder="Nhập năm">
                 </div>
                 
                 
@@ -142,7 +142,7 @@
                     <div class="enter-data-ul">
                         <ul>
                             @foreach($film_type as $data)
-                            <li><label><input type="checkbox" name="film_type_id[]" value="{!! $data->id !!}">Phim {!! $data->type_name !!}</label></li>
+                            <li><label><input type="checkbox" name="film_type_id[]" value="{!! $data->id !!}" @if(!empty(old('film_type_id')) && in_array($data->id, old('film_type_id'))) checked @endif>Phim {!! $data->type_name !!}</label></li>
                             @endforeach
                         </ul>
                     </div>
@@ -154,7 +154,7 @@
                     <div class="enter-data-ul">
                         <ul>
                             @foreach ($film_country as $country)
-                            <li><label><input type="checkbox" name="film_country_id[]" value="{!! $country->id !!}" @if(old('film_country') == $country->id) selected="true"@endif>{!! $country->country_name !!}</label></li>
+                            <li><label><input type="checkbox" name="film_country_id[]" value="{!! $country->id !!}" @if(!empty(old('film_country_id')) && in_array($country->id, old('film_country_id'))) checked @endif>{!! $country->country_name !!}</label></li>
                            @endforeach
                         </ul>
                     </div>
@@ -289,23 +289,23 @@
                 <label>Nguồn Trailer: </label>
                 <div>
                     <select class="form-control" name="film_src_name">
-                        <option value="youtube">Youtube</option>
-                        <option value="google photos">Google Photos</option>
-                        <option value="google drive">Google Drive</option>
+                        <option value="youtube" @if(old('film_src_name') == 'youtube') selected @endif>Youtube</option>
+                        <option value="google photos" @if(old('film_src_name') == 'google photos') selected @endif>Google Photos</option>
+                        <option value="google drive" @if(old('film_src_name') == 'google drive') selected @endif>Google Drive</option>
                     </select>
                 </div>
                 <label>Source Trailer</label>
                 <div>
-                    <textarea name="film_src_full" class="form-control" placeholder="Nhập URL trailer"></textarea>
+                    <textarea name="film_src_full" class="form-control" placeholder="Nhập URL trailer">{!! old('film_src_full') !!}</textarea>
                 </div>
                 <label>Ngôn Ngữ Trailer:</label>
                 <div>
                     <select name="film_episode_language" class="form-control">
-                        <option value="vs">VietSub</option>
-                        <option value="tm">Thuyết Minh</option>
-                        <option value="lt">Lồng Tiếng</option>
-                        <option value="es">EnlishSub</option>
-                        <option value="raw">Raw</option>
+                        <option value="vs" @if(old('film_episode_language') == 'vs') selected @endif>VietSub</option>
+                        <option value="tm" @if(old('film_episode_language') == 'tm') selected @endif>Thuyết Minh</option>
+                        <option value="lt" @if(old('film_episode_language') == 'lt') selected @endif>Lồng Tiếng</option>
+                        <option value="es" @if(old('film_episode_language') == 'es') selected @endif>EnlishSub</option>
+                        <option value="raw" @if(old('film_episode_language') == 'raw') selected @endif>Raw</option>
                     </select>
                 </div>
             </div>

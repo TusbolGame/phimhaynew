@@ -9,7 +9,7 @@ use App\Lib\GetLinkVideo\GetLinkVideo;
 
 class FilmPlayer
 {
-	public function getFilmVideojs($film_video, $poster_video, $film_track = ''){
+	public function getFilmVideojs($film_video, $poster_video, $film_track = '', $trailer = ''){
 
 		if(count($film_video) == 1){
 			$video = new VideojsPlay();
@@ -35,21 +35,42 @@ class FilmPlayer
 					$video->setSrcYoutube($get_link_video->getLinkDriveEmbedYoutube($film_video->film_src_full));
 					$video->videoIframe();
 				}elseif(env('DRIVE_USE') == 'proxy'){
-					if($film_video->film_src_360p != null){
+					if($trailer == 'yes'){
+						//trailer
+						if($film_video->film_src_360p != null){
+						$video->setSrc360(route('videoStream.getProxy', [$film_video->id, '360p']).'?trailer=yes');
+						}
+						if($film_video->film_src_480p != null){
+							$video->setSrc480(route('videoStream.getProxy', [$film_video->id, '480p']).'?trailer=yes');
+						}
+						if($film_video->film_src_720p != null){
+							$video->setSrc720(route('videoStream.getProxy', [$film_video->id, '720p']).'?trailer=yes');
+						}
+						if($film_video->film_src_1080p != null){
+							$video->setSrc1080(route('videoStream.getProxy', [$film_video->id, '1080p']).'?trailer=yes');
+						}
+						if($film_video->film_src_2160p != null){
+							$video->setSrc2160(route('videoStream.getProxy', [$film_video->id, '2160p']).'?trailer=yes');
+						}
+					}else{
+						//phim
+						if($film_video->film_src_360p != null){
 						$video->setSrc360(route('videoStream.getProxy', [$film_video->id, '360p']));
+						}
+						if($film_video->film_src_480p != null){
+							$video->setSrc480(route('videoStream.getProxy', [$film_video->id, '480p']));
+						}
+						if($film_video->film_src_720p != null){
+							$video->setSrc720(route('videoStream.getProxy', [$film_video->id, '720p']));
+						}
+						if($film_video->film_src_1080p != null){
+							$video->setSrc1080(route('videoStream.getProxy', [$film_video->id, '1080p']));
+						}
+						if($film_video->film_src_2160p != null){
+							$video->setSrc2160(route('videoStream.getProxy', [$film_video->id, '2160p']));
+						}
 					}
-					if($film_video->film_src_480p != null){
-						$video->setSrc480(route('videoStream.getProxy', [$film_video->id, '480p']));
-					}
-					if($film_video->film_src_720p != null){
-						$video->setSrc720(route('videoStream.getProxy', [$film_video->id, '720p']));
-					}
-					if($film_video->film_src_1080p != null){
-						$video->setSrc1080(route('videoStream.getProxy', [$film_video->id, '1080p']));
-					}
-					if($film_video->film_src_2160p != null){
-						$video->setSrc2160(route('videoStream.getProxy', [$film_video->id, '2160p']));
-					}
+					
 					$video->videoHtml5Script();
 				}
 			}

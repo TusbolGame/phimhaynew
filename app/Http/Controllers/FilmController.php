@@ -33,9 +33,12 @@ use App\Lib\SessionTimeouts\SessionDownloadFilm;
 use App\Lib\CheckLinks\HttpResponseCode;
 use App\Lib\FilmPlayers\FilmPlayer;
 use App\Lib\FilmCookies\CookieVideoStream;
+use App\Lib\ParseUrlInfo;
+
 use Input;
 use Auth;
 use File;
+use DB;
 //
 use App\Sessions;
 use App\Lib\GuestInfo;
@@ -43,45 +46,52 @@ use App\Lib\GuestInfo;
 class FilmController extends Controller {
 
 	public function getTest(Request $request){
+		//
+		$http = new HttpResponseCode();
+		$http->setUrl('https://www.youtube.com/watch?v=7777JGwWNGJdvx877');
+		var_dump($http->getStatusCode());
+		$status_code_error = ['404' => '', '403' => 'gg', '500' => '', '303' => ''];
+		echo 
+		exit;
 		// $real_file_location_path_or_url = 'http://vjs.zencdn.net/v/oceans.mp4';
 		$real_file_location_path_or_url = 'https://r15---sn-i3b7kn7y.googlevideo.com/videoplayback?id=3f8223b3c0aa7362&itag=18&source=picasa&begin=0&requiressl=yes&mm=30&mn=sn-i3b7kn7y&ms=nxu&mv=m&pl=21&sc=yes&ei=1LkVWabHBsvkoQPtnryACg&mime=video/mp4&lmt=1488386430735990&mt=1494595940&ip=1.52.35.213&ipbits=8&expire=1494624852&sparams=ip,ipbits,expire,id,itag,source,requiressl,mm,mn,ms,mv,pl,sc,ei,mime,lmt&signature=662BB58A6BEAD760F22A377940194C98F99B3332.3F330ADB3299A75A14E903D084A4B3E6686B1179&key=ck2';
-ini_set('memory_limit','1024M');
-		//check http code
+		ini_set('memory_limit','1024M');
+				//check http code
 
-set_time_limit(3600);
+		set_time_limit(3600);
 
-ob_start();
+		ob_start();
 
-// do any user checks here - authentication / ip restriction / max downloads / whatever**
+		// do any user checks here - authentication / ip restriction / max downloads / whatever**
 
-// if check fails, return back error message**
+		// if check fails, return back error message**
 
-// if check succeeds, proceed with code below**
+		// if check succeeds, proceed with code below**
 
-if( isset($_SERVER['HTTP_RANGE']) )
+		if( isset($_SERVER['HTTP_RANGE']) )
 
-$opts['http']['header'][0]="Range: ".$_SERVER['HTTP_RANGE'];
+		$opts['http']['header'][0]="Range: ".$_SERVER['HTTP_RANGE'];
 
-$opts['http']['method']= "HEAD";
-$opts['http']['header'][1]= "Cookie: DRIVE_STREAM=vCJp8VJJvTs; path=/; expires=Session; domain=.drive.google.com";
-// $opts['ssl'] = [
-//         'verify_peer'   => false];
+		$opts['http']['method']= "HEAD";
+		$opts['http']['header'][1]= "Cookie: DRIVE_STREAM=vCJp8VJJvTs; path=/; expires=Session; domain=.drive.google.com";
+		// $opts['ssl'] = [
+		//         'verify_peer'   => false];
 
-$conh=stream_context_create($opts);
+		$conh=stream_context_create($opts);
 
-$opts['http']['method']= "GET";
+		$opts['http']['method']= "GET";
 
-$cong= stream_context_create($opts);
+		$cong= stream_context_create($opts);
 
-$out[]= file_get_contents($real_file_location_path_or_url,false,$conh);
+		$out[]= file_get_contents($real_file_location_path_or_url,false,$conh);
 
-$out[]= $http_response_header;
+		$out[]= $http_response_header;
 
-ob_end_clean();
+		ob_end_clean();
 
-array_map("header",$http_response_header);
+		array_map("header",$http_response_header);
 
-readfile($real_file_location_path_or_url,false,$cong);
+		readfile($real_file_location_path_or_url,false,$cong);
 		exit;
 
 
@@ -109,7 +119,7 @@ readfile($real_file_location_path_or_url,false,$cong);
 
 		
 	}
-	//check link
+	//check link image
 	public function getCheckLink($film_id){
 		$film_successes = [];
 		$film_errors = [];
@@ -153,12 +163,7 @@ readfile($real_file_location_path_or_url,false,$cong);
 	}
 	public function getFilmInfo($film_dir, $film_id){
 		$film_id = (int)$film_id;
-		// echo '<br>'.$film_dir;
-		// die();
-		//find
-		// $film_list = FilmList::where('id', $film_id)->where('film_dir_name', $film_dir)->first();
 		$film_list = FilmList::find($film_id);
-		//fb
 		if(count($film_list) == 1 && $film_list->film_dir_name == $film_dir){
 			//get info
 			$film_detail = FilmDetail::find($film_id);
@@ -253,7 +258,7 @@ readfile($real_file_location_path_or_url,false,$cong);
 		}
 		//not found
 		// return redirect()->route('404');	
-		return redirect()->view('phimhay.include.404');	
+		return view('phimhay.include.404');	
 	}
 	public function getFilmWatch($film_dir, $film_id, $film_episode_id){
 		$film_id = (int)$film_id;
@@ -392,10 +397,12 @@ readfile($real_file_location_path_or_url,false,$cong);
 	//admin
 	public function getAdd(){
 		$film_job = FilmJob::all();
-		// $film_country = FilmCountry::all();//da co tron service
+		// $film_country = FilmCountry::all();//da co trong service
 		return view('admin.film.add', compact('film_job'));
 	}
 	public function postAdd(Request $request){
+		// Start transaction!
+		DB::beginTransaction();
 		$film_detail = new FilmDetail();
 		$film_detail->film_kind = $request->film_kind;
 		$film_detail->film_info = $request->film_info;
@@ -423,38 +430,40 @@ readfile($real_file_location_path_or_url,false,$cong);
 		$film_detail->film_thumbnail_big = $request->film_thumbnail_big;
 		$film_detail->film_poster_video = $request->film_poster_video;
 		$film_detail->film_key_words = $request->film_key_words;
-		$film_detail->save();
-		//add country
-		if(count($request->film_country_id) > 0){
-			$country = [];
-			foreach ($request->film_country_id as $key => $value) {
-				$country[$key] = ['film_id' => $film_detail->id, 'country_id' => $value];
+		$film_detail_save = $film_detail->save();
+		if($film_detail_save){
+			//add country
+			if(count($request->film_country_id) > 0){
+				$country = [];
+				foreach ($request->film_country_id as $key => $value) {
+					$country[$key] = ['film_id' => $film_detail->id, 'country_id' => $value];
+				}
+				$film_country = FilmDetailCountry::insert($country);
 			}
-			$film_country = FilmDetailCountry::insert($country);
-		}
-		//add type
-		if(count($request->film_type_id) > 0){
-			$type = [];
-			foreach ($request->film_type_id as $key => $value) {
-				$type[$key] = ['film_id' => $film_detail->id, 'type_id' => $value];
+			//add type
+			if(count($request->film_type_id) > 0){
+				$type = [];
+				foreach ($request->film_type_id as $key => $value) {
+					$type[$key] = ['film_id' => $film_detail->id, 'type_id' => $value];
+				}
+				$film_detail_type = FilmDetailType::insert($type);
 			}
-			$film_detail_type = FilmDetailType::insert($type);
-		}
-		//add film actor
-		if(count($request->actor_id) > 0){
-			$actors = [];
-			foreach ($request->actor_id as $key => $value) {
-				$actors[$key] = ['film_id' => $film_detail->id, 'actor_id' => $value, 'actor_character' => $request->actor_character[$key]];
+			//add film actor
+			if(count($request->actor_id) > 0){
+				$actors = [];
+				foreach ($request->actor_id as $key => $value) {
+					$actors[$key] = ['film_id' => $film_detail->id, 'actor_id' => $value, 'actor_character' => $request->actor_character[$key]];
+				}
+				$film_actor = FilmActor::insert($actors);
 			}
-			$film_actor = FilmActor::insert($actors);
-		}
-		//add film director
-		if(count($request->director_id) > 0){
-			$directors = [];
-			foreach ($request->director_id as $key => $value) {
-				$directors[$key] = ['film_id' => $film_detail->id, 'director_id' => $value];
+			//add film director
+			if(count($request->director_id) > 0){
+				$directors = [];
+				foreach ($request->director_id as $key => $value) {
+					$directors[$key] = ['film_id' => $film_detail->id, 'director_id' => $value];
+				}
+				$film_director = FilmDirector::insert($directors);
 			}
-			$film_director = FilmDirector::insert($directors);
 		}
 		// die();
 		//add film trailer
@@ -463,24 +472,15 @@ readfile($real_file_location_path_or_url,false,$cong);
 		$film_trailer->film_episode_language = $request->film_episode_language;
 		$film_trailer->film_src_name = $request->film_src_name;
 		$film_trailer->film_src_full = $request->film_src_full;
-		//get link
 		//getlink
-		if($request->film_src_name != 'youtube'){
-			//reset src
-			$film_trailer->film_src_360p = null;
-			$film_trailer->film_src_480p = null;
-			$film_trailer->film_src_720p = null;
-			$film_trailer->film_src_1080p = null;
-			$film_trailer->film_src_2160p = null;
+		//getlink, youtube ko can getlink
+		$get_link_video = new GetLinkVideo();
+		if($request->film_src_name == 'google photos'){
 			//gg drive
-			$get_link_video = new GetLinkVideo();
+			//
 			if((int)env('GET_LINK_LOCAL') == 1){
-				if($request->film_src_name == 'google drive'){
-					$get_link_video->getLinkVideoGoogleDrive($request->film_src_full);
-					
-				}else if($request->film_src_name == 'google photos'){
-					$get_link_video->getLinkVideoGooglePhotos($request->film_src_full);	
-				}
+				//use local
+				$get_link_video->getLinkVideoGooglePhotos($request->film_src_full);	
 			}else{
 				//remote video.io
 				$get_link_video->getLinkVideoIo($request->film_src_full);
@@ -490,9 +490,27 @@ readfile($real_file_location_path_or_url,false,$cong);
 			$film_trailer->film_src_720p = ($get_link_video->getSrc720()) ? $get_link_video->getSrc720() : null;
 			$film_trailer->film_src_1080p = ($get_link_video->getSrc1080()) ? $get_link_video->getSrc1080() : null;
 			$film_trailer->film_src_2160p = ($get_link_video->getSrc2160()) ? $get_link_video->getSrc2160() : null;
+		}else if($request->film_src_name == 'google drive'){
+			//
+			if(env('DRIVE_USE') == 'proxy'){
+				//
+				$get_link_video->getLinkDriveUseProxy($request->film_src_full);
+				$film_trailer->film_src_360p = ($get_link_video->getSrc360()) ? $get_link_video->getSrc360() : null;
+				$film_trailer->film_src_480p = ($get_link_video->getSrc480()) ? $get_link_video->getSrc480() : null;
+				$film_trailer->film_src_720p = ($get_link_video->getSrc720()) ? $get_link_video->getSrc720() : null;
+				$film_trailer->film_src_1080p = ($get_link_video->getSrc1080()) ? $get_link_video->getSrc1080() : null;
+				$film_trailer->film_src_2160p = ($get_link_video->getSrc2160()) ? $get_link_video->getSrc2160() : null;
+				//add cookie
+				$cookie = $get_link_video->getCookie();
+				if(!empty($cookie['data'])){
+					$film_trailer->drive_cookie = json_encode($cookie);
+				}
+			}
+
 		}
 		//
-		$film_trailer->save();
+		//
+		$film_trailer_save = $film_trailer->save();
 		// add film list
 		$film_list = new FilmList();
 		$film_list->id = $film_detail->id;
@@ -508,8 +526,13 @@ readfile($real_file_location_path_or_url,false,$cong);
 		$film_process = new FilmProcess();
 		$film_list->film_dir_name = $film_process->getFilmDirName($request->film_name_vn, $request->film_name_en, $request->film_release_date_year);
 		$film_list->film_status = 'Trailer';
-		$film_list->save();
-		return redirect()->route('admin.film.getShow', $film_detail->id);
+		$film_list_save = $film_list->save();
+		if($film_detail_save && $film_trailer_save && $film_list_save){
+			DB::commit();
+			return redirect()->route('admin.film.getShow', $film_detail->id);
+		}
+		DB::rollback();
+		return redirect()->back()->with(['flash_message_error' =>'Error! Không thể thêm phim'])->withInput();
 	}
 	public function getList(){
 		$films = FilmDetail::orderBy('id', 'DESC')->with('filmList')->paginate(5);
@@ -709,35 +732,79 @@ readfile($real_file_location_path_or_url,false,$cong);
 		return view('admin.film.show', compact('film_detail', 'film_list', 'film_trailer', 'film_id', 'film_director', 'film_actor', 'film_detail_country', 'film_detail_type', 'total_film_episode'));
 	}
 	public function postEditFilmTrailer($film_id, Request $request){
+		//
+		//check domain, status http
+		if($request->film_src_name != 'local'){
+			//check
+			$path_url_info = new ParseUrlInfo($request->film_src_full);
+			if($request->film_src_name == 'google drive'){
+				if($path_url_info->getHost() != 'drive.google.com'){
+					return redirect()->back()->with(['flash_message_error' => 'Trailer! Source Episode Error! Sai Domain Google Drive'])->withInput();
+				}
+			}elseif($request->film_src_name == 'google photos'){
+				if($path_url_info->getHost() != 'photos.google.com'){
+					return redirect()->back()->with(['flash_message_error' => 'Trailer! Source Episode Error! Sai Domain Google Photos'])->withInput();
+				}
+			}elseif($request->film_src_name == 'youtube'){
+				if($path_url_info->getHost() != 'www.youtube.com'){
+					return redirect()->back()->with(['flash_message_error' => 'Trailer! Source Episode Error! Sai Domain Youtube'])->withInput();
+				}
+			}
+			//check http status code film_src_full
+			//youtube check ko dc
+			$http_response_code = new HttpResponseCode();
+			$http_response_code->setUrl($request->film_src_full);
+			if(!$http_response_code->checkHttpResponseCode200()){
+				//error
+				return redirect()->back()->with(['flash_message_error' => 'Trailer! Source Episode Status'.$http_response_code->getStatusCode().'!'.$http_response_code->getStatusCodeName()])->withInput();
+			}
+		}
+		//
 		$film_trailer = FilmTrailer::find($film_id);
 		$film_trailer->film_src_name = $request->film_src_name;
 		$film_trailer->film_src_full = $request->film_src_full;
-		//getlink
-		if($request->film_src_name != 'youtube'){
-			//reset src
+		//reset src
 			$film_trailer->film_src_360p = null;
 			$film_trailer->film_src_480p = null;
 			$film_trailer->film_src_720p = null;
 			$film_trailer->film_src_1080p = null;
 			$film_trailer->film_src_2160p = null;
+		//getlink
+		$get_link_video = new GetLinkVideo();
+		if($request->film_src_name == 'google photos'){			
 			//gg drive
-			$get_link_video = new GetLinkVideo();
 			if((int)env('GET_LINK_LOCAL') == 1){
-				if($request->film_src_name == 'google drive'){
-					$get_link_video->getLinkVideoGoogleDrive($request->film_src_full);
-					
-				}else if($request->film_src_name == 'google photos'){
-					$get_link_video->getLinkVideoGooglePhotos($request->film_src_full);	
-				}
+				//local
+				$get_link_video->getLinkVideoGooglePhotos($request->film_src_full);			
 			}else{
-				//remote blogit
-				$get_link_video->getLinkVideoByBlogIt(env('GET_LINK_REMOTE_API'), $request->film_src_full);
+				//remote video.io
+				$get_link_video->getLinkVideoIo($request->film_src_full);
 			}
 			$film_trailer->film_src_360p = ($get_link_video->getSrc360()) ? $get_link_video->getSrc360() : null;
 			$film_trailer->film_src_480p = ($get_link_video->getSrc480()) ? $get_link_video->getSrc480() : null;
 			$film_trailer->film_src_720p = ($get_link_video->getSrc720()) ? $get_link_video->getSrc720() : null;
 			$film_trailer->film_src_1080p = ($get_link_video->getSrc1080()) ? $get_link_video->getSrc1080() : null;
 			$film_trailer->film_src_2160p = ($get_link_video->getSrc2160()) ? $get_link_video->getSrc2160() : null;
+		}
+		else if($request->film_src_name == 'google drive'){
+			//
+			if(env('DRIVE_USE') == 'embeb'){
+				// $film_trailer->film_src_360p = $get_link_video->getLinkDriveEmbedYoutube($request->film_src_full);
+			}elseif(env('DRIVE_USE') == 'proxy'){
+
+				$get_link_video->getLinkDriveUseProxy($request->film_src_full);
+				$film_trailer->film_src_360p = ($get_link_video->getSrc360()) ? $get_link_video->getSrc360() : null;
+				$film_trailer->film_src_480p = ($get_link_video->getSrc480()) ? $get_link_video->getSrc480() : null;
+				$film_trailer->film_src_720p = ($get_link_video->getSrc720()) ? $get_link_video->getSrc720() : null;
+				$film_trailer->film_src_1080p = ($get_link_video->getSrc1080()) ? $get_link_video->getSrc1080() : null;
+				$film_trailer->film_src_2160p = ($get_link_video->getSrc2160()) ? $get_link_video->getSrc2160() : null;
+				//add cookie
+				$cookie = $get_link_video->getCookie();
+				if(!empty($cookie['data'])){
+					$film_trailer->drive_cookie = json_encode($cookie);
+				}
+				
+			}
 		}
 		$film_trailer->film_episode_language = $request->film_episode_language;
 		$film_trailer->save();

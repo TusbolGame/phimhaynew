@@ -155,7 +155,7 @@
 		<div class="film-trailer film-detail-border">
 			<h4 class="film-title-box"><span class="glyphicon glyphicon-film"></span> TRAILER</h4>
 			<div class="background-video">
-				{!! $film_player->getFilmVideojs($film_trailer, $film_detail->film_poster_video) !!}
+				{!! $film_player->getFilmVideojs($film_trailer, $film_detail->film_poster_video, '', 'yes') !!}
 			</div>
 		</div>
 		<div class="film-content film-detail-border">

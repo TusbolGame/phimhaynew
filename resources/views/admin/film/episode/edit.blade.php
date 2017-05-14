@@ -17,17 +17,17 @@
             <div class="form-group">           
                 <label>Episode</label><br>
                 <label>Link Number: </label>
-                <input type="number" name="film_link_number" class="form-control" value="{!! $film_episode->film_link_number !!}" placeholder="Nhập link number">
+                <input type="number" name="film_link_number" class="form-control" value="{!! old('film_link_number', $film_episode->film_link_number) !!}" placeholder="Nhập link number">
             </div>
             <div class="form-group">
                 <label>Ngôn Ngữ Episode:</label>
                 <div>
                     <select name="film_episode_language" class="form-control">
-                        <option value="vs" @if($film_episode->film_episode_language == 'vs') selected @endif>VietSub</option>
-                        <option value="tm" @if($film_episode->film_episode_language == 'tm') selected @endif>Thuyết Minh</option>
-                        <option value="lt" @if($film_episode->film_episode_language == 'lt') selected @endif>Lồng Tiếng</option>
-                        <option value="es" @if($film_episode->film_episode_language == 'es') selected @endif>EnglishSub</option>
-                        <option value="raw" @if($film_episode->film_episode_language == 'raw') selected @endif>Raw</option>
+                        <option value="vs" @if(old('film_episode_language', $film_episode->film_episode_language) == 'vs') selected @endif>VietSub</option>
+                        <option value="tm" @if(old('film_episode_language', $film_episode->film_episode_language) == 'tm') selected @endif>Thuyết Minh</option>
+                        <option value="lt" @if(old('film_episode_language', $film_episode->film_episode_language) == 'lt') selected @endif>Lồng Tiếng</option>
+                        <option value="es" @if(old('film_episode_language', $film_episode->film_episode_language) == 'es') selected @endif>EnglishSub</option>
+                        <option value="raw" @if(old('film_episode_language', $film_episode->film_episode_language) == 'raw') selected @endif>Raw</option>
                     </select>
                 </div>
             </div>
@@ -35,17 +35,17 @@
                 <label>Chất Lượng Episode:</label>
                 <div>
                     <select name="film_episode_quality" class="form-control">
-                        <option value="360p" @if($film_episode->film_episode_quality == '360p') selected @endif>360p</option>
-                        <option value="480p" @if($film_episode->film_episode_quality == '480p') selected @endif>480p</option>
-                        <option value="720p" @if($film_episode->film_episode_quality == '720p') selected @endif>720p</option>
-                        <option value="1080p" @if($film_episode->film_episode_quality == '1080p') selected @endif>1080p</option>
-                        <option value="2160p" @if($film_episode->film_episode_quality == '2160p') selected @endif>2160p</option>
+                        <option value="360p" @if(old('film_episode_quality', $film_episode->film_episode_quality) == '360p') selected @endif>360p</option>
+                        <option value="480p" @if(old('film_episode_quality', $film_episode->film_episode_quality) == '480p') selected @endif>480p</option>
+                        <option value="720p" @if(old('film_episode_quality', $film_episode->film_episode_quality) == '720p') selected @endif>720p</option>
+                        <option value="1080p" @if(old('film_episode_quality', $film_episode->film_episode_quality) == '1080p') selected @endif>1080p</option>
+                        <option value="2160p" @if(old('film_episode_quality', $film_episode->film_episode_quality) == '2160p') selected @endif>2160p</option>
                     </select>
                 </div>
             </div>
             <div class="form-group">
                 <label>Film Episode: lẻ - 0, bộ - tập mấy  </label>
-                <input type="number" name="film_episode" class="form-control" value="{!! $film_episode->film_episode !!}" placeholder="Nhập: bộ là tập mấy, lẻ là 0">
+                <input type="number" name="film_episode" class="form-control" value="{!! old('film_episode', $film_episode->film_episode) !!}" placeholder="Nhập: bộ là tập mấy, lẻ là 0">
             </div>
             @if(count($film_track) == 1)
                 {{-- is track --}}
@@ -101,10 +101,10 @@
                 <label>Nguồn Episode: </label>
                 <div>
                     <select class="form-control" name="film_src_name">
-                        <option value="youtube" @if($film_episode->film_src_name == 'youtube') selected @endif>Youtube</option>
-                        <option value="google photos" @if($film_episode->film_src_name == 'google photos') selected @endif>Google Photos</option>
-                        <option value="google drive" @if($film_episode->film_src_name == 'google drive') selected @endif>Google Drive</option>
-                        <option value="local" @if($film_episode->film_src_name == 'local') selected @endif>Local</option>
+                        <option value="youtube" @if(old('film_src_name', $film_episode->film_src_name) == 'youtube') selected @endif>Youtube</option>
+                        <option value="google photos" @if(old('film_src_name', $film_episode->film_src_name) == 'google photos') selected @endif>Google Photos</option>
+                        <option value="google drive" @if(old('film_src_name', $film_episode->film_src_name) == 'google drive') selected @endif>Google Drive</option>
+                        <option value="local" @if(old('film_src_name', $film_episode->film_src_name) == 'local') selected @endif>Local</option>
                     </select>
                 </div>
             </div>
@@ -240,7 +240,7 @@
             <div class="form-group">
                 <label>Source Episode</label>
                 <div>
-                    <textarea name="film_src_full" class="form-control" placeholder="Nhập URL trailer">{!! $film_episode->film_src_full !!}</textarea>
+                    <textarea name="film_src_full" class="form-control" placeholder="Nhập URL trailer">{!! old('film_src_full', $film_episode->film_src_full) !!}</textarea>
                 </div>
             </div>
             <div class="text-right">
