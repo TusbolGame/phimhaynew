@@ -63,33 +63,6 @@
 			$(this).text(temp.fromNow());
 		});
 		//
-		function setCommentLocalTotal($total){
-			$('.comment-local-total-int').text($total);
-		}
-		function addCommentLocalUserPrepend($comment_id, $user_name, $image, $content, $time){
-			$comment_list = $('.comment-local-list ul');
-			//get username
-			$username = $user_name;
-			//check image
-			$image_data = $image;
-			if($image.substring(0, 4) == 'icon'){
-				$image_data = '{!! url('resources/photos/') !!}/'+$image;
-			}
-			//time
-			$time_comment_moment = moment.tz($time, $timezone_default).fromNow();
-			$str = '<li>'+
-				'<div class="comment-avata col-sm-1 col-xs-3">'+
-				'<img src="'+$image_data+'" alt="error image avata">'+
-				'</div>'+
-				'<div class="comment-user-info col-sm-11">'+
-				'<input type="hidden" class="comment-id" value="'+$comment_id+'">'+
-				'<span class="comment-username">'+$username+'</span>'+
-				'<span class="comment-content">'+$content+'</span>'+
-				'<span class="comment-time" title="'+$time+'">'+$time_comment_moment+'</span>'+
-				'</div>'+
-				'</li>';
-				$comment_list.prepend($str);
-		}
 		function showAndGetCommentCheck($content){
 			$('.comment-check').text($content).show();
 		}
@@ -117,8 +90,6 @@
 				$comment_list.append($str);
 		}
 		$('.btn-fiml-comment-local-add').click(function() {
-			//
-			showAndGetCommentCheck('');
 			$(this).button('loading');
 			//goi ajax
 			var data = {
@@ -127,7 +98,6 @@
 	        };
 	        if(data['comment_content'] == ''){
 	        	showAndGetCommentCheck('Chưa nhập bình luận');
-	        	$(this).button('reset');
 	        	return false;
 	        }
 			$.ajax({
@@ -147,11 +117,9 @@
                 		//comment success add
                 		showAndGetCommentCheck('Bình luận thành công!');
                 		//total ++
-                		$('.comment-local-total-int').text(parseInt($('.comment-local-total-int').text()) + 1);
+                		// $('.comment-local-total-int').text(parseInt($('.comment-local-total-int').text()) + 1);
+                		//
                 		$('textarea.comment-content').val('');
-                		//show comment
-                		addCommentLocalUserPrepend(result['content']['comment']['user_id'], result['content']['comment']['username'], result['content']['comment']['image'], result['content']['comment']['content'], result['content']['comment']['time']['date']);
-                		
                 	}else{
                 		showAndGetCommentCheck('Lỗi xử lý!');
                 	}
@@ -163,7 +131,6 @@
 	        });
 	        $(this).button('reset');
 		});
-		//load comment
 		$('#btn-load-comment-local').on('click', function () {
 		    var btn = $(this).button('loading');
 		    //
@@ -217,7 +184,74 @@
 		})
 	});
 </script>
+<script src="https://localhost/socket.io/socket.io-1.3.4.js"></script>
 <script>
+    // var socket = io.connect('https://localhost:8080');
+   	// socket.on('message', function (data) {
+   	// 	console.log(data);
+    // });
+//
+function setCommentLocalTotal($total){
+	$('.comment-local-total-int').text($total);
+}
+function addCommentLocalUserPrepend($comment_id, $user_name, $image, $content, $time){
+			$comment_list = $('.comment-local-list ul');
+			//get username
+			$username = $user_name;
+			//check image
+			$image_data = $image;
+			if($image.substring(0, 4) == 'icon'){
+				$image_data = '{!! url('resources/photos/') !!}/'+$image;
+			}
+			//time
+			$time_comment_moment = moment.tz($time, $timezone_default).fromNow();
+			$str = '<li>'+
+				'<div class="comment-avata col-sm-1 col-xs-3">'+
+				'<img src="'+$image_data+'" alt="error image avata">'+
+				'</div>'+
+				'<div class="comment-user-info col-sm-11">'+
+				'<input type="hidden" class="comment-id" value="'+$comment_id+'">'+
+				'<span class="comment-username">'+$username+'</span>'+
+				'<span class="comment-content">'+$content+'</span>'+
+				'<span class="comment-time" title="'+$time+'">'+$time_comment_moment+'</span>'+
+				'</div>'+
+				'</li>';
+				$comment_list.prepend($str);
+		}
+const PRIVATE_CHANNEL = '{!! $channel_name !!}';
 
+//
+
+// var io = require('socket.io-client')
+
+var host = window.location.host.split(':')[0]
+var socket = io.connect('//' + host + ':8000', {secure: true, rejectUnauthorized: false})
+
+socket.on('connect', function () {
+    console.log('CONNECT')
+    
+    socket.on('event', function (data) {
+        console.log('EVENT', data)
+    })
+    
+    socket.on('messages.new', function (data) {
+        // console.log('NEW PRIVATE MESSAGE', data)
+        // alert(data['comment']);
+        // console.log(data['comment']['time']['date']);
+        addCommentLocalUserPrepend(data['comment']['user_id'], data['comment']['username'], data['comment']['image'], data['comment']['content'], data['comment']['time']['date']);
+        //set total
+        setCommentLocalTotal(data['comment']['total']);
+        // console.log(data['comment']['time']);
+    })
+    
+    socket.on('disconnect', function () {
+        console.log('disconnect')
+    })
+    
+    // Kick it off
+    // Can be any channel. For private channels, Laravel should pass it upon page load (or given by another user).
+    socket.emit('subscribe-to-channel', {channel: PRIVATE_CHANNEL})
+    console.log('SUBSCRIBED TO <' + PRIVATE_CHANNEL + '>');
+})
  
 </script>
