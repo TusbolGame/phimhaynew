@@ -253,15 +253,5 @@ socket.on('connect', function () {
     socket.emit('subscribe-to-channel', {channel: PRIVATE_CHANNEL})
     console.log('SUBSCRIBED TO <' + PRIVATE_CHANNEL + '>');
 })
-    //var url = window.location.protocol + '//' + window.location.hostname;
-//     var socket = io(url, {
-//   'secure': true,
-//   'reconnect': true,
-//   'reconnection delay': 500,
-//   'max reconnection attempts': 10
-// });
-// var chosenEvent = 'room_' + room.id;
-// socket.on(chosenEvent, function (data) {
-//   console.log(data);
-// });
+ 
 </script>

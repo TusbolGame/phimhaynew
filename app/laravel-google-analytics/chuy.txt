@@ -1,2 +1,0 @@
-site id la tracking id analytics.google.com vao admin\property\tracking info
-loi client id, The OAuth client was invalid

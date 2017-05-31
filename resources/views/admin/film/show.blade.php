@@ -28,12 +28,12 @@
 @endif
 <div class="col-lg-12 admin-detail">
     <div class="col-lg-6">
-        <a href="{!! route('admin.film.getEdit', $film_list->id) !!}" class="btn btn-success">Chỉnh sửa thông tin phim và trailer</a>
+        <a href="{!! route('admin.film.getEdit', $film_list->id) !!}" class="btn btn-success">Chỉnh sửa thông tin phim</a>
         <a href="{!! route('film.getFilm', [$film_list->film_dir_name, $film_list->id]) !!}" class="btn btn-info">Xem phim</a><br><br>
         <a href="{!! route('admin.film.getCheckLink', $film_list->id) !!}" class="btn btn-primary">Check Link Poster</a>
         <br><br>
-        <a href="{!! route('admin.film.episode.getList', [$film_list->id]) !!}" class="btn btn-info">Danh sách Source <span class="badge">{!! $total_film_episode !!}</span></a>
-        <a href="{!! route('admin.film.episode.getAdd', [$film_list->id]) !!}" class="btn btn-success">Thêm Source</a>
+        <a href="{!! route('admin.film.episode.getList', [$film_list->id]) !!}" class="btn btn-info">Danh sách Episode <span class="badge">{!! $total_film_episode !!}</span></a>
+        <a href="{!! route('admin.film.episode.getAdd', [$film_list->id]) !!}" class="btn btn-success">Thêm Episode</a>
         <h4>Thông tin phim</h4>
         <table class="table table-striped table-bordered fix-word-break">
             <tbody>
@@ -77,6 +77,10 @@
         <br><br>
         <table class="table table-striped table-bordered fix-word-break">
             <tbody>
+                <tr>
+                    <th>Src Youtube Trailer</th>
+                    <td>{!! $film_detail->src_youtube_trailer !!}</td>
+                </tr>
                 <tr>
                     <th>Ngày Chiếu</th>
                     <td>{!! $film_detail->film_release_date !!}</td>
@@ -175,63 +179,5 @@
             </tbody>
         </table>
     </div>
-    <div class="col-lg-12">
-        <table class="table table-bordered table-striped table-responsive">
-            <caption class="text-danger"><strong>Trailer: Chi Tiết</strong></caption>
-            <tbody>
-                <tr>
-                    <th>Source Trailer</th>
-                    <!-- co source trailer -->
-                    @if(count($film_trailer) >= 1)
-                    <td class="bg-success">
-                        <table class="table table-responsive fix-word-break">
-                            <tbody>
-                                <tr>
-                                    <th>Nguồn Trailer</th>
-                                    <td>{!! $film_trailer->film_src_name !!}</td>
-                                </tr>
-                                <tr>
-                                    <th>Source Trailer</th>
-                                    <td>{!! $film_trailer->film_src_full !!}</td>
-                                </tr>
-                                <tr>
-                                    <th>Ngôn Ngữ Trailer</th>
-                                    <td>{!! $film_trailer->film_episode_language !!}</td>
-                                </tr>
-                                <tr>
-                                    <th>Source 360p</th>
-                                    <td>{!! $film_trailer->film_src_360p !!}</td>
-                                </tr>
-                                <tr>
-                                    <th>Source 480p</th>
-                                    <td>{!! $film_trailer->film_src_480p !!}</td>
-                                </tr>
-                                <tr>
-                                    <th>Source 720p</th>
-                                    <td>{!! $film_trailer->film_src_720p !!}</td>
-                                </tr>
-                                <tr>
-                                    <th>Source 1080p</th>
-                                    <td>{!! $film_trailer->film_src_1080p !!}</td>
-                                </tr>
-                                <tr>
-                                    <th>Source 2160p</th>
-                                    <td>{!! $film_trailer->film_src_2160p !!}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </td>
-                    <td><button type="button" class="btn btn-success" data-toggle="modal" data-target=".modal-edit-film-trailer">Chỉnh Sửa</button></td>
-                    @else
-                    <!-- ko co -->
-                    <td class="bg-danger">ko </td>
-                    @endif
-                    
-                </tr>
-            </tbody>
-        </table>
-        @include('admin.film.modal-edit-film-trailer', [$film_trailer, $film_id])
-    </div>
-    
 </div>
 @endsection

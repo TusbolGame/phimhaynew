@@ -14,8 +14,14 @@
                 <th>ID</th>
                 <th>Chỉnh Sửa</th>
                 <th>Xóa</th>
-                <th>Image</th>
                 <th>Tên nhân vật</th>
+                <th>Tên đầy đủ</th>
+                <th>Tên khai sinh</th>
+                <th>Biệt hiệu</th>
+                <th>Ngày sinh</th>
+                <th>Nghề nghiệp</th>
+                <th>Chiều cao (m)</th>
+                <th>Thông tin</th>
                 <th>Created_at</th>
                 <th>Updated_at</th>
             </tr>
@@ -26,14 +32,28 @@
                     <td>{{ $data->id }}</td>
                     <td class="center"><i class="fa fa-pencil fa-fw"></i> <a href="{!! route('admin.person.getEdit', $data->id) !!}">Sửa</a></td>
                     <td class="center"><i class="fa fa-trash-o  fa-fw"></i><a onclick="return checkDelete('Bạn có muốn xóa Person id là {!! $data->id !!} không');" href="{!! route('admin.person.getDelete', $data->id) !!}"> Xóa</a></td> 
-                    <td><img src="{{ $data->person_image }}" class="img-responsive" alt=""></td>
                     <td>{{ $data->person_name }}</td>
-                    <td title="{!! $data->created_at !!}">{!! \Carbon\Carbon::createFromTimestamp(strtotime($data->created_at))->diffForHumans() !!}</td>
-                    <td title="{!! $data->updated_at !!}">{!! \Carbon\Carbon::createFromTimestamp(strtotime($data->updated_at))->diffForHumans() !!}</td>
+                    <td>{{ $data->person_full_name }}</td>
+                    <td>{{ $data->person_birth_name }}</td>
+                    <td>{{ $data->person_nick_name }}</td>
+                    <td class="person_info">{{ $data->person_birth_date }}</td>
+                    <td>
+                        @if(count($data->filmPersonJob) > 0)
+                        <ul>
+                            @foreach ($data->filmPersonJob as $person_job)
+                            <li>{!! $person_job->filmJob->job_name !!}</li>
+                            @endforeach
+                        </ul>
+                        @endif
+                    </td>
+                    <td class="person_info">{{ $data->person_height }}</td>
+                    <td class="person_info">{{ $data->person_info }}</td>
+                    <td title="{!! $data->created_at !!}">{{ $data->created_at  }}</td>
+                    <td title="{!! $data->updated_at !!}">{{ $data->updated_at  }}</td>
                 </tr>
             @endforeach
         </tbody>
     </table>
+    <?php echo $film_person->render(); ?>
 </div>
-<?php echo $film_person->render(); ?>
 @endsection

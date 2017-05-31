@@ -1,9 +1,5 @@
 @extends('phimhay.master')
-@if($film_list->film_status != 'Trailer') 
-	@section('title', $film_process->getTitleWatch($film_list, $film_episode_watch))
-@else
-	{{-- @section('title', $film_process->getTitleWatch($film_list->film_name_vn, $film_list->film_name_en, $film_list->film_years, $film_list->film_quality, $film_list->film_category, $film_list->film_status)) --}}
-@endif
+@section('title', $film_process->getTitleWatch($film_list, $film_source_watch))
 @section('description', $film_process->getFilmDescriptionInfo($film_detail->film_info))
 @section('css')
 	<!-- slick -->
@@ -29,16 +25,17 @@
 	@include('phimhay.include.modal-alert-not-login')
 	@include('phimhay.include.modal-add-report-error', ['film_id' => $film_list->id])
 	<div class="film-watch film-background-border">
-		@if($film_list->film_status != 'Trailer' && count($film_episode_watch) > 0)
+		@if($film_list->film_status != 'Trailer' && count($film_source_watch) > 0)
 		<div class="film-watch-title">
 			<h3><a href="{!! route('film.getFilm', [$film_list->film_dir_name, $film_list->id]) !!}" title="">{!! $film_process->getFilmNameVnEn($film_list->film_name_vn, $film_list->film_name_en) !!}
 			@if ($film_list->film_category == 'bo') 
-				Tập {!! $film_episode_watch->film_episode !!} 
+				Tập {!! $film_source_watch->filmEpisode->film_episode !!} 
 			@endif
 			</a></h3>
 		</div>
 		<div class="film-watch-video background-video">
-			{!! $film_player->getFilmVideojs($film_episode_watch, $film_detail->film_poster_video, $film_track) !!}
+			{{-- {!! $film_player->getFilmVideojs($film_source_watch, $film_detail->film_poster_video, $film_source_track) !!} --}}
+			{!! $film_player->getFilmVideojs($data_source, $film_detail->film_poster_video, $film_source_track) !!}
 		</div>
 		<div class="film-watch-option">
 			<ul>
@@ -65,55 +62,55 @@
 					    	<span class="caret"></span>
 					  	</a>
 					  	<ul class="dropdown-menu">
-					  		@if($film_episode_watch->film_src_name == 'local')
-							    @if(!empty($film_episode_watch->film_src_360p))
-							    <li><a href="{!! route('videoStream.getVideoStream', $film_episode_watch->film_src_360p) !!}" download="true" target="_blank">360p</a></li>
+					  		@if($film_source_watch->film_src_name == 'local')
+							    @if(!empty($film_source_watch->film_src_360p))
+							    <li><a href="{!! route('videoStream.getVideoStream', $film_source_watch->film_src_360p) !!}" download="true" target="_blank">360p</a></li>
 							    @endif
-							    @if(!empty($film_episode_watch->film_src_480p))
-							    <li><a href="{!! route('videoStream.getVideoStream', $film_episode_watch->film_src_480p) !!}" download="true" target="_blank">480p</a></li>
+							    @if(!empty($film_source_watch->film_src_480p))
+							    <li><a href="{!! route('videoStream.getVideoStream', $film_source_watch->film_src_480p) !!}" download="true" target="_blank">480p</a></li>
 							    @endif
-							    @if(!empty($film_episode_watch->film_src_720p))
-							    <li><a href="{!! route('videoStream.getVideoStream', $film_episode_watch->film_src_720p) !!}" download="true" target="_blank">720p</a></li>
+							    @if(!empty($film_source_watch->film_src_720p))
+							    <li><a href="{!! route('videoStream.getVideoStream', $film_source_watch->film_src_720p) !!}" download="true" target="_blank">720p</a></li>
 							    @endif
-							    @if(!empty($film_episode_watch->film_src_1080p))
-							    <li><a href="{!! route('videoStream.getVideoStream', $film_episode_watch->film_src_1080p) !!}" download="true" target="_blank">1080p</a></li>
+							    @if(!empty($film_source_watch->film_src_1080p))
+							    <li><a href="{!! route('videoStream.getVideoStream', $film_source_watch->film_src_1080p) !!}" download="true" target="_blank">1080p</a></li>
 							    @endif
-							    @if(!empty($film_episode_watch->film_src_2160p))
-							    <li><a href="{!! route('videoStream.getVideoStream', $film_episode_watch->film_src_2160p) !!}" download="true" target="_blank">2160p</a></li>
+							    @if(!empty($film_source_watch->film_src_2160p))
+							    <li><a href="{!! route('videoStream.getVideoStream', $film_source_watch->film_src_2160p) !!}" download="true" target="_blank">2160p</a></li>
 							    @endif
-						    @elseif($film_episode_watch->film_src_name == 'google photos')
-							    @if(!empty($film_episode_watch->film_src_360p))
-							    <li><a href="{!! $film_episode_watch->film_src_360p !!}" download="true" target="_blank">360p</a></li>
+						    @elseif($film_source_watch->film_src_name == 'google photos')
+							    @if(!empty($film_source_watch->film_src_360p))
+							    <li><a href="{!! $film_source_watch->film_src_360p !!}" download="true" target="_blank">360p</a></li>
 							    @endif
-							    @if(!empty($film_episode_watch->film_src_480p))
-							    <li><a href="{!! $film_episode_watch->film_src_480p !!}" download="true" target="_blank">480p</a></li>
+							    @if(!empty($film_source_watch->film_src_480p))
+							    <li><a href="{!! $film_source_watch->film_src_480p !!}" download="true" target="_blank">480p</a></li>
 							    @endif
-							    @if(!empty($film_episode_watch->film_src_720p))
-							    <li><a href="{!! $film_episode_watch->film_src_720p !!}" download="true" target="_blank">720p</a></li>
+							    @if(!empty($film_source_watch->film_src_720p))
+							    <li><a href="{!! $film_source_watch->film_src_720p !!}" download="true" target="_blank">720p</a></li>
 							    @endif
-							    @if(!empty($film_episode_watch->film_src_1080p))
-							    <li><a href="{!! $film_episode_watch->film_src_1080p !!}" download="true" target="_blank">1080p</a></li>
+							    @if(!empty($film_source_watch->film_src_1080p))
+							    <li><a href="{!! $film_source_watch->film_src_1080p !!}" download="true" target="_blank">1080p</a></li>
 							    @endif
-							    @if(!empty($film_episode_watch->film_src_2160p))
-							    <li><a href="{!! $film_episode_watch->film_src_2160p !!}" download="true" target="_blank">2160p</a></li>
+							    @if(!empty($film_source_watch->film_src_2160p))
+							    <li><a href="{!! $film_source_watch->film_src_2160p !!}" download="true" target="_blank">2160p</a></li>
 							    @endif
-							@elseif($film_episode_watch->film_src_name == 'google drive')
-							    @if(!empty($film_episode_watch->film_src_360p))
-							    <li><a href="{!! route('videoStream.getProxy', [$film_episode_watch->id, '360p']) !!}" download="true" target="_blank">360p</a></li>
+							@elseif($film_source_watch->film_src_name == 'google drive')
+							    @if(!empty($film_source_watch->film_src_360p))
+							    <li><a href="{!! route('videoStream.getProxy', [$film_source_watch->id, '360p']) !!}" download="true" target="_blank">360p</a></li>
 							    @endif
-							    @if(!empty($film_episode_watch->film_src_480p))
-							    <li><a href="{!! route('videoStream.getProxy', [$film_episode_watch->id, '480p']) !!}" download="true" target="_blank">480p</a></li>
+							    @if(!empty($film_source_watch->film_src_480p))
+							    <li><a href="{!! route('videoStream.getProxy', [$film_source_watch->id, '480p']) !!}" download="true" target="_blank">480p</a></li>
 							    @endif
-							    @if(!empty($film_episode_watch->film_src_720p))
-							    <li><a href="{!! route('videoStream.getProxy', [$film_episode_watch->id, '720p']) !!}" download="true" target="_blank">720p</a></li>
+							    @if(!empty($film_source_watch->film_src_720p))
+							    <li><a href="{!! route('videoStream.getProxy', [$film_source_watch->id, '720p']) !!}" download="true" target="_blank">720p</a></li>
 							    @endif
-							    @if(!empty($film_episode_watch->film_src_1080p))
-							    <li><a href="{!! route('videoStream.getProxy', [$film_episode_watch->id, '1080p']) !!}" download="true" target="_blank">1080p</a></li>
+							    @if(!empty($film_source_watch->film_src_1080p))
+							    <li><a href="{!! route('videoStream.getProxy', [$film_source_watch->id, '1080p']) !!}" download="true" target="_blank">1080p</a></li>
 							    @endif
-							    @if(!empty($film_episode_watch->film_src_2160p))
-							    <li><a href="{!! route('videoStream.getProxy', [$film_episode_watch->id, '2160p']) !!}" download="true" target="_blank">2160p</a></li>
+							    @if(!empty($film_source_watch->film_src_2160p))
+							    <li><a href="{!! route('videoStream.getProxy', [$film_source_watch->id, '2160p']) !!}" download="true" target="_blank">2160p</a></li>
 							    @endif
-						    @elseif($film_episode_watch->film_src_name == 'youtube')
+						    @elseif($film_source_watch->film_src_name == 'youtube')
 						    	<p>Không có source để download</p>
 						    @endif
 					  	</ul>
@@ -134,26 +131,43 @@
 		<!-- end film evaluate -->
 		<div class="film-watch-source">
 			<div class="film-watch-source-list">
+				<h5 class="film-watch-source-list-title">Server</h5>
+				<ul>
+				@if(count($film_source_list) >= 1)
+					@foreach ($film_source_list as $data)
+
+						<li><a href="{!! route('film.getFilmWatch', [$film_list->film_dir_name, $film_list->id, $data->id]) !!}"
+						 @if ($film_source_watch->id == $data->id) class="film-watch-source-selected" @endif
+						>{!! $data->film_src_name.'-'.$film_process->xulyGetFilmLanguage($data->film_episode_language) !!}</a></li>
+						
+					@endforeach
+				@endif
+				</ul>
+			</div>
+			<div class="film-watch-source-list">
 				<!-- <h5 class="film-watch-source-list-title">Server 1</h5>
 				<ul>
 					<li><a href="" title="">234</a></li>
 					<li><a href="" title="">234</a></li>
 					<li><a href="" title="">234</a></li>
 				</ul> -->
-				<h5 class="film-watch-source-list-title">@if($film_list->film_category == 'le') Server @else Episodes @endif</h5>
+				<h5 class="film-watch-source-list-title">Episode</h5>
 				<ul>
 				@if (count($film_episode_list) > 0)
 					@if ($film_list->film_category == 'le')
 						@foreach ($film_episode_list as $film_episode)
-								
-								<li><a href="{!! route('film.getFilmWatch', [$film_list->film_dir_name, $film_list->id, $film_episode->id]) !!}" @if ($film_episode_watch->id == $film_episode->id) class="film-watch-source-selected" @endif>{!! $film_process->xulyGetFilmLanguage($film_episode->film_episode_language) !!}</a></li>
+
+								<li><a href="{!! route('film.getFilmWatch', [$film_list->film_dir_name, $film_list->id, $film_episode->filmSource->first()]) !!}"
+								 @if ($film_source_watch->film_episode_id == $film_episode->id) class="film-watch-source-selected" @endif
+								>Full</a></li>
+							
 						@endforeach
 					@else
 						@foreach ($film_episode_list as $film_episode)
 
-								<li><a href="{!! route('film.getFilmWatch', [$film_list->film_dir_name, $film_list->id, $film_episode->id]) !!}"
-								 @if ($film_episode_watch->id == $film_episode->id) class="film-watch-source-selected" @endif
-								>{!! $film_episode->film_episode !!}</a></li>
+								<li><a href="{!! route('film.getFilmWatch', [$film_list->film_dir_name, $film_list->id, $film_episode->filmSource->first()]) !!}"
+								 @if ($film_source_watch->film_episode_id == $film_episode->id) class="film-watch-source-selected" @endif
+								>{!! $film_episode->film_episode !!} @if($film_episode->film_episode_name != ''){!! $film_episode->film_episode_name !!}@endif</a></li>
 							
 						@endforeach
 					@endif

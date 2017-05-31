@@ -116,7 +116,6 @@ Route::group(['prefix' => '/', 'middleware' => 'phimhay'], function(){
             Route::get('show/{film_id}',['as'=>'admin.film.getShow', 'uses'=>'FilmController@getShow']);
             //check-link
             Route::get('check-link/{film_id}',['as'=>'admin.film.getCheckLink', 'uses'=>'FilmController@getCheckLink']);
-            Route::post('trailer/edit/{film_id}',['as'=>'admin.film.postEditFilmTrailer', 'uses'=>'FilmController@postEditFilmTrailer']);
             //
             Route::get('search',['as'=>'admin.film.getSearch', 'uses'=>'FilmController@getSearchAdmin']);
             // //delete
@@ -130,11 +129,27 @@ Route::group(['prefix' => '/', 'middleware' => 'phimhay'], function(){
                 Route::get('list/{film_id}',['as'=>'admin.film.episode.getList', 'uses'=>'FilmEpisodeController@getList']);
                 Route::post('edit/{film_id}/{id}',['as'=>'admin.film.episode.postEdit', 'uses'=>'FilmEpisodeController@postEdit']);
                 Route::get('delete/{film_id}/{id}',['as'=>'admin.film.episode.getDelete', 'uses'=>'FilmEpisodeController@getDelete']);
+                //add episode with source
+                Route::get('add-with-source/{film_id}',['as'=>'admin.film.episode.getAddWithSource', 'uses'=>'FilmEpisodeController@getAddWithSource']);
+                Route::post('add-with-source/{film_id}', 'FilmEpisodeController@postAddWithSource');
+                Route::get('grab-link/{film_id}',['as'=>'admin.film.episode.getGrabLink', 'uses'=>'FilmEpisodeController@getGrabLink']);
+                Route::post('grab-link/{film_id}', 'FilmEpisodeController@postGrabLink');
                 //
-                 Route::post('upload-episode',['as'=>'admin.film.episodeAjax.postUpload', 'uses'=>'FilmEpisodeAjaxController@postUpload']);
-                 Route::post('delete-episode',['as'=>'admin.film.episodeAjax.postDelete', 'uses'=>'FilmEpisodeAjaxController@postDelete']);
-                 Route::post('check-movie-episode',['as'=>'admin.film.episodeAjax.postCheckExists', 'uses'=>'FilmEpisodeAjaxController@postCheckExists']);
-                 Route::get('check-movie-episode',['as'=>'admin.film.episodeAjax.getCheckExists', 'uses'=>'FilmEpisodeAjaxController@getCheckExists']);
+                Route::post('upload-episode',['as'=>'admin.film.episodeAjax.postUpload', 'uses'=>'FilmEpisodeAjaxController@postUpload']);
+                Route::post('delete-episode',['as'=>'admin.film.episodeAjax.postDelete', 'uses'=>'FilmEpisodeAjaxController@postDelete']);
+                Route::post('check-movie-episode',['as'=>'admin.film.episodeAjax.postCheckExists', 'uses'=>'FilmEpisodeAjaxController@postCheckExists']);
+                Route::get('check-movie-episode',['as'=>'admin.film.episodeAjax.getCheckExists', 'uses'=>'FilmEpisodeAjaxController@getCheckExists']);
+                //source
+                Route::group(['prefix' => 'source'], function(){
+                    Route::get('list/{film_id}/{episode_id}',['as'=>'admin.film.episode.source.getList', 'uses'=>'FilmSourceController@getList']);
+                    Route::get('add/{film_id}',['as'=>'admin.film.episode.source.getAdd', 'uses'=>'FilmSourceController@getAdd']);
+                    Route::post('add/{film_id}','FilmSourceController@postAdd');
+                    // //
+                    Route::get('edit/{film_id}/{episode_id}/{source_id}',['as'=>'admin.film.episode.source.getEdit', 'uses'=>'FilmSourceController@getEdit']);
+                    Route::post('edit/{film_id}/{episode_id}/{source_id}',['as'=>'admin.film.episode.source.postEdit', 'uses'=>'FilmSourceController@postEdit']);
+                    Route::get('delete/{film_id}/{episode_id}/{source_id}',['as'=>'admin.film.episode.source.getDelete', 'uses'=>'FilmSourceController@getDelete']);
+                });
+
             });
         });
         //
@@ -251,9 +266,11 @@ Route::group(['prefix' => '/', 'middleware' => 'phimhay'], function(){
         Route::get('streamming/{filename}', ['as' => 'videoStream.getVideoStream', 'uses' => 'VideoStreamController@getVideoStream']);
         Route::get('proxy/{id}/{quality}', ['as' => 'videoStream.getProxy', 'uses' => 'VideoStreamController@getProxy']);
     });
+    //redirect
+    Route::get('videoplayback/{id}', ['as' => 'videoPlayback', 'uses' => 'VideoPlaybackController@getRedirect']);
     //xem phim
     // Route::get('watch/{film_dir}/{film_id}', ['as' => 'film.getFilmWatch', 'uses' => 'FilmController@getFilmWatch']);
-    Route::get('watch/{film_dir}/{film_id}/{id}', ['as' => 'film.getFilmWatch', 'uses' => 'FilmController@getFilmWatch']);
+    Route::get('watch/{film_dir}/{film_id}/{source_id}', ['as' => 'film.getFilmWatch', 'uses' => 'FilmController@getFilmWatch']);
     // Route::get('google', function(){
     //     $analyticsData = LaravelAnalytics::getMostVisitedPages(365, 20);
     //     dd($analyticsData);
@@ -263,5 +280,6 @@ Route::group(['prefix' => '/', 'middleware' => 'phimhay'], function(){
         Route::get('captcha/{film_dir}/{film_id}', ['as' => 'film.getFilmDownloadCaptcha', 'uses' => 'FilmController@getFilmDownloadCaptcha']);
         Route::match(['get', 'post'],'{film_dir}/{film_id}', ['as' => 'film.getFilmDownload', 'uses' => 'FilmController@getFilmDownload']);
     });
+
 
 });

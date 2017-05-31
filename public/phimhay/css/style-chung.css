@@ -615,6 +615,7 @@ div.vote a{
 /* film info */
 .film-dir ol{
     background-color: #201f21;
+    text-transform: capitalize;
 }
 .film-background-border{
     background-color: #201f21;
@@ -1066,7 +1067,7 @@ div.vote a{
     margin-bottom: 10px;
 }
 .film-watch-source-list ul li a{
-        display: block;
+    display: block;
     font-size: 13px;
     text-align: center;
     font-weight: bold;
@@ -1075,6 +1076,7 @@ div.vote a{
     padding: 10px;
     color: #ddd;
     border-radius: 3px;
+    text-transform: capitalize;
 }
 .film-watch-source-list ul li a:hover{
     background-color: #ea8f99; /* color red */
@@ -1196,3 +1198,14 @@ div.vote a{
     color: #0082bb;
     background-color: #faebd7;
 }
+/* end captcha */
+
+
+/* responsive */
+@media (max-width: 568px){
+    .list-film-new-ul li{
+        width: 49%;
+    }
+}
+
+/* end responsive */

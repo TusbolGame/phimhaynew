@@ -7,11 +7,11 @@
 	"require": {
 		"laravel/framework": "5.0.*",
 		"doctrine/dbal": "v2.5",
-		"guzzle/guzzle": "~5.0",
 		"cartalyst/sentinel": "^2.0",
 		"intervention/image": "^2.3",
 		"laravel/socialite" : "^2.0",
-		"predis/predis" : "1.1.1"
+		"predis/predis" : "1.1.1",
+		"npt-nguyen/libs": "^1.1"
 		
 	},
 	"require-dev": {

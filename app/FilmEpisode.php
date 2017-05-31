@@ -4,8 +4,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class FilmEpisode extends Model {
 
+	//
 	protected $table = 'film_episodes';
-	protected $fillable = ['id', 'film_id', 'film_link_number', 'film_episode_language', 'film_episode', 'film_src_name', 'film_src_full', 'film_src_360p', 'film_src_480p', 'film_src_720p', 'film_src_1080p', 'film_src_2160p', 'created_at', 'updated_at'];
+	protected $fillable = ['id', 'film_id', 'film_episode', 'film_episode_name'];
 	public $timestamps = true;
 
 	public function filmDetail(){
@@ -14,8 +15,13 @@ class FilmEpisode extends Model {
 	public function filmList(){
 		return $this->belongsTo('App\FilmList', 'film_id', 'id');
 	}
-	public function filmEpisodeTrack(){
-		return $this->hasOne('App\FilmEpisodeTrack', 'film_episode_id', 'id');
+	public function filmSource(){
+		return $this->hasMany('App\FilmSource', 'film_episode_id', 'id');
 	}
-
+	public function filmSourceFirst(){
+		return $this->filmSource()->take(0);
+	}
+	// public function filmSourceCount(){
+	// 	return $this->hasMany('App\FilmSource', 'film_episode_id', 'id');
+	// }
 }

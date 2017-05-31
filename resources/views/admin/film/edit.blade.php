@@ -16,13 +16,13 @@
             <div class="col-lg-5">
                 <div class="form-group">
                     <label>Tên Tiếng Việt</label>
-                    <textarea class="form-control" name="film_name_vn"  placeholder="Nhập tên phim tiếng việt">{!! $film_list->film_name_vn !!}</textarea>
+                    <textarea class="form-control" name="film_name_vn"  placeholder="Nhập tên phim tiếng việt">{!! old('film_name_vn', $film_list->film_name_vn) !!}</textarea>
                 </div>
             </div>
             <div class="col-lg-4">
                 <div class="form-group">
                     <label>Tên Tiếng Anh, Nhật, ...</label>
-                    <textarea class="form-control" name="film_name_en" placeholder="Nhập tên phim tiếng anh or nhật, ...">{!! $film_list->film_name_en !!}</textarea>
+                    <textarea class="form-control" name="film_name_en" placeholder="Nhập tên phim tiếng anh or nhật, ...">{!! old('film_name_en', $film_list->film_name_en) !!}</textarea>
                 </div>
             </div>
             <div class="clearfix"></div>
@@ -51,7 +51,7 @@
             <div class="clearfix"></div>
             <div class="form-group">
                 <label>Nội Dung<span class="text-danger">*</span></label>
-                <textarea name="film_info" class="form-control enter-data-tinymce" placeholder="Nhập nội dung phim">{{ $film_detail->film_info }}</textarea>
+                <textarea name="film_info" class="form-control enter-data-tinymce" placeholder="Nhập nội dung phim">{{ old('film_info', $film_detail->film_info) }}</textarea>
             </div>
             <div class="col-lg-6">
                  <div class="form-group">
@@ -178,7 +178,7 @@
                     <label>Hãng Sản Xuất:</label>
                     <span class="text-giai-thich"><i>Nếu có nhiều cty sx thì cách nhau bằng dấu phẩy và khoảng trắng ', '</i></span>
                     <span class="text-giai-thich"><i>Ex: Company A, Company B</i></span>
-                    <textarea name="film_production_company" class="form-control" placeholder="Nhập tên hãng sản xuất" >{!! $film_detail->film_production_company !!}</textarea>
+                    <textarea name="film_production_company" class="form-control" placeholder="Nhập tên hãng sản xuất" >{!! old('film_production_company', $film_detail->film_production_company) !!}</textarea>
                 </div>
             </div>
             <div class="col-lg-6">
@@ -186,7 +186,7 @@
                     <label>Từ Khóa:</label>
                     <span class="text-giai-thich"><i>Nếu có nhiều từ khóa thì mỗi từ khóa được cách nhau bằng dấu phẩy và khoảng trắng ', '</i></span>
                     <span class="text-giai-thich"><i>Ex: Key word 1, key word 2</i></span>
-                    <textarea name="film_key_words" class="form-control" placeholder="Nhập tên từ khóa" >{!! $film_detail->film_key_words !!}</textarea>
+                    <textarea name="film_key_words" class="form-control" placeholder="Nhập tên từ khóa" >{!! old('film_key_words', $film_detail->film_key_words) !!}</textarea>
                 </div>
             </div>
             <div class="form-group">
@@ -293,39 +293,21 @@
         
             <div class="form-group">
                 <label>Ảnh Thumbnail small (300x400)</label>
-                <textarea name="film_thumbnail_small" class="form-control" placeholder="Nhập URL ảnh thumnail small" >{!! $film_list->film_thumbnail_small !!}</textarea>
+                <textarea name="film_thumbnail_small" class="form-control" placeholder="Nhập URL ảnh thumnail small" >{!! old('film_thumbnail_small', $film_list->film_thumbnail_small) !!}</textarea>
             </div>
             <div class="form-group">
                 <label>Ảnh Thumbnail big (450x600)</label>
-                <textarea name="film_thumbnail_big" class="form-control" placeholder="Nhập URL ảnh thumnail big" >{!! $film_detail->film_thumbnail_big !!}</textarea>
+                <textarea name="film_thumbnail_big" class="form-control" placeholder="Nhập URL ảnh thumnail big" >{!! old('film_thumbnail_big', $film_detail->film_thumbnail_big) !!}</textarea>
             </div>
             <div class="form-group">
                 <label>Ảnh Poster Video</label>
-                <textarea name="film_poster_video" class="form-control" placeholder="Nhập URL ảnh poster video" >{!! $film_detail->film_poster_video !!}</textarea>
+                <textarea name="film_poster_video" class="form-control" placeholder="Nhập URL ảnh poster video" >{!! old('film_poster_video', $film_detail->film_poster_video) !!}</textarea>
             </div>
             <div class="form-group">           
             <label>Trailer</label><br>
-            <label>Nguồn Trailer: </label>
+            <label>Source Youtube Trailer</label>
             <div>
-                <select class="form-control" name="film_src_name">
-                    <option value="youtube" @if($film_trailer->film_src_name == 'youtube') selected @endif>Youtube</option>
-                    <option value="google photos" @if($film_trailer->film_src_name == 'google photos') selected @endif>Google Photos</option>
-                    <option value="google drive" @if($film_trailer->film_src_name == 'google drive') selected @endif>Google Drive</option>
-                </select>
-            </div>
-            <label>Source Trailer</label>
-            <div>
-                <textarea name="film_src_full" class="form-control" placeholder="Nhập URL trailer">{!! $film_trailer->film_src_full !!}</textarea>
-            </div>
-            <label>Ngôn Ngữ Trailer:</label>
-            <div>
-                <select name="film_episode_language" class="form-control">
-                    <option value="vs" @if($film_trailer->film_episode_language == 'vs') selected @endif>VietSub</option>
-                    <option value="tm" @if($film_trailer->film_episode_language == 'tm') selected @endif>Thuyết Minh</option>
-                    <option value="lt" @if($film_trailer->film_episode_language == 'lt') selected @endif>Lồng Tiếng</option>
-                    <option value="es" @if($film_trailer->film_episode_language == 'es') selected @endif>EnlishSub</option>
-                    <option value="raw" @if($film_trailer->film_episode_language == 'raw') selected @endif>Raw</option>
-                </select>
+                <textarea name="src_youtube_trailer" class="form-control" placeholder="Nhập URL trailer">{!! old('src_youtube_trailer', $film_detail->src_youtube_trailer) !!}</textarea>
             </div>
           </div>
         </div>        

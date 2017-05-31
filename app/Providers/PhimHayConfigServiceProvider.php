@@ -2,7 +2,6 @@
 
 use Illuminate\Support\ServiceProvider;
 
-use App\PhimHayConfig;
 use App\FilmList;
 use App\FilmCountry;
 use App\FilmType;

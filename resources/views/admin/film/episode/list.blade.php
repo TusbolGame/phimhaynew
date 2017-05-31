@@ -7,49 +7,36 @@
 @section('content')
 <div>
     <a href="{!! route('admin.film.getShow', $film_id) !!}" class="btn btn-info">Quay lại</a>
+    <a href="{!! route('admin.film.episode.getAddWithSource', $film_id) !!}" class="btn btn-success">Thêm Nhanh Episode - Source</a>
+    <a href="{!! route('admin.film.episode.getGrabLink', $film_id) !!}" class="btn btn-primary">Grab Link Video</a>
     <a href="{!! route('admin.film.episode.getAdd', $film_id) !!}" class="btn btn-success">Thêm Episode</a>
 </div>
 <div class="div-overflow">         
     <table class="table table-bordered table-striped">
-        <caption class="text-danger"><strong>Danh sách source video <span class="badge">{!! $film_episodes->count() !!}</span></strong></caption>
+        <caption class="text-danger"><strong>Danh sách tập <span class="badge">{!! $film_episodes->count() !!}</span></strong></caption>
         <thead>
             <tr>
+                
+                {{-- <th>ID</th>                --}}
+                <th>Episode</th>               
+                <th>Episode Name</th>
+                <th>Total</th>
+                <th>Chi tiet</th>
                 <th>Sửa</th>
                 <th>Xóa</th>
-                <th>ID</th>               
-                <th>Link Number</th>
-                <th>Language</th>
-                <th>Episode</th>
-                <th>Track</th>
-                <th>Source Full Status</th>
-                <th>Source Name</th>
-                <th>Source Full</th>
-                <th>Source 360p</th>
-                <th>Source 480p0p</th>
-                <th>Source 720p</th>
-                <th>Source 1080p</th>
-                <th>Source 216p</th>
             </tr>
         </thead>
         <tbody>
             @foreach ($film_episodes as $film_episode)
             <tr>
-                <td><a href="{!! route('admin.film.episode.getEdit', [$film_id, $film_episode->id]) !!}">Sửa ID {!! $film_episode->id !!}</a></td>
-                <td><a onclick="return checkDelete('Bạn có muốn xóa Episode_id là {!! $film_episode->id !!} không?');" href="{!! route('admin.film.episode.getDelete', [$film_id, $film_episode->id]) !!}"> Xóa ID {!! $film_episode->id !!}</a></td>
-                <td>{!! $film_episode->id !!}</td> 
-                <td>{!! $film_episode->film_link_number !!}</td>
-                <td>{!! $film_episode->film_episode_language !!}</td>
-                <td>{!! $film_episode->film_episode !!}</td>
-                <td>@if(count($film_episode->filmEpisodeTrack) == 1) Yes @else No @endif</td>
-                <?php $http_response_code->setUrl($film_episode->film_src_full);  ?>
-                <td @if($http_response_code->checkHttpResponseCode200()) class="bg-success" @else class="bg-danger"@endif>{!! $http_response_code->getStatusCode() !!}</td>
-                <td>{!! $film_episode->film_src_name !!}</td>                
-                <td>{!! $film_episode->film_src_full !!}</td>
-                <td>{!! $film_episode->film_src_360p !!}</td>
-                <td>{!! $film_episode->film_src_480p !!}</td>
-                <td>{!! $film_episode->film_src_720p !!}</td>
-                <td>{!! $film_episode->film_src_1080p !!}</td>
-                <td>{!! $film_episode->film_src_2160p !!}</td>
+                
+                {{-- <td>{!! $film_episode->id !!}</td>  --}}
+                <td>{!! $film_episode->film_episode !!}</td> 
+                <td>{!! $film_episode->film_episode_name !!}</td>
+                <td>{!! $film_episode->filmSource->count() !!}</td>
+                <td><a href="{!! route('admin.film.episode.source.getList', [$film_id, $film_episode->id]) !!}" class="btn btn-info">Chi tiết {!! $film_episode->film_episode !!}</a></td>
+                <td><a href="{!! route('admin.film.episode.getEdit', [$film_id, $film_episode->id]) !!}" class="btn btn-primary">Sửa Episode {!! $film_episode->film_episode !!}</a></td>
+                <td><a onclick="return checkDelete('Bạn có muốn xóa Episode là {!! $film_episode->film_episode !!} không?');" href="{!! route('admin.film.episode.getDelete', [$film_id, $film_episode->id]) !!}" class="btn btn-danger"> Xóa Episode {!! $film_episode->film_episode !!}</a></td>
             </tr>
             @endforeach
         </tbody>

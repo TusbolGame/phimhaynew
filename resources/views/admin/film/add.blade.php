@@ -78,7 +78,7 @@
                 <label class="col-xs-2 fix-left-col">Ngày Chiếu:</label>
                 <div class="col-xs-3">
                     <select name="film_release_date_day" class="form-control">
-                        <option value="??" selected="9">Ngày</option>
+                        <option value="??">Ngày</option>
                         <option value="1">1</option>
                         <option value="2">2</option>
                         <option value="3">3</option>
@@ -114,7 +114,7 @@
                 </div>
                 <div class="col-xs-3">
                     <select name="film_release_date_month" class="form-control">
-                        <option value="0" selected="1">Tháng</option>
+                        <option value="??">Tháng</option>
                         <option value="1">1</option>
                         <option value="2">2</option>
                         <option value="3">3</option>
@@ -286,27 +286,10 @@
             </div>
             <div class="form-group">           
                 <label>Trailer</label><br>
-                <label>Nguồn Trailer: </label>
+
+                <label>Source Youtube Trailer</label>
                 <div>
-                    <select class="form-control" name="film_src_name">
-                        <option value="youtube" @if(old('film_src_name') == 'youtube') selected @endif>Youtube</option>
-                        <option value="google photos" @if(old('film_src_name') == 'google photos') selected @endif>Google Photos</option>
-                        <option value="google drive" @if(old('film_src_name') == 'google drive') selected @endif>Google Drive</option>
-                    </select>
-                </div>
-                <label>Source Trailer</label>
-                <div>
-                    <textarea name="film_src_full" class="form-control" placeholder="Nhập URL trailer">{!! old('film_src_full') !!}</textarea>
-                </div>
-                <label>Ngôn Ngữ Trailer:</label>
-                <div>
-                    <select name="film_episode_language" class="form-control">
-                        <option value="vs" @if(old('film_episode_language') == 'vs') selected @endif>VietSub</option>
-                        <option value="tm" @if(old('film_episode_language') == 'tm') selected @endif>Thuyết Minh</option>
-                        <option value="lt" @if(old('film_episode_language') == 'lt') selected @endif>Lồng Tiếng</option>
-                        <option value="es" @if(old('film_episode_language') == 'es') selected @endif>EnlishSub</option>
-                        <option value="raw" @if(old('film_episode_language') == 'raw') selected @endif>Raw</option>
-                    </select>
+                    <textarea name="src_youtube_trailer" class="form-control" placeholder="Nhập URL Youtube trailer">{!! old('src_youtube_trailer') !!}</textarea>
                 </div>
             </div>
         </div>

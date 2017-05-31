@@ -33,7 +33,7 @@
                     <td>{!! $film->filmList->film_name_vn !!}</td>
                     <td>{!! $film->filmList->film_name_en !!}</td>
                     <td>{!! $film->filmList->film_status !!}</td>
-                    <td>{!! $film->filmTrailer->film_src_name !!}</td>
+                    <td>{!! $film->src_youtube_trailer !!}</td>
                     <td title="{!! $film->updated_at !!}">{!! \Carbon\Carbon::createFromTimestamp(strtotime($film->updated_at))->diffForHumans() !!}</td>
                     <td title="{!! $film->created_at !!}">{!! \Carbon\Carbon::createFromTimestamp(strtotime($film->created_at))->diffForHumans() !!}</td>
                     <td><a href="{!! route('admin.film.getShow', $film->id) !!}">Xem</a></td>

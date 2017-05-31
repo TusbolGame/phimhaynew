@@ -30,7 +30,7 @@
 					<img src="{!! $film_detail->film_thumbnail_big !!}" alt="Error Image Thumnail Small">
 					<ul>
 						<li><a class="btn btn-warning" href="{!! route('film.getFilmDownloadCaptcha', [$film_list->film_dir_name, $film_list->id]) !!}" title="Download">Dowload</a></li>
-						<li><a class="btn btn-success" href="{!! route('film.getFilmWatch', [$film_list->film_dir_name, $film_list->id, $film_episode_id]) !!}" title="Xem phim">Xem phim</a></li>
+						<li><a class="btn btn-success" href="{!! route('film.getFilmWatch', [$film_list->film_dir_name, $film_list->id, $film_source_id]) !!}" title="Xem phim">Xem phim</a></li>
 					</ul>
 					<!-- film tick -->
 					<!-- 1 - is tick, 0 - no tick -->
@@ -155,7 +155,7 @@
 		<div class="film-trailer film-detail-border">
 			<h4 class="film-title-box"><span class="glyphicon glyphicon-film"></span> TRAILER</h4>
 			<div class="background-video">
-				{!! $film_player->getFilmVideojs($film_trailer, $film_detail->film_poster_video, '', 'yes') !!}
+				{!! $film_player->getTrailerYoutube($film_detail->src_youtube_trailer, $film_detail->film_poster_video) !!}
 			</div>
 		</div>
 		<div class="film-content film-detail-border">

@@ -42,10 +42,12 @@ class Handler extends ExceptionHandler {
 			switch ($e->getStatusCode()) {
 				// not found
 				case 404:
-					return redirect()->route('404');
+					// return redirect()->route('404');
+					return response()->view('phimhay.include.404', [], 404);
 					break;
 				case 500:
-					return redirect()->route('500');
+					// return redirect()->route('500');
+					return response()->view('phimhay.include.500', [], 500);
 					break;
 				
 				default:

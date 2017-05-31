@@ -3,11 +3,25 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
 	<meta http-equiv="X-UA-Compatible" username="IE=edge">
+	<meta content="width=device-width,initial-scale=1" name="viewport">
 	<title>@yield('title')</title>
 	<meta name="description" content="@yield('description')">
 	<meta property="fb:app_id" content="{!! env('FB_APP_ID') !!}" />
 	<meta property="fb:admins" content="{!! env('FB_ADMINS') !!}"/>
 	<link rel="icon" type="image/png" href="{!! asset('public/favicon.ico') !!}">
+
+	<meta property="og:title" content="@yield('title')">
+    <meta property="og:image" content="">
+    <meta property="og:description" content="@yield('title')">
+    <meta property="article:author" content="NPT">
+    <meta property="og:url" content="https://scotch.io/tutorials/build-search-functionality-with-laravel-scout-and-vue-js">
+    <meta property="og:type" content="article">
+    <meta property="article:publisher" content="https://www.facebook.com/scotchdevelopment">
+    <meta property="og:site_name" content="PhimHay">
+
+    <link rel="publisher" href="https://plus.google.com/b/113854128330570384219">
+    <link rel="author" href="https://plus.google.com/b/113854128330570384219">
+    
 	<!-- Bootstrap -->
     <link href="{!! asset('public/bootstrap/css/bootstrap.min.css') !!}" rel="stylesheet">
 
@@ -67,12 +81,14 @@
 		<div class="content container">
 			@yield('slider')
 			@yield('film-dir')
-			<div class="col-sm-9">
+			{{-- <div class="col-sm-9"> --}}
+			<div class="col-xs-12 col-sm-8 col-md-9">
 				@yield('content')
 			</div> <!-- /.col-sm-9 -->
 			<!-- top film -->
-			<div class="col-sm-3">
-				@include('phimhay.include.facebook-page')
+			<div class="col-xs-12 col-sm-4 col-md-3">
+			{{-- <div class="col-sm-3"> --}}
+				{{-- @include('phimhay.include.facebook-page') --}}
 				@include('phimhay.include.film-hot', $film_hots)
 			</div> <!-- /.col-sm-3 -->
 			
