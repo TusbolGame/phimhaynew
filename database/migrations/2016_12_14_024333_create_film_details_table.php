@@ -26,7 +26,7 @@ class CreateFilmDetailsTable extends Migration {
 			$table->string('film_thumbnail_big', 400);
 			$table->string('film_poster_video', 400);
 			$table->string('film_key_words')->nullable();
-			$table->string('film_comment_fb', 300)->nullable();
+			$table->string('src_youtube_trailer', 100)->nullable();
 			$table->timestamps();
 		});
 	}

@@ -30,7 +30,7 @@ class CreateFilmListsTable extends Migration {
 			$table->integer('film_vote_count')->default(0);
 			$table->integer('film_viewed')->default(0);
 			$table->string('film_dir_name', 500);
-			$table->string('film_status', 11)->nullable();
+			$table->string('film_status', 30)->nullable();
 		});
 	}
 
