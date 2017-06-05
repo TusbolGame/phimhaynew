@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\FilmCountry;
 use App\Lib\FilmProcess\FilmProcess;
+use Cache;
 
 class FilmCountryController extends Controller {
 
@@ -54,6 +55,9 @@ class FilmCountryController extends Controller {
 		$film_country->country_name = $request->country_name;
 		$film_country->country_alias = $film_process->getNameAlias($request->country_name);
 		$film_country->save();
+		//update cache
+		$film_country_cache = FilmCountry::orderBy('country_name', 'ASC')->get();
+		Cache::forever('film_country', $film_country_cache);
 		return redirect()->route('admin.country.index')->with(['flash_message' => 'Thành công! Thêm mới Country name '.$request->country_name]);
 	}
 
@@ -95,6 +99,9 @@ class FilmCountryController extends Controller {
 		$film_country->country_name = $request->country_name;
 		$film_country->country_alias = $film_process->getNameAlias($request->country_name);
 		$film_country->save();
+		//update cache
+		$film_country_cache = FilmCountry::orderBy('country_name', 'ASC')->get();
+		Cache::forever('film_country', $film_country_cache);
 		return redirect()->route('admin.country.index')->with(['flash_message' => 'Thành công! Cập nhật Country name: '.$request->country_name]);
 	}
 
@@ -110,6 +117,9 @@ class FilmCountryController extends Controller {
 		//check existss
 		$film_country = FilmCountry::findOrFail($id);
 		$film_country->destroy($id);
+		//update cache
+		$film_country_cache = FilmCountry::orderBy('country_name', 'ASC')->get();
+		Cache::forever('film_country', $film_country_cache);
 		return redirect()->route('admin.country.index')->with(['flash_message' => 'Thành công! Xóa Country id: '.$id]);
 	}
 

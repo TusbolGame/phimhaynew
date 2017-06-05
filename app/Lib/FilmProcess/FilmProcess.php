@@ -241,7 +241,8 @@ class FilmProcess
 		if(count($data) > 0){
 			foreach ($data as $key) {
 				//change space to -
-					$temp = preg_replace('/ /', '-', $key);
+				// $temp = preg_replace('/ /', '-', $key);
+				$temp = urlencode(trim($key));
 				echo '<li><a href="'.url('film?name='.$temp).'" title="'.$key.'">'.$key.'</a></li>';
 			}
 		}

@@ -613,6 +613,9 @@ div.vote a{
 }
 /*  */
 /* film info */
+.film-dir{
+    margin-top: 5px;
+}
 .film-dir ol{
     background-color: #201f21;
     text-transform: capitalize;

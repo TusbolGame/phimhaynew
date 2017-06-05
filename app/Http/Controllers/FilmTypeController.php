@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\FilmType;
 use App\Lib\FilmProcess\FilmProcess;
+use Cache;
 
 class FilmTypeController extends Controller {
 
@@ -55,6 +56,9 @@ class FilmTypeController extends Controller {
 		$film_type->type_name = $request->type_name;
 		$film_type->type_alias = $film_process->getNameAlias($request->type_name);
 		$film_type->save();
+		//update cache
+		$film_type_cache = FilmType::orderBy('type_name', 'ASC')->get();
+		Cache::forever('film_type', $film_type_cache);
 		return redirect()->route('admin.type.index')->with(['flash_message' => 'Thành công! Thêm mới Type name '.$request->type_name]);
 	}
 
@@ -96,6 +100,9 @@ class FilmTypeController extends Controller {
 		$film_type->type_name = $request->type_name;
 		$film_type->type_alias = $film_process->getNameAlias($request->type_name);
 		$film_type->save();
+		//update cache
+		$film_type_cache = FilmType::orderBy('type_name', 'ASC')->get();
+		Cache::forever('film_type', $film_type_cache);
 		return redirect()->route('admin.type.index')->with(['flash_message' => 'Thành công! Cập nhật Type: '.$request->type_name]);
 	}
 
@@ -110,6 +117,9 @@ class FilmTypeController extends Controller {
 		//
 		$film_type = FilmType::findOrFail($id);
 		$film_type->destroy($id);
+		//update cache
+		$film_type_cache = FilmType::orderBy('type_name', 'ASC')->get();
+		Cache::forever('film_type', $film_type_cache);
 		return redirect()->route('admin.type.index')->with(['flash_message' => 'Thành công! Xóa Type id: '.$id]);
 	}
 
