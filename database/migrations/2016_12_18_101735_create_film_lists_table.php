@@ -20,6 +20,7 @@ class CreateFilmListsTable extends Migration {
 			$table->foreign('id')->references('id')->on('film_details')->onDelete('cascade');
 			$table->string('film_name_en')->nullable();
 			$table->string('film_name_vn')->nullable();
+			$table->char('film_kind', 10)->default('truyen');//truyen, hoat-hinh
 			$table->char('film_category', 2)->default('le'); //le, bo
 			$table->integer('film_time')->nullable();
 			$table->integer('film_years')->nullable();

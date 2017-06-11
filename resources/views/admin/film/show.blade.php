@@ -33,7 +33,6 @@
         <a href="{!! route('admin.film.getCheckLink', $film_list->id) !!}" class="btn btn-primary">Check Link Poster</a>
         <br><br>
         <a href="{!! route('admin.film.episode.getList', [$film_list->id]) !!}" class="btn btn-info">Danh sách Episode <span class="badge">{!! $total_film_episode !!}</span></a>
-        <a href="{!! route('admin.film.episode.getAdd', [$film_list->id]) !!}" class="btn btn-success">Thêm Episode</a>
         <h4>Thông tin phim</h4>
         <table class="table table-striped table-bordered fix-word-break">
             <tbody>
@@ -47,7 +46,7 @@
                 </tr>
                 <tr>
                     <th>Phim</th>
-                    <td>{!! $film_process->xulyGetFilmKind($film_detail->film_kind) !!}</td>
+                    <td>{!! $film_process->xulyGetFilmKind($film_list->film_kind) !!}</td>
                 </tr>
                 <tr>
                     <th>Phim Loại</th>

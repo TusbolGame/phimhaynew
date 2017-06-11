@@ -21,17 +21,16 @@ class PhimHayConfigServiceProvider extends ServiceProvider {
 	{
 		$film_process = new FilmProcess();
 		$film_hots = [];
-
+		$cache_time_new = \Carbon\Carbon::now()->addMinutes(30); //30p
 		//use cache
 		//reset cache
 		//cache film hh hot
 		if(!Cache::has('film_hh_hot')){
 			//no cache
-			$film_hots['hh'] = FilmList::whereHas('filmDetail', function($query){
-				$query->select('id')->where('film_kind', 'hoat-hinh');
-			})->orderBy('film_viewed', 'DESC')->take(6)->get();
+			$film_hots['hh'] = FilmList::where('film_kind', 'hoat-hinh')->orderBy('film_viewed', 'DESC')->take(6)->get();
 			//add cache
-			Cache::forever('film_hh_hot', $film_hots['hh']);
+			// Cache::forever('film_hh_hot', $film_hots['hh']);
+			Cache::put('film_hh_hot', $film_hots['hh'], $cache_time_new);
 		}else{
 			//is cache
 			$film_hots['hh'] = Cache::get('film_hh_hot');
@@ -40,11 +39,10 @@ class PhimHayConfigServiceProvider extends ServiceProvider {
 		//cache film bo hot
 		if(!Cache::has('film_bo_hot')){
 			//no cache
-			$film_hots['bo'] = FilmList::whereHas('filmDetail', function($query){
-				$query->select('id')->where('film_kind', 'hoat-hinh');
-			})->orderBy('film_viewed', 'DESC')->take(6)->get();
+			$film_hots['bo'] = FilmList::where('film_category', 'bo')->where('film_kind', 'truyen')->orderBy('film_viewed', 'DESC')->take(6)->get();
 			//add cache
-			Cache::forever('film_bo_hot', $film_hots['bo']);
+			// Cache::forever('film_bo_hot', $film_hots['bo']);
+			Cache::put('film_hh_hot', $film_hots['hh'], $cache_time_new);
 		}
 		else{
 			//is cache
@@ -54,11 +52,10 @@ class PhimHayConfigServiceProvider extends ServiceProvider {
 		//cache film le hot
 		if(!Cache::has('film_le_hot')){
 			//no cache
-			$film_hots['le'] = FilmList::whereHas('filmDetail', function($query){
-				$query->select('id')->where('film_kind', 'hoat-hinh');
-			})->orderBy('film_viewed', 'DESC')->take(6)->get();
+			$film_hots['le'] = FilmList::where('film_category', 'le')->where('film_kind', 'truyen')->orderBy('film_viewed', 'DESC')->take(6)->get();
 			//add cache
-			Cache::forever('film_le_hot', $film_hots['le']);
+			// Cache::forever('film_le_hot', $film_hots['le']);
+			Cache::put('film_hh_hot', $film_hots['hh'], $cache_time_new);
 		}
 		else{
 			//is cache
@@ -105,10 +102,9 @@ class PhimHayConfigServiceProvider extends ServiceProvider {
 			//no cache
 			$film_news['hh'] = FilmEpisode::orderBy('id', 'DESC')
 				->groupBy('film_id')->take(15)
-				->whereHas('filmDetail', function($query){
-					$query->distinct()->where('film_kind', 'hoat-hinh');
-				})
-				->select('film_id')->with('filmList')->get();
+				->select('film_id')->whereHas('filmList', function($query){
+						$query->where('film_kind', 'hoat-hinh');
+				})->with('filmList')->get();
 			//add cache
 			Cache::forever('film_hh_new', $film_news['hh']);
 		}//end if(!Cache::has('film_hh_new'))
@@ -117,10 +113,8 @@ class PhimHayConfigServiceProvider extends ServiceProvider {
 			//no cache
 			$film_news['le'] = FilmEpisode::orderBy('id', 'DESC')
 				->groupBy('film_id')->take(15)
-				->whereHas('filmDetail', function($query){
-					$query->distinct()->where('film_kind', 'truyen')->whereHas('filmList', function($query2){
-						$query2->where('film_category', 'le');
-					});
+				->whereHas('filmList', function($query){
+					$query->distinct()->where('film_kind', 'truyen')->where('film_category', 'le');
 				})
 				->select('film_id')->with('filmList')->get();
 			//add cache
@@ -131,10 +125,8 @@ class PhimHayConfigServiceProvider extends ServiceProvider {
 			//no cache
 			$film_news['bo'] = FilmEpisode::orderBy('id', 'DESC')
 				->groupBy('film_id')->take(15)
-				->whereHas('filmDetail', function($query){
-					$query->distinct()->where('film_kind', 'truyen')->whereHas('filmList', function($query2){
-						$query2->where('film_category', 'bo');
-					});
+				->whereHas('filmList', function($query){
+					$query->distinct()->where('film_kind', 'truyen')->where('film_category', 'bo');
 				})
 				->select('film_id')->with('filmList')->get();
 			//add cache

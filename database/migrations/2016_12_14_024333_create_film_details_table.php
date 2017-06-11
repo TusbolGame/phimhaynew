@@ -15,7 +15,6 @@ class CreateFilmDetailsTable extends Migration {
 		Schema::create('film_details', function(Blueprint $table)
 		{
 			$table->increments('id');
-			$table->char('film_kind', 10)->default('truyen');//truyen, hoat-hinh
 			$table->text('film_info')->nullable();
 			$table->float('film_score_imdb')->nullable();
 			$table->integer('film_score_aw')->nullable();

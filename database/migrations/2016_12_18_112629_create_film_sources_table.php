@@ -15,8 +15,6 @@ class CreateFilmSourcesTable extends Migration {
 		Schema::create('film_sources', function(Blueprint $table)
 		{
 			$table->increments('id');
-			$table->integer('film_id')->unsigned();
-			$table->foreign('film_id')->references('id')->on('film_details')->onDelete('cascade');
 			$table->integer('film_episode_id')->unsigned();
 			$table->foreign('film_episode_id')->references('id')->on('film_episodes')->onDelete('cascade');
 			$table->char('film_episode_language', 3)->default('vs'); // vs, es, tm, raw

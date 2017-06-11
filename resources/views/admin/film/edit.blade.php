@@ -290,7 +290,10 @@
         </div> <!-- ./col-lg-8 -->
 
          <div class="col-lg-4">
-        
+            <div class="form-group">
+                <label>Trạng Thái</label>
+                <textarea name="film_status" class="form-control" placeholder="Nhập URL ảnh thumnail small" >{!! old('film_status', $film_list->film_status) !!}</textarea>
+            </div>
             <div class="form-group">
                 <label>Ảnh Thumbnail small (300x400)</label>
                 <textarea name="film_thumbnail_small" class="form-control" placeholder="Nhập URL ảnh thumnail small" >{!! old('film_thumbnail_small', $film_list->film_thumbnail_small) !!}</textarea>

@@ -63,97 +63,74 @@ class ProcessVideoLink
 			}
 			//is cache
 			//update data_source
+			//create id -> public id: time() + ?? + int + 5
+			$id_random =  time();
 			if(!empty($film_source->film_src_360p)){
 				$videoplayback = new VideoPlayback();
-				$videoplayback->id = time();
+				$videoplayback->id = hash('crc32', $id_random);
 				$videoplayback->redirect = $film_source->film_src_360p;
 				$videoplayback->time = $cache_link;
 				$videoplayback->save();
 				$this->data['film_src_360p'] = route('videoPlayback', $videoplayback->id);
+				$id_random++;//update id random
+
 			}
 			if(!empty($film_source->film_src_480p)){
 				$videoplayback = new VideoPlayback();
-				$videoplayback->id = time() + random_int(0, 50);
+				$videoplayback->id = hash('crc32', $id_random);
 				$videoplayback->redirect = $film_source->film_src_480p;
 				$videoplayback->time = $cache_link;
 				$videoplayback->save();
 				$this->data['film_src_480p'] = route('videoPlayback', $videoplayback->id);
+				$id_random++;//update id random
 			}
 			if(!empty($film_source->film_src_720p)){
 				$videoplayback = new VideoPlayback();
-				$videoplayback->id = time() + random_int(0, 50);
+				$videoplayback->id = hash('crc32', $id_random);
 				$videoplayback->redirect = $film_source->film_src_720p;
 				$videoplayback->time = $cache_link;
 				$videoplayback->save();
 				$this->data['film_src_720p'] = route('videoPlayback', $videoplayback->id);
+				$id_random++;//update id random
 			}
 			if(!empty($film_source->film_src_1080p)){
 				$videoplayback = new VideoPlayback();
-				$videoplayback->id = time() + random_int(0, 50);
+				$videoplayback->id = hash('crc32', $id_random);
 				$videoplayback->redirect = $film_source->film_src_1080p;
 				$videoplayback->time = $cache_link;
 				$videoplayback->save();
 				$this->data['film_src_1080p'] = route('videoPlayback', $videoplayback->id);
+				$id_random++;//update id random
 			}
 			if(!empty($film_source->film_src_2160p)){
 				$videoplayback = new VideoPlayback();
-				$videoplayback->id = time() + random_int(0, 50);
+				$videoplayback->id_public = hash('crc32', $id_random);
 				$videoplayback->redirect = $film_source->film_src_2160p;
 				$videoplayback->time = $cache_link;
 				$videoplayback->save();
 				$this->data['film_src_2160p'] = route('videoPlayback', $videoplayback->id);
+				$id_random++;//update id random
 			}
 		} // end else
-
-		/*
-			elseif($film_source->film_src_name == 'google drive'){
-			//get
-			//check cache -> cache 3h
-			if((int)$film_source->time == 0 || (int)$film_source->time < $time ){
-				//no cache
-				$get_link_video->getLinkVideoIo($film_source->film_src_full);
-				//
-				
-				//check source get
-				if(!empty($get_link_video->getSrcVideoJson())){
-					//get ok
-					//update source
-					$film_source->film_src_360p = ($get_link_video->getSrc360()) ? $get_link_video->getSrc360() : null;
-					$film_source->film_src_480p = ($get_link_video->getSrc480()) ? $get_link_video->getSrc480() : null;
-					$film_source->film_src_720p = ($get_link_video->getSrc720()) ? $get_link_video->getSrc720() : null;
-					$film_source->film_src_1080p = ($get_link_video->getSrc1080()) ? $get_link_video->getSrc1080() : null;
-					$film_source->film_src_2160p = ($get_link_video->getSrc2160()) ? $get_link_video->getSrc2160() : null;
-					$film_source->time = $cache_link;
-					$film_source->save();
-				}
-				//
-				//embed
-				
-			}else{
-				//is cache
-				//ok
-				if($get_link_video->getSrc360()){
-					//update src
-					$film_source->film_src_360p = $get_link_video->getSrc360();
-				}
-				if($get_link_video->getSrc360()){
-					//update src
-					$film_source->film_src_360p = $get_link_video->getSrc360();
-				}
-				if($get_link_video->getSrc360()){
-					//update src
-					$film_source->film_src_360p = $get_link_video->getSrc360();
-				}
-				if($get_link_video->getSrc360()){
-					//update src
-					$film_source->film_src_360p = $get_link_video->getSrc360();
-				}
-			}
-		}
-		*/
 	}
 	function getData(){
 		return $this->data;
+	}
+	protected function randomString($len = 8){
+		//echo hash('crc32', '0000000001'); // gives 6c13f76e
+		# get random character length between minimum and maximum length
+     	// $length = rand($min, $max);
+     	$length = $len;
+     	$string = '';
+     	# character index [0-9a-zA-Z] etc
+     	$index = '0123456789bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ';
+     
+     	for ($i=0; $i < $length; $i++) {
+	        # get random character index
+	        $index = str_shuffle($index);
+	        $string .= $index[mt_rand(0, strlen($index) -1)];
+     	}
+ 		return $string;
 	}
 	// public function postAdd($film_id, Request $request){
 	// 	//check domain, status http

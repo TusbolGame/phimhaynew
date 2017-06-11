@@ -129,6 +129,7 @@ Route::group(['prefix' => '/', 'middleware' => 'phimhay'], function(){
                 Route::get('list/{film_id}',['as'=>'admin.film.episode.getList', 'uses'=>'FilmEpisodeController@getList']);
                 Route::post('edit/{film_id}/{id}',['as'=>'admin.film.episode.postEdit', 'uses'=>'FilmEpisodeController@postEdit']);
                 Route::get('delete/{film_id}/{id}',['as'=>'admin.film.episode.getDelete', 'uses'=>'FilmEpisodeController@getDelete']);
+                //
                 //add episode with source
                 Route::get('add-with-source/{film_id}',['as'=>'admin.film.episode.getAddWithSource', 'uses'=>'FilmEpisodeController@getAddWithSource']);
                 Route::post('add-with-source/{film_id}', 'FilmEpisodeController@postAddWithSource');
@@ -151,6 +152,7 @@ Route::group(['prefix' => '/', 'middleware' => 'phimhay'], function(){
                 });
 
             });
+            //list source
         });
         //
         //user
@@ -169,6 +171,11 @@ Route::group(['prefix' => '/', 'middleware' => 'phimhay'], function(){
              Route::get('search',['as'=>'admin.user.getSearch', 'uses'=>'UserController@getSearch']);
             //ajax search user
              Route::post('search', ['as' => 'admin.userAjax.postSearch', 'uses' => 'UserAjaxController@postSearch']);
+        });
+        //cache
+        Route::group(['prefix' => 'cache'], function() {
+            //add
+            Route::get('clear',['as'=>'admin.cache.getClear', 'uses'=>'CacheController@getClear']);
         });
         //slider
         Route::group(['prefix' => 'slider'], function() {

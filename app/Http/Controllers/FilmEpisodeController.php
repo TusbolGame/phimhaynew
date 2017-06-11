@@ -21,50 +21,49 @@ class FilmEpisodeController extends Controller {
 	}
 	public function postAdd($film_id, Request $request){
 		//
+		$film_list = FilmList::find($film_id);
+		if(count($film_list) == 0){
+			return redirect()->route('admin.film.getList')->with(['flash_message_error' => 'Lỗi! Không có Film Id: '.$film_id]);
+		}
 		$film_episode =  new FilmEpisode();
 		$film_episode->film_id = $film_id;
 		$film_episode->film_episode = $request->film_episode;
 		$film_episode->film_episode_name = $request->film_episode_name;
 		$film_episode->save();
 		//update cache film new
-		$film_detail = FilmDetail::find($film_id);
-		$film_list = FilmList::find($film_id);
-		if($film_list->film_category == 'le'){
-			//update cache film le new
-			$cache_le_new = FilmEpisode::orderBy('id', 'DESC')
-				->groupBy('film_id')->take(15)
-				->whereHas('filmDetail', function($query){
-					$query->distinct()->where('film_kind', 'truyen')->whereHas('filmList', function($query2){
-						$query2->where('film_category', 'le');
-					});
-				})
-				->select('film_id')->with('filmList')->get();
-			//add cache
-			Cache::forever('film_le_new', $cache_le_new);
-		}
-		elseif($film_list->film_category == 'bo'){
-			//update cache film bo new
-			$cache_bo_new = FilmEpisode::orderBy('id', 'DESC')
-				->groupBy('film_id')->take(15)
-				->whereHas('filmDetail', function($query){
-					$query->distinct()->where('film_kind', 'truyen')->whereHas('filmList', function($query2){
-						$query2->where('film_category', 'bo');
-					});
-				})
-				->select('film_id')->with('filmList')->get();
-			//add cache
-			Cache::forever('film_bo_new', $cache_bo_new);
-		}
-		elseif($film_detail->film_kind == 'hoat-hinh'){
+		if($film_list->film_kind == 'hoat-hinh'){
 			//update cache film hh new
 			$cache_hh_new = FilmEpisode::orderBy('id', 'DESC')
 				->groupBy('film_id')->take(15)
-				->whereHas('filmDetail', function($query){
-					$query->distinct()->where('film_kind', 'hoat-hinh');
-				})
-				->select('film_id')->with('filmList')->get();
+				->select('film_id')->whereHas('filmList', function($query){
+						$query->where('film_kind', 'hoat-hinh');
+				})->with('filmList')->get();
 			//add cache
 			Cache::forever('film_hh_new', $cache_hh_new);
+		}else{
+			//kind is truyen
+			if($film_list->film_category == 'le'){
+				//update cache film le new
+				$cache_le_new = FilmEpisode::orderBy('id', 'DESC')
+					->groupBy('film_id')->take(15)
+					->whereHas('filmList', function($query){
+						$query->distinct()->where('film_kind', 'truyen')->where('film_category', 'le');
+					})
+					->select('film_id')->with('filmList')->get();
+				//add cache
+				Cache::forever('film_le_new', $cache_le_new);
+			}
+			elseif($film_list->film_category == 'bo'){
+				//update cache film bo new
+				$cache_bo_new = FilmEpisode::orderBy('id', 'DESC')
+					->groupBy('film_id')->take(15)
+					->whereHas('filmList', function($query){
+						$query->distinct()->where('film_kind', 'truyen')->where('film_category', 'bo');
+					})
+					->select('film_id')->with('filmList')->get();
+				//add cache
+				Cache::forever('film_bo_new', $cache_bo_new);
+			}
 		}
 		//end cache
 		return redirect()->route('admin.film.episode.getList', $film_id)->with(['flash_message' => 'Thành công! Thêm Episode '.$request->film_episode.' ở Film ID: '.$film_id]);
@@ -108,43 +107,39 @@ class FilmEpisodeController extends Controller {
 		}
 		$film_episode->delete();
 		//update cache film new
-		$film_detail = FilmDetail::find($film_id);
-		if($film_list->film_category == 'le'){
-			//update cache film le new
-			$cache_le_new = FilmEpisode::orderBy('id', 'DESC')
-				->groupBy('film_id')->take(15)
-				->whereHas('filmDetail', function($query){
-					$query->distinct()->where('film_kind', 'truyen')->whereHas('filmList', function($query2){
-						$query2->where('film_category', 'le');
-					});
-				})
-				->select('film_id')->with('filmList')->get();
-			//add cache
-			Cache::forever('film_le_new', $cache_le_new);
-		}
-		elseif($film_list->film_category == 'bo'){
-			//update cache film bo new
-			$cache_bo_new = FilmEpisode::orderBy('id', 'DESC')
-				->groupBy('film_id')->take(15)
-				->whereHas('filmDetail', function($query){
-					$query->distinct()->where('film_kind', 'truyen')->whereHas('filmList', function($query2){
-						$query2->where('film_category', 'bo');
-					});
-				})
-				->select('film_id')->with('filmList')->get();
-			//add cache
-			Cache::forever('film_bo_new', $cache_bo_new);
-		}
-		elseif($film_detail->film_kind == 'hoat-hinh'){
+		if($film_list->film_kind == 'hoat-hinh'){
 			//update cache film hh new
 			$cache_hh_new = FilmEpisode::orderBy('id', 'DESC')
 				->groupBy('film_id')->take(15)
-				->whereHas('filmDetail', function($query){
-					$query->distinct()->where('film_kind', 'hoat-hinh');
-				})
-				->select('film_id')->with('filmList')->get();
+				->select('film_id')->whereHas('filmList', function($query){
+						$query->where('film_kind', 'hoat-hinh');
+				})->with('filmList')->get();
 			//add cache
 			Cache::forever('film_hh_new', $cache_hh_new);
+		}else{
+			//kind is truyen
+			if($film_list->film_category == 'le'){
+				//update cache film le new
+				$cache_le_new = FilmEpisode::orderBy('id', 'DESC')
+					->groupBy('film_id')->take(15)
+					->whereHas('filmList', function($query){
+						$query->distinct()->where('film_kind', 'truyen')->where('film_category', 'le');
+					})
+					->select('film_id')->with('filmList')->get();
+				//add cache
+				Cache::forever('film_le_new', $cache_le_new);
+			}
+			elseif($film_list->film_category == 'bo'){
+				//update cache film bo new
+				$cache_bo_new = FilmEpisode::orderBy('id', 'DESC')
+					->groupBy('film_id')->take(15)
+					->whereHas('filmList', function($query){
+						$query->distinct()->where('film_kind', 'truyen')->where('film_category', 'bo');
+					})
+					->select('film_id')->with('filmList')->get();
+				//add cache
+				Cache::forever('film_bo_new', $cache_bo_new);
+			}
 		}
 		//end cache
 		return redirect()->route('admin.film.episode.getList', $film_id)->with(['flash_message' => 'Thành công! Đã xóa Episode ID '.$episode_id.' ở Film_id '.$film_id]);
@@ -170,11 +165,14 @@ class FilmEpisodeController extends Controller {
 		$film_list->film_language = $film_process->xulyAddFilmLanguage($film_list->film_language, $request->film_episode_language);
 		$i = 0;
 		while($i < $dk){
-			$film_episode = new FilmEpisode();
-			$film_episode->film_id = $film_id;
-			$film_episode->film_episode = $request->film_episode[$i];
-			$film_episode->film_episode_name = $request->film_episode_name[$i];
-			$film_episode->save();
+			$film_episode = FilmEpisode::where('film_id', $film_id)->where('film_episode', $request->film_episode[$i])->first();
+			if(count($film_episode) ==0){
+				$film_episode = new FilmEpisode();
+				$film_episode->film_id = $film_id;
+				$film_episode->film_episode = $request->film_episode[$i];
+				$film_episode->film_episode_name = $request->film_episode_name[$i];
+				$film_episode->save();
+			}
 			//source
 			$film_source = new FilmSource();
 			$film_source->film_episode_id = $film_episode->id;
@@ -211,44 +209,41 @@ class FilmEpisodeController extends Controller {
 		}
 		$film_list->save();
 		//update cache film new
-		$film_detail = FilmDetail::find($film_id);
-		if($film_list->film_category == 'le'){
-			//update cache film le new
-			$cache_le_new = FilmEpisode::orderBy('id', 'DESC')
-				->groupBy('film_id')->take(15)
-				->whereHas('filmDetail', function($query){
-					$query->distinct()->where('film_kind', 'truyen')->whereHas('filmList', function($query2){
-						$query2->where('film_category', 'le');
-					});
-				})
-				->select('film_id')->with('filmList')->get();
-			//add cache
-			Cache::forever('film_le_new', $cache_le_new);
-		}
-		elseif($film_list->film_category == 'bo'){
-			//update cache film bo new
-			$cache_bo_new = FilmEpisode::orderBy('id', 'DESC')
-				->groupBy('film_id')->take(15)
-				->whereHas('filmDetail', function($query){
-					$query->distinct()->where('film_kind', 'truyen')->whereHas('filmList', function($query2){
-						$query2->where('film_category', 'bo');
-					});
-				})
-				->select('film_id')->with('filmList')->get();
-			//add cache
-			Cache::forever('film_bo_new', $cache_bo_new);
-		}
-		elseif($film_detail->film_kind == 'hoat-hinh'){
+		if($film_list->film_kind == 'hoat-hinh'){
 			//update cache film hh new
 			$cache_hh_new = FilmEpisode::orderBy('id', 'DESC')
 				->groupBy('film_id')->take(15)
-				->whereHas('filmDetail', function($query){
-					$query->distinct()->where('film_kind', 'hoat-hinh');
-				})
-				->select('film_id')->with('filmList')->get();
+				->select('film_id')->whereHas('filmList', function($query){
+						$query->where('film_kind', 'hoat-hinh');
+				})->with('filmList')->get();
 			//add cache
 			Cache::forever('film_hh_new', $cache_hh_new);
+		}else{
+			//kind is truyen
+			if($film_list->film_category == 'le'){
+				//update cache film le new
+				$cache_le_new = FilmEpisode::orderBy('id', 'DESC')
+					->groupBy('film_id')->take(15)
+					->whereHas('filmList', function($query){
+						$query->distinct()->where('film_kind', 'truyen')->where('film_category', 'le');
+					})
+					->select('film_id')->with('filmList')->get();
+				//add cache
+				Cache::forever('film_le_new', $cache_le_new);
+			}
+			elseif($film_list->film_category == 'bo'){
+				//update cache film bo new
+				$cache_bo_new = FilmEpisode::orderBy('id', 'DESC')
+					->groupBy('film_id')->take(15)
+					->whereHas('filmList', function($query){
+						$query->distinct()->where('film_kind', 'truyen')->where('film_category', 'bo');
+					})
+					->select('film_id')->with('filmList')->get();
+				//add cache
+				Cache::forever('film_bo_new', $cache_bo_new);
+			}
 		}
+		//end cache
 		//
 		return redirect()->route('admin.film.episode.getList', $film_id)->with(['flash_message' => 'Thành công! Thêm Episode Source ']);
 	}
@@ -279,10 +274,19 @@ class FilmEpisodeController extends Controller {
 			//set language
 			$film_list->film_language = $film_process->xulyAddFilmLanguage($film_list->film_language, $request->film_episode_language);
 			foreach ($data as $key) {
-				$film_episode = new FilmEpisode();
-				$film_episode->film_id = $film_id;
-				$film_episode->film_episode = $key['episode'];
-				$film_episode->save();
+				// $film_episode = new FilmEpisode();
+				// $film_episode->film_id = $film_id;
+				// $film_episode->film_episode = $key['episode'];
+				// $film_episode->save();
+				//
+				$film_episode = FilmEpisode::where('film_id', $film_id)->where('film_episode', $key['episode'])->first();
+				if(count($film_episode) ==0){
+					$film_episode = new FilmEpisode();
+					$film_episode->film_id = $film_id;
+					$film_episode->film_episode = $key['episode'];
+					$film_episode->film_episode_name = '';
+					$film_episode->save();
+				}
 				//source
 				$film_source = new FilmSource();
 				$film_source->film_episode_id = $film_episode->id;
@@ -317,44 +321,41 @@ class FilmEpisodeController extends Controller {
 			}
 			$film_list->save();
 			//update cache film new
-			$film_detail = FilmDetail::find($film_id);
-			if($film_list->film_category == 'le'){
-				//update cache film le new
-				$cache_le_new = FilmEpisode::orderBy('id', 'DESC')
-					->groupBy('film_id')->take(15)
-					->whereHas('filmDetail', function($query){
-						$query->distinct()->where('film_kind', 'truyen')->whereHas('filmList', function($query2){
-							$query2->where('film_category', 'le');
-						});
-					})
-					->select('film_id')->with('filmList')->get();
-				//add cache
-				Cache::forever('film_le_new', $cache_le_new);
-			}
-			elseif($film_list->film_category == 'bo'){
-				//update cache film bo new
-				$cache_bo_new = FilmEpisode::orderBy('id', 'DESC')
-					->groupBy('film_id')->take(15)
-					->whereHas('filmDetail', function($query){
-						$query->distinct()->where('film_kind', 'truyen')->whereHas('filmList', function($query2){
-							$query2->where('film_category', 'bo');
-						});
-					})
-					->select('film_id')->with('filmList')->get();
-				//add cache
-				Cache::forever('film_bo_new', $cache_bo_new);
-			}
-			elseif($film_detail->film_kind == 'hoat-hinh'){
+			if($film_list->film_kind == 'hoat-hinh'){
 				//update cache film hh new
 				$cache_hh_new = FilmEpisode::orderBy('id', 'DESC')
 					->groupBy('film_id')->take(15)
-					->whereHas('filmDetail', function($query){
-						$query->distinct()->where('film_kind', 'hoat-hinh');
-					})
-					->select('film_id')->with('filmList')->get();
+					->select('film_id')->whereHas('filmList', function($query){
+							$query->where('film_kind', 'hoat-hinh');
+					})->with('filmList')->get();
 				//add cache
 				Cache::forever('film_hh_new', $cache_hh_new);
+			}else{
+				//kind is truyen
+				if($film_list->film_category == 'le'){
+					//update cache film le new
+					$cache_le_new = FilmEpisode::orderBy('id', 'DESC')
+						->groupBy('film_id')->take(15)
+						->whereHas('filmList', function($query){
+							$query->distinct()->where('film_kind', 'truyen')->where('film_category', 'le');
+						})
+						->select('film_id')->with('filmList')->get();
+					//add cache
+					Cache::forever('film_le_new', $cache_le_new);
+				}
+				elseif($film_list->film_category == 'bo'){
+					//update cache film bo new
+					$cache_bo_new = FilmEpisode::orderBy('id', 'DESC')
+						->groupBy('film_id')->take(15)
+						->whereHas('filmList', function($query){
+							$query->distinct()->where('film_kind', 'truyen')->where('film_category', 'bo');
+						})
+						->select('film_id')->with('filmList')->get();
+					//add cache
+					Cache::forever('film_bo_new', $cache_bo_new);
+				}
 			}
+			//end cache
 			//
 			return redirect()->route('admin.film.episode.getList', $film_id)->with(['flash_message' => 'Thành công! Thêm Episode Source ']);
 		}

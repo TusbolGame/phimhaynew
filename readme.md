@@ -21,3 +21,14 @@ Thank you for considering contributing to the Laravel framework! The contributio
 ### License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
+### Install
+- Download source code
+- Update vendor: composer update
+- Edit file .env : DB....
+- Create table: php artisan migrate
+- Database seed: php artisan db:seed
+- Uses account: admin
+- Password: 123456
+- Please access Admin Interface: Select Cache and select Clear Cache after enter infomation.
+
+

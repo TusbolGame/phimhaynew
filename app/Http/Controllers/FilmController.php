@@ -51,6 +51,14 @@ use App\Lib\GuestInfo;
 class FilmController extends Controller {
 
 	public function getTest(Request $request){
+		//
+		// $film_detail = FilmDetail::all();
+		// foreach ($film_detail as $key) {
+		// 	$key->filmList->film_kind = $key->film_kind;
+		// 	$key->filmList->save();
+		// }
+		// $int = 1 + time() + 5 +1;
+		// echo hash('crc32', '1234567');exit;
 		// $arr = [
 		// 	131 => 'https://www.youtube.com/watch?v=PkflbYNW_1w',
 		// 	132 => 'https://www.youtube.com/watch?v=S0f8NQRmtik',
@@ -422,7 +430,6 @@ class FilmController extends Controller {
 		// Start transaction!
 		DB::beginTransaction();
 		$film_detail = new FilmDetail();
-		$film_detail->film_kind = $request->film_kind;
 		$film_detail->film_info = $request->film_info;
 		$film_detail->film_score_imdb = $request->film_score_imdb;
 		$film_detail->film_score_aw = $request->film_score_aw;
@@ -489,6 +496,7 @@ class FilmController extends Controller {
 		$film_list->id = $film_detail->id;
 		$film_list->film_name_en = $request->film_name_en;
 		$film_list->film_name_vn = $request->film_name_vn;
+		$film_list->film_kind = $request->film_kind;
 		$film_list->film_category = $request->film_category;
 		$film_list->film_time = $request->film_time;
 		$film_list->film_years = $request->film_release_date_year;
@@ -535,7 +543,6 @@ class FilmController extends Controller {
 		if(count($film_detail) == 0){
 			return redirect()->route('admin.film.getList')->with(['flash_message_error' =>'Post Edit! Không tồn tại film id: '.$film_id]);
 		}
-		$film_detail->film_kind = $request->film_kind;
 		$film_detail->film_info = $request->film_info;
 		$film_detail->film_score_imdb = $request->film_score_imdb;
 		$film_detail->film_score_aw = $request->film_score_aw;
@@ -620,6 +627,7 @@ class FilmController extends Controller {
 		$film_list = FilmList::find($film_id);
 		$film_list->film_name_en = $request->film_name_en;
 		$film_list->film_name_vn = $request->film_name_vn;
+		$film_list->film_kind = $request->film_kind;
 		$film_list->film_category = $request->film_category;
 		$film_list->film_time = $request->film_time;
 		$film_list->film_years = $request->film_release_date_year;
@@ -631,6 +639,7 @@ class FilmController extends Controller {
 		//
 		$film_process = new FilmProcess();
 		$film_list->film_dir_name = $film_process->getFilmDirName($request->film_name_vn, $request->film_name_en, $request->film_release_date_year);
+		$film_list->film_status = $request->film_status;
 		$film_list->save();
 		return redirect()->route('admin.film.getShow', $film_detail->id);
 	}

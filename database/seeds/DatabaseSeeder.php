@@ -14,9 +14,12 @@ class DatabaseSeeder extends Seeder {
 	{
 		Model::unguard();
 		
-		// $this->call('FilmTypeDatabaseSeeder');
-		// $this->call('FilmCountryDatabaseSeeder');
-		// $this->call('FilmJobDatabaseSeeder');
+		$this->call('FilmRelateDatabaseSeeder');
+		$this->call('FilmJobDatabaseSeeder');	
+		$this->call('FilmCountryDatabaseSeeder');
+		$this->call('FilmTypeDatabaseSeeder');
+		$this->call('UserDatabaseSeeder');
+		
 	}
 
 }
@@ -130,6 +133,30 @@ class FilmTypeDatabaseSeeder extends Seeder {
 			['type_name' => 'võ thuật', 'type_alias' => 'vo-thuat'],
 			['type_name' => 'zombie', 'type_alias' => 'zombie']
 			
+			]);
+	}
+
+}
+class UserDatabaseSeeder extends Seeder {
+
+	/**
+	 * Run the database seeds.
+	 *
+	 * @return void
+	 */
+	public function run()
+	{
+		DB::table('users')->insert([
+			//1
+			[
+				'username' => 'admin', 
+				'password' => '$2y$10$z5y06rL5yyUbnM80lrxkGeeWWlL1O/1OEhwjFkChnnHsGS/1yEWAO', //123456
+				'image' => 'icon-user-default.jpg',
+				'email' => 'admin@localhost.com',
+				'level' => 1,
+				'actived' => 1,
+				'blocked' => 0,
+			]
 			]);
 	}
 

@@ -5,7 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 class FilmDetail extends Model {
 
 	protected $table = 'film_details';
-	protected $fillable = ['id', 'film_kind', 'film_info', 'film_score_imdb', 'film_score_aw', 'film_release_date', 'film_production_company', 'film_relate_id', 'film_thumbnail_big', 'film_poster_video', 'film_key_words', 'src_youtube_trailer', 'created_at', 'updated_at'];
+	protected $fillable = ['id', 'film_info', 'film_score_imdb', 'film_score_aw', 'film_release_date', 'film_production_company', 'film_relate_id', 'film_thumbnail_big', 'film_poster_video', 'film_key_words', 'src_youtube_trailer', 'created_at', 'updated_at'];
 	public $timestamps = true;
 
 	public function filmList(){

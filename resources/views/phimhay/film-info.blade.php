@@ -78,7 +78,7 @@
 								<ul>
 									<!-- kind -->
 									<li>
-										<a href="{!! route('film.getSearch') !!}?type={!! $film_detail->film_kind !!}" title="Phim {!! $film_process->xulyGetFilmKind($film_detail->film_kind) !!}">Phim {!! $film_process->xulyGetFilmKind($film_detail->film_kind) !!}</a>
+										<a href="{!! route('film.getSearch') !!}?type={!! $film_list->film_kind !!}" title="Phim {!! $film_process->xulyGetFilmKind($film_list->film_kind) !!}">Phim {!! $film_process->xulyGetFilmKind($film_list->film_kind) !!}</a>
 									</li>
 									<!-- category -->
 									<li>
