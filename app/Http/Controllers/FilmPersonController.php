@@ -11,6 +11,7 @@ use App\FilmJob;
 use App\Lib\FilmProcess\FilmProcess;
 use App\Http\Requests\AdminAddFilmPersonRequest;
 use Illuminate\Http\Request;
+use File;
 
 class FilmPersonController extends Controller {
 
@@ -117,9 +118,18 @@ class FilmPersonController extends Controller {
 		$person->person_birth_date = $request->person_birth_date;
 		$person->person_height = $request->person_height;
 		$person->person_info = $request->person_info;
-		$person->person_image = $request->person_image;
+		$person->person_image = $request->person_image_url;
 		$person->person_dir_name = $dir_name;
 		$person->save();
+		//image
+		$file = $request->file('person_image_file');
+		if($file && $file->isValid()){
+			//
+			$image_name = $dir_name.'-'.$person->id.'-'.$file->getClientOriginalExtension();
+			$file->move('resources/phim/people/', $image_name);
+			$person->person_image = $image_name;
+			$person->save();
+		}
 		//job
 		if(count($request->person_job) > 0){
 			$job_arr = [];
@@ -158,8 +168,23 @@ class FilmPersonController extends Controller {
 		$person->person_birth_date = $request->person_birth_date;
 		$person->person_height = $request->person_height;
 		$person->person_info = $request->person_info;
-		$person->person_image = $request->person_image;
 		$person->person_dir_name = $dir_name;
+		//image
+		$file = $request->file('person_image_file');
+		if($file && $file->isValid()){
+			//check and remove file image old
+			if(substr($person->person_image, 0, 4) != 'http') {
+				if(File::exists('resources/phim/people/'.$person->person_image)){
+					//remove
+					File::delete('resources/phim/people/'.$person->person_image);
+				}
+			}
+			$image_name = $dir_name.'-'.$person->id.'-'.$file->getClientOriginalExtension();
+			$file->move('resources/phim/people/', $image_name);
+			$person->person_image = $image_name;
+		}else{
+			$person->person_image = $request->person_image_url;
+		}		
 		$person->save();
 		//job
 		//person

@@ -36,12 +36,12 @@ use App\Lib\CheckLinks\HttpResponseCode;
 use App\Lib\FilmPlayers\FilmPlayer;
 use App\Lib\FilmCookies\CookieVideoStream;
 use App\Lib\ParseUrlInfo;
-
+use File;
 
 
 use Input;
 use Auth;
-use File;
+
 use DB;
 use Schema;
 //
@@ -51,6 +51,8 @@ use App\Lib\GuestInfo;
 class FilmController extends Controller {
 
 	public function getTest(Request $request){
+		$film_list = FilmList::find(1);
+		var_dump($film_list->getFilmThumbnailSmall());exit;
 		//
 		// $film_detail = FilmDetail::all();
 		// foreach ($film_detail as $key) {
@@ -93,11 +95,18 @@ class FilmController extends Controller {
 
 		// $str =  new \NptNguyen\Libs\ParseUrlInfo('http://username:password@hostname:9090/path?arg=value#anchor');
 		//
-		//  Schema::table('film_sources', function($table){
+		//  Schema::table('video_playbacks', function($table){
 
 		// 	// $table->dropColumn('film_episode_id');
-		// 	$table->integer('film_episode_id')->unsigned()->default(1);
-		// 	$table->foreign('film_episode_id')->references('id')->on('film_episodes')->onDelete('cascade');
+		// 	$table->integer('film_id')->unsigned()->default(1);
+		// 	$table->foreign('film_id')->references('id')->on('film_details')->onDelete('cascade');
+		// 	$table->integer('episode_id')->unsigned()->default(1);
+		// 	$table->foreign('episode_id')->references('id')->on('film_episodes')->onDelete('cascade');
+		// 	$table->string('src_360p', 500)->nullable();
+		// 	$table->string('src_480p', 500)->nullable();
+		// 	$table->string('src_720p', 500)->nullable();
+		// 	$table->string('src_1080p', 500)->nullable();
+		// 	$table->string('src_2160p', 500)->nullable();
 		// });
 		// Schema::table('film_sources', function($table){
 
@@ -319,7 +328,7 @@ class FilmController extends Controller {
 			$film_source_list = FilmSource::where('film_episode_id', $film_source_watch->film_episode_id)->get();
 			//
 			$process_link = new ProcessVideoLink();
-			$process_link->getVideoPlayback($film_source_watch);
+			$process_link->getVideoPlayback($film_id, $film_source_watch);
 			$data_source = $process_link->getData();
 			// var_dump($data_source);exit;
 			/*
@@ -453,7 +462,28 @@ class FilmController extends Controller {
 			$film_detail->film_relate_id = 1;
 		}
 		$film_detail->film_thumbnail_big = $request->film_thumbnail_big;
+		//
+		$film_process = new FilmProcess();
+		$dir_name =  $film_process->getFilmDirName($request->film_name_vn, $request->film_name_en, $request->film_release_date_year);
+		//image thumbnail big
+		$thumbnail_big_file = $request->file('film_thumbnail_big_file');
+		if($thumbnail_big_file && $thumbnail_big_file->isValid()){
+			//
+			$image_name = $dir_name.'-poster-big.'.$thumbnail_big_file->getClientOriginalExtension();
+			$thumbnail_big_file->move('resources/phim/poster/', $image_name);
+			//update thumbnail big name
+			$film_detail->film_thumbnail_big = $image_name;
+		}
 		$film_detail->film_poster_video = $request->film_poster_video;
+		//image poster video
+		$poster_video = $request->file('film_poster_video_file');
+		if($poster_video && $poster_video->isValid()){
+			//
+			$image_name = $dir_name.'-poster-video.'.$poster_video->getClientOriginalExtension();
+			$poster_video->move('resources/phim/poster/', $image_name);
+			//update thumbnail big name
+			$film_detail->film_poster_video = $image_name;
+		}
 		$film_detail->film_key_words = $request->film_key_words;
 		$film_detail->src_youtube_trailer = $request->src_youtube_trailer;
 		$film_detail_save = $film_detail->save();
@@ -503,9 +533,16 @@ class FilmController extends Controller {
 		$film_list->film_quality = '';
 		$film_list->film_language = null;
 		$film_list->film_thumbnail_small = $request->film_thumbnail_small;
-		//
-		$film_process = new FilmProcess();
-		$film_list->film_dir_name = $film_process->getFilmDirName($request->film_name_vn, $request->film_name_en, $request->film_release_date_year);
+		//image thumbnail small
+		$thumbnail_small_file = $request->file('film_thumbnail_small_file');
+		if($thumbnail_small_file && $thumbnail_small_file->isValid()){
+			//
+			$image_name = $dir_name.'-poster-small.'.$thumbnail_small_file->getClientOriginalExtension();
+			$thumbnail_small_file->move('resources/phim/poster/', $image_name);
+			//update thumbnail big name
+			$film_list->film_thumbnail_small = $image_name;
+		}
+		$film_list->film_dir_name = $dir_name;
 		$film_list->film_status = 'Trailer';
 		$film_list_save = $film_list->save();
 		if($film_detail_save && $film_list_save){
@@ -543,6 +580,10 @@ class FilmController extends Controller {
 		if(count($film_detail) == 0){
 			return redirect()->route('admin.film.getList')->with(['flash_message_error' =>'Post Edit! Không tồn tại film id: '.$film_id]);
 		}
+		//
+		$film_process = new FilmProcess();
+		$dir_name = $film_process->getFilmDirName($request->film_name_vn, $request->film_name_en, $request->film_release_date_year);
+		//
 		$film_detail->film_info = $request->film_info;
 		$film_detail->film_score_imdb = $request->film_score_imdb;
 		$film_detail->film_score_aw = $request->film_score_aw;
@@ -567,7 +608,40 @@ class FilmController extends Controller {
 				$film_detail->film_relate_id = $request->film_relate_selected;
 			}
 		}
-		$film_detail->film_thumbnail_big = $request->film_thumbnail_big;
+		//image thumbnail big
+		$thumbnail_big_file = $request->file('film_thumbnail_big_file');
+		if($thumbnail_big_file && $thumbnail_big_file->isValid()){
+			//check exists file thumbnail big
+			if(substr($film_detail->film_thumbnail_big, 0, 4) != 'http') {
+				if(File::exists('resources/phim/poster/'.$film_detail->film_thumbnail_big)){
+					//remove
+					File::delete('resources/phim/poster/'.$film_detail->film_thumbnail_big);
+				}
+			}
+			$image_name = $dir_name.'-poster-big.'.$thumbnail_big_file->getClientOriginalExtension();
+			$thumbnail_big_file->move('resources/phim/poster/', $image_name);
+			//update thumbnail big name
+			$film_detail->film_thumbnail_big = $image_name;
+		}else{
+			$film_detail->film_thumbnail_big = $request->film_thumbnail_big;
+		}
+		//image poster video
+		$poster_video_file = $request->file('film_poster_video_file');
+		if($poster_video_file && $poster_video_file->isValid()){
+			//check exists file thumbnail big
+			if(substr($film_detail->film_poster_video, 0, 4) != 'http') {
+				if(File::exists('resources/phim/poster/'.$film_detail->film_poster_video)){
+					//remove
+					File::delete('resources/phim/poster/'.$film_detail->film_poster_video);
+				}
+			}
+			$image_name = $dir_name.'-poster-video.'.$poster_video_file->getClientOriginalExtension();
+			$poster_video_file->move('resources/phim/poster/', $image_name);
+			//update thumbnail big name
+			$film_detail->film_poster_video = $image_name;
+		}else{
+			$film_detail->film_poster_video = $request->film_poster_video;
+		}
 		$film_detail->film_poster_video = $request->film_poster_video;
 		$film_detail->film_key_words = $request->film_key_words;
 		$film_detail->src_youtube_trailer = $request->src_youtube_trailer;
@@ -635,10 +709,26 @@ class FilmController extends Controller {
 		if(count($request->film_language) > 0){
 			$film_list->film_language = implode(',', $request->film_language);
 		}
+		//image thumbnail small
+		$thumbnail_small_file = $request->file('film_thumbnail_small_file');
+		if($thumbnail_small_file && $thumbnail_small_file->isValid()){
+			//check exists file thumbnail big
+			if(substr($film_list->film_thumbnail_small, 0, 4) != 'http') {
+				if(File::exists('resources/phim/poster/'.$film_list->film_thumbnail_small)){
+					//remove
+					File::delete('resources/phim/poster/'.$film_list->film_thumbnail_small);
+				}
+			}
+			$image_name = $dir_name.'-poster-small.'.$thumbnail_small_file->getClientOriginalExtension();
+			$thumbnail_small_file->move('resources/phim/poster/', $image_name);
+			//update thumbnail big name
+			$film_list->film_thumbnail_small = $image_name;
+		}else{
+			$film_list->film_thumbnail_small = $request->film_thumbnail_small;
+		}
 		$film_list->film_thumbnail_small = $request->film_thumbnail_small;
 		//
-		$film_process = new FilmProcess();
-		$film_list->film_dir_name = $film_process->getFilmDirName($request->film_name_vn, $request->film_name_en, $request->film_release_date_year);
+		$film_list->film_dir_name = $dir_name;
 		$film_list->film_status = $request->film_status;
 		$film_list->save();
 		return redirect()->route('admin.film.getShow', $film_detail->id);

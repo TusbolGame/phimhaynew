@@ -164,15 +164,24 @@
                 </tr>
                 <tr>
                     <th>Ảnh Thumnail small</th>
-                    <td>{!! $film_list->film_thumbnail_small !!}</td>
+                    <td>
+                        <img src="{!! $film_list->getFilmThumbnailSmall() !!}" alt="Error thumbnail small" style="width: 75px; height: 100px;">
+                        <p>{!! $film_list->film_thumbnail_small !!}</p>
+                    </td>
                 </tr>
                 <tr>
                     <th>Ảnh Thumnail big</th>
-                    <td>{!! $film_detail->film_thumbnail_big !!}</td>
+                    <td>
+                        <img src="{!! $film_detail->getFilmThumbnailBig() !!}" alt="Error thumbnail big" style="width: 75px; height: 100px;">
+                        <p>{!! $film_detail->film_thumbnail_big !!}</p>
+                    </td>
                 </tr>
                 <tr>
                     <th>Ảnh Poster Video</th>
-                    <td>{!! $film_detail->film_poster_video !!}</td>
+                    <td>
+                        <img src="{!! $film_detail->getFilmPosterVideo() !!}" alt="Error poster video" style="width: 125px; height: 75px;">
+                        <p>{!! $film_detail->film_poster_video !!}</p>
+                    </td>
                 </tr>
                 
             </tbody>

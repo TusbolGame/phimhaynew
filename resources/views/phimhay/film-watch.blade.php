@@ -34,8 +34,8 @@
 			</a></h3>
 		</div>
 		<div class="film-watch-video background-video">
-			{{-- {!! $film_player->getFilmVideojs($film_source_watch, $film_detail->film_poster_video, $film_source_track) !!} --}}
-			{!! $film_player->getFilmVideojs($data_source, $film_detail->film_poster_video, $film_source_track) !!}
+			{{-- {!! $film_player->getFilmVideojs($film_source_watch, $film_detail->getFilmPosterVideo(), $film_source_track) !!} --}}
+			{!! $film_player->getFilmVideojs($data_source, $film_detail->getFilmPosterVideo(), $film_source_track) !!}
 		</div>
 		<div class="film-watch-option">
 			<ul>
@@ -122,7 +122,7 @@
 		@else
 			<div>
 				<h4 class="bg-danger" style="padding: 5px;">Trailer, phim chưa được chiếu, vui lòng quay lại sau</h4>
-				<img src="{!! $film_detail->film_poster_video !!}" class="img-responsive" alt="">
+				<img src="{!! $film_detail->getFilmPosterVideo() !!}" class="img-responsive" alt="">
 			</div>
 		@endif
 		<div class="clearfix"></div>

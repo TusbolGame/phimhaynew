@@ -8,7 +8,7 @@
 @endsection
 @section('content')
 <div class="col-lg-12" style="padding-bottom:120px">
-    <form action="{{ route('admin.person.getEdit', $person->id) }}" method="POST" class="form-add-film">
+    <form action="{{ route('admin.person.getEdit', $person->id) }}" method="POST" class="form-add-film" enctype="multipart/form-data">
         @include('admin.messages.messages')
         <input type="hidden" name="_token" value="{!! csrf_token() !!}">
 
@@ -58,6 +58,18 @@
             <div class="form-group">
               <label>Ảnh đại diện</label>
               <textarea class="form-control" name="person_image" required="true" placeholder="Nhập đường dẫn ảnh">{!! old('person_image', $person->person_image) !!}</textarea>
+            </div>
+            <div class="form-group">
+              <label>Ảnh đại diện</label>
+              <img src="{!! $person->getPersonImage() !!}" class="img-responsive" alt="Error image" style="width: 40%;">
+              <div class="form-group">
+                <label>Thay đổi: Chọn file:</label>
+                <input type="file" accept="image/*" name="person_image_file">
+              </div>
+              <div class="form-group">
+                <label>Hoặc Nhập URL image</label>
+                <textarea class="form-control" name="person_image_url" placeholder="Nhập đường dẫn ảnh">{!! old('person_image_url', $person->person_image) !!}</textarea>
+              </div>              
             </div>
             <div class="text-center">
                 <input type="submit" name="submit" class="btn btn-primary" value="Sửa nhân vật">

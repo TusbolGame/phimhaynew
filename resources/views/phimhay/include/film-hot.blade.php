@@ -8,7 +8,7 @@
 			<li>
 				<a href="{!! route('film.getFilm', [$hot->film_dir_name, $hot->id]) !!}" title="">
 					<div class="col-sm-5 col-xs-4 film-hot-thumbnail">
-						<img src="{!! $hot->film_thumbnail_small !!}" class="img" alt="">
+						<img src="{!! $hot->getFilmThumbnailSmall() !!}" class="img" alt="">
 					</div>
 					<div class="col-sm-7 col-xs-8 film-hot-detail">
 						<span class="film-title-vn">{!! $film_process->getFilmNameVn($hot->film_name_vn, $hot->film_name_en) !!}</span>
@@ -32,7 +32,7 @@
 			<li>
 				<a href="{!! route('film.getFilm', [$hot->film_dir_name, $hot->id]) !!}" title="">
 					<div class="col-sm-5 col-xs-4 film-hot-thumbnail">
-						<img src="{!! $hot->film_thumbnail_small !!}" class="img" alt="">
+						<img src="{!! $hot->getFilmThumbnailSmall() !!}" class="img" alt="">
 					</div>
 					<div class="col-sm-7 col-xs-8 film-hot-detail">
 						<span class="film-title-vn">{!! $film_process->getFilmNameVn($hot->film_name_vn, $hot->film_name_en) !!}</span>
@@ -56,7 +56,7 @@
 			<li>
 				<a href="{!! route('film.getFilm', [$hot->film_dir_name, $hot->id]) !!}" title="">
 					<div class="col-sm-5 col-xs-4 film-hot-thumbnail">
-						<img src="{!! $hot->film_thumbnail_small !!}" class="img" alt="">
+						<img src="{!! $hot->getFilmThumbnailSmall() !!}" class="img" alt="">
 					</div>
 					<div class="col-sm-7 col-xs-8 film-hot-detail">
 						<span class="film-title-vn">{!! $film_process->getFilmNameVn($hot->film_name_vn, $hot->film_name_en) !!}</span>

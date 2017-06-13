@@ -37,7 +37,7 @@
 					<li>
 						<a href="{!! route('person.getProfile', [$person->person_dir_name, $person->id]) !!}" title="{!! $person->person_name !!}">
 							<div class="film-actor-img">
-								<img src="{!! $person->person_image !!}" alt="Error">
+								<img src="{!! $person->getPersonImage() !!}" alt="Error">
 							</div>
 							<div class="film-actor-name">
 								<span class="film-actor-name-1">{!! $person->person_name !!}</span>

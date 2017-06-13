@@ -274,7 +274,7 @@ Route::group(['prefix' => '/', 'middleware' => 'phimhay'], function(){
         Route::get('proxy/{id}/{quality}', ['as' => 'videoStream.getProxy', 'uses' => 'VideoStreamController@getProxy']);
     });
     //redirect
-    Route::get('videoplayback/{id}', ['as' => 'videoPlayback', 'uses' => 'VideoPlaybackController@getRedirect']);
+    Route::get('videoplayback/{id}/{resolution}', ['as' => 'videoPlayback', 'uses' => 'VideoPlaybackController@getRedirect']);
     //xem phim
     // Route::get('watch/{film_dir}/{film_id}', ['as' => 'film.getFilmWatch', 'uses' => 'FilmController@getFilmWatch']);
     Route::get('watch/{film_dir}/{film_id}/{source_id}', ['as' => 'film.getFilmWatch', 'uses' => 'FilmController@getFilmWatch']);

@@ -17,5 +17,11 @@ class FilmPerson extends Model {
 	public function filmPersonJob(){
 		return $this->hasMany('App\FilmPersonJob', 'film_person_id', 'id');
 	}
+	public function getPersonImage(){
+		if(substr($this->person_image, 0, 4) == 'http') {
+			return $this->person_image;
+		}
+		return url('resources/phim/people/'.$this->person_image);
+	}
 	
 }

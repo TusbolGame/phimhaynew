@@ -27,7 +27,7 @@
 		<div class="film-info">
 			<div class="col-sm-6">
 				<div class="film-thumbnail">
-					<img src="{!! $film_detail->film_thumbnail_big !!}" alt="Error Image Thumnail Small">
+					<img src="{!! $film_detail->getFilmThumbnailBig() !!}" alt="Error Image Thumnail Big">
 					<ul>
 						<li><a class="btn btn-warning" href="{!! route('film.getFilmDownloadCaptcha', [$film_list->film_dir_name, $film_list->id]) !!}" title="Download">Dowload</a></li>
 						<li><a class="btn btn-success" href="{!! route('film.getFilmWatch', [$film_list->film_dir_name, $film_list->id, $film_source_id]) !!}" title="Xem phim">Xem phim</a></li>
@@ -155,7 +155,7 @@
 		<div class="film-trailer film-detail-border">
 			<h4 class="film-title-box"><span class="glyphicon glyphicon-film"></span> TRAILER</h4>
 			<div class="background-video">
-				{!! $film_player->getTrailerYoutube($film_detail->src_youtube_trailer, $film_detail->film_poster_video) !!}
+				{!! $film_player->getTrailerYoutube($film_detail->src_youtube_trailer, $film_detail->getFilmPosterVideo()) !!}
 			</div>
 		</div>
 		<div class="film-content film-detail-border">

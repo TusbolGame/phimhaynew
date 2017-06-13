@@ -83,8 +83,12 @@ class FilmPersonAjaxController extends Controller {
 		{
 			//get 10 row 
 			$person = FilmPerson::where('person_name', 'LIKE', '%'.Request::get('person_name').'%')->select('id', 'person_name', 'person_image')->take(5)->get();
+			$arr = [];
+			foreach ($person as $data) {
+				array_push($arr, ['id' => $data->id, 'person_name' => $data->person_name, 'person_image' => $data->getPersonImage()]);
+			}
 			if(count($person) >= 1){
-				$result['content'] = $person;
+				$result['content'] = $arr;
 				$result['status'] = 1;
 				return response()->json($result);
 			}

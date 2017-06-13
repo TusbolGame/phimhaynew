@@ -20,4 +20,10 @@ class FilmList extends Model {
 	public function filmDetailType(){
 		return $this->hasMany('App\FilmDetailType', 'film_id', 'id');
 	}
+	public function getFilmThumbnailSmall(){
+		if(substr($this->film_thumbnail_small, 0, 4) == 'http') {
+			return $this->film_thumbnail_small;
+		}
+		return url('resources/phim/poster/'.$this->film_thumbnail_small);
+	}
 }

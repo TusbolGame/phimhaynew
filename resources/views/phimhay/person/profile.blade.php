@@ -25,7 +25,7 @@
 			<div class="col-sm-1"></div>
 			<div class="col-sm-4">
 				<div class="film-thumbnail film-person-image">
-					<img src="{!! $person->person_image !!}" alt="Error Image Thumnail Small">
+					<img src="{!! $person->getPersonImage() !!}" alt="Error Image Thumnail Small">
 				</div>
 			</div>
 			<div class="col-sm-1"></div>

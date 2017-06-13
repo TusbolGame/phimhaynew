@@ -23,4 +23,16 @@ class FilmDetail extends Model {
 	public function filmRelate(){
 		return $this->belongsTo('App\FilmRelate', 'film_relate_id', 'id');
 	}
+	public function getFilmThumbnailBig(){
+		if(substr($this->film_thumbnail_big, 0, 4) == 'http') {
+			return $this->film_thumbnail_big;
+		}
+		return url('resources/phim/poster/'.$this->film_thumbnail_big);
+	}
+	public function getFilmPosterVideo(){
+		if(substr($this->film_poster_video, 0, 4) == 'http') {
+			return $this->film_poster_video;
+		}
+		return url('resources/phim/poster/'.$this->film_poster_video);
+	}
 }

@@ -8,7 +8,7 @@
 			<li>
 				<a href="{!! route('film.getFilm', [$phim_moi->filmList->film_dir_name, $phim_moi->filmList->id]) !!}" title="{!! $film_process->getFilmNameVnEn($phim_moi->filmList->film_name_vn, $phim_moi->filmList->film_name_en) !!}">
 					<div class="film-new-thumbnail">
-						<img src="{!! $phim_moi->filmList->film_thumbnail_small !!}" alt="Error Thumbnail small">
+						<img src="{!! $phim_moi->filmList->getFilmThumbnailSmall() !!}" alt="Error Thumbnail small">
 						<!-- <div class="film-ribbon-status"><span>Tap 2/22</span></div> -->
 						<div class="film-ribbon-status"><span>{!! $phim_moi->filmList->film_status !!}</span></div>
 						<div class="film-ribbon-language"><span>{!! $film_process->xulyGetFilmLanguage($phim_moi->filmList->film_language) !!}</span></div>
@@ -33,7 +33,7 @@
 			<li>
 				<a href="{!! route('film.getFilm', [$phim_moi->filmList->film_dir_name, $phim_moi->filmList->id]) !!}" title="{!! $film_process->getFilmNameVnEn($phim_moi->filmList->film_name_vn, $phim_moi->filmList->film_name_en) !!}">
 					<div class="film-new-thumbnail">
-						<img src="{!! $phim_moi->filmList->film_thumbnail_small !!}" alt="Error Thumbnail small">
+						<img src="{!! $phim_moi->filmList->getFilmThumbnailSmall() !!}" alt="Error Thumbnail small">
 						<!-- <div class="film-ribbon-status"><span>Tap 2/22</span></div> -->
 						<div class="film-ribbon-status"><span>{!! $phim_moi->filmList->film_status !!}</span></div>
 						<div class="film-ribbon-language"><span>{!! $film_process->xulyGetFilmLanguage($phim_moi->filmList->film_language) !!}</span></div>
@@ -58,7 +58,7 @@
 			<li>
 				<a href="{!! route('film.getFilm', [$phim_moi->filmList->film_dir_name, $phim_moi->filmList->id]) !!}" title="{!! $film_process->getFilmNameVnEn($phim_moi->filmList->film_name_vn, $phim_moi->filmList->film_name_en) !!}">
 					<div class="film-new-thumbnail">
-						<img src="{!! $phim_moi->filmList->film_thumbnail_small !!}" alt="Error Thumbnail small">
+						<img src="{!! $phim_moi->filmList->getFilmThumbnailSmall() !!}" alt="Error Thumbnail small">
 						<!-- <div class="film-ribbon-status"><span>Tap 2/22</span></div> -->
 						<div class="film-ribbon-status"><span>{!! $phim_moi->filmList->film_status !!}</span></div>
 						<div class="film-ribbon-language"><span>{!! $film_process->xulyGetFilmLanguage($phim_moi->filmList->film_language) !!}</span></div>

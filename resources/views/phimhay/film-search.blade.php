@@ -86,7 +86,7 @@
 				<li>
 					<a href="{!! route('film.getFilm', [$film->film_dir_name, $film->id]) !!}" title="{!! $film_process->getFilmNameVnEn($film->film_name_vn, $film->film_name_en) !!}">
 						<div class="film-new-thumbnail">
-							<img src="{!! $film->film_thumbnail_small !!}" alt="Error Thumbnail small">
+							<img src="{!! $film->getFilmThumbnailSmall() !!}" alt="Error Thumbnail small">
 							<div class="film-ribbon-status"><span>{!! $film->film_status !!}</span></div>
 							<div class="film-ribbon-language"><span>{!! $film_process->xulyGetFilmLanguage($film->film_language) !!}</span></div>
 						</div>

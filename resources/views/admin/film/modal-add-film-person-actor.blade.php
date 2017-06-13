@@ -6,7 +6,7 @@
         <h4 class="modal-title" id="gridSystemModalLabel">Thêm Diễn Viên</h4>
       </div>
       <div class="modal-body">
-        <form action="" class="form-add-film-person-actor" method="post" accept-charset="utf-8">
+        <form action="" class="form-add-film-person-actor" method="post" accept-charset="utf-8" enctype="multipart/form-data">
           <input type="hidden" name="_token" value="{!! csrf_token() !!}">
             <div class="form-group">
               <label>Tên diễn viên</label>

@@ -8,7 +8,7 @@
 @endsection
 @section('content')
 <div class="col-lg-12" style="padding-bottom:120px">
-    <form action="{{ route('admin.film.getAdd') }}" method="POST" class="form-add-film">
+    <form action="{{ route('admin.film.getAdd') }}" method="POST" class="form-add-film" enctype="multipart/form-data">
         @include('admin.messages.messages')
         <input type="hidden" name="_token" value="{!! csrf_token() !!}">
 
@@ -274,15 +274,18 @@
         
             <div class="form-group">
                 <label>Ảnh Thumbnail small (300x400)</label>
-                <textarea name="film_thumbnail_small" class="form-control" placeholder="Nhập URL ảnh thumnail small" >{{ old('film_thumbnail_small') }}</textarea>
+                <input type="file" name="film_thumbnail_small_file" accept="image/*">
+                <textarea name="film_thumbnail_small" class="form-control" placeholder="Hoặc Nhập URL ảnh thumnail small" >{{ old('film_thumbnail_small') }}</textarea>
             </div>
             <div class="form-group">
                 <label>Ảnh Thumbnail big (450x600)</label>
-                <textarea name="film_thumbnail_big" class="form-control" placeholder="Nhập URL ảnh thumnail big" >{{ old('film_thumbnail_big') }}</textarea>
+                <input type="file" name="film_thumbnail_big_file" accept="image/*">
+                <textarea name="film_thumbnail_big" class="form-control" placeholder="Hoặc Nhập URL ảnh thumnail big" >{{ old('film_thumbnail_big') }}</textarea>
             </div>
             <div class="form-group">
                 <label>Ảnh Poster Video</label>
-                <textarea name="film_poster_video" class="form-control" placeholder="Nhập URL ảnh poster video" >{{ old('film_poster_video') }}</textarea>
+                <input type="file" name="film_poster_video_file" accept="image/*">
+                <textarea name="film_poster_video" class="form-control" placeholder="Hoặc Nhập URL ảnh poster video" >{{ old('film_poster_video') }}</textarea>
             </div>
             <div class="form-group">           
                 <label>Trailer</label><br>

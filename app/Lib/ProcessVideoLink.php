@@ -15,7 +15,7 @@ class ProcessVideoLink
 	function __construct()
 	{
 	}
-	function getVideoPlayback($film_source){
+	function getVideoPlayback($film_id, $film_source){
 		//uu tien get link
 		$get_link_video = new \NptNguyen\Libs\GetLinkVideos\GetLinkVideo();
 		$time = time();
@@ -27,12 +27,15 @@ class ProcessVideoLink
 		//embed
 		$this->data['film_src_name'] = $film_source->film_src_name;
 		//
+		$videoplayback = new VideoPlayback();
+		$videoplayback->id = hash('crc32', $time);
+		$videoplayback->film_id = $film_id;
+		$videoplayback->film_episode_id = $film_source->film_episode_id;
+		$videoplayback->time = $cache_link;
+		//
 		if($film_source->film_src_name == 'youtube'){
-			//
-			$videoplayback = new VideoPlayback();
-			$videoplayback->id = $time;
-			$videoplayback->redirect = $film_source->film_src_full;
-			$videoplayback->time = $cache_link; 
+			//insert videoplayback	
+			$videoplayback->src_360p = $film_source->film_src_full;
 			$videoplayback->save();
 			//youtube error redirect
 			// $this->data['film_src_full'] = route('videoPlayback', $videoplayback->id);
@@ -47,7 +50,7 @@ class ProcessVideoLink
 					$get_link_video->getLinkVideoGooglePhotos($film_source->film_src_full);
 				}
 				elseif($film_source->film_src_name == 'google drive'){
-					$get_link_video->getLinkVideoIo($film_source->film_src_full);
+					// $get_link_video->getLinkVideoIo($film_source->film_src_full);
 				}
 				if(!empty($get_link_video->getSrcVideoJson())){
 					//get ok
@@ -64,53 +67,29 @@ class ProcessVideoLink
 			//is cache
 			//update data_source
 			//create id -> public id: time() + ?? + int + 5
-			$id_random =  time();
 			if(!empty($film_source->film_src_360p)){
-				$videoplayback = new VideoPlayback();
-				$videoplayback->id = hash('crc32', $id_random);
-				$videoplayback->redirect = $film_source->film_src_360p;
-				$videoplayback->time = $cache_link;
-				$videoplayback->save();
-				$this->data['film_src_360p'] = route('videoPlayback', $videoplayback->id);
-				$id_random++;//update id random
+				$videoplayback->src_360p = $film_source->film_src_360p;
+				$this->data['film_src_360p'] = route('videoPlayback', [$videoplayback->id, 0]);
 
 			}
 			if(!empty($film_source->film_src_480p)){
-				$videoplayback = new VideoPlayback();
-				$videoplayback->id = hash('crc32', $id_random);
-				$videoplayback->redirect = $film_source->film_src_480p;
-				$videoplayback->time = $cache_link;
-				$videoplayback->save();
-				$this->data['film_src_480p'] = route('videoPlayback', $videoplayback->id);
-				$id_random++;//update id random
+				$videoplayback->src_480p = $film_source->film_src_480p;
+				$this->data['film_src_480p'] = route('videoPlayback', [$videoplayback->id, 1]);
 			}
 			if(!empty($film_source->film_src_720p)){
-				$videoplayback = new VideoPlayback();
-				$videoplayback->id = hash('crc32', $id_random);
-				$videoplayback->redirect = $film_source->film_src_720p;
-				$videoplayback->time = $cache_link;
-				$videoplayback->save();
-				$this->data['film_src_720p'] = route('videoPlayback', $videoplayback->id);
-				$id_random++;//update id random
+				$videoplayback->src_720p = $film_source->film_src_720p;
+				$this->data['film_src_720p'] = route('videoPlayback', [$videoplayback->id, 2]);
 			}
 			if(!empty($film_source->film_src_1080p)){
-				$videoplayback = new VideoPlayback();
-				$videoplayback->id = hash('crc32', $id_random);
-				$videoplayback->redirect = $film_source->film_src_1080p;
-				$videoplayback->time = $cache_link;
-				$videoplayback->save();
-				$this->data['film_src_1080p'] = route('videoPlayback', $videoplayback->id);
-				$id_random++;//update id random
+				$videoplayback->src_1080p = $film_source->film_src_1080p;
+				$this->data['film_src_1080p'] = route('videoPlayback', [$videoplayback->id, 3]);
 			}
 			if(!empty($film_source->film_src_2160p)){
-				$videoplayback = new VideoPlayback();
-				$videoplayback->id_public = hash('crc32', $id_random);
-				$videoplayback->redirect = $film_source->film_src_2160p;
-				$videoplayback->time = $cache_link;
-				$videoplayback->save();
-				$this->data['film_src_2160p'] = route('videoPlayback', $videoplayback->id);
-				$id_random++;//update id random
+				$videoplayback->src_2160p = $film_source->film_src_2160p;
+				$this->data['film_src_2160p'] = route('videoPlayback', [$videoplayback->id, 4]);
 			}
+			//save videoplayback
+			$videoplayback->save();
 		} // end else
 	}
 	function getData(){

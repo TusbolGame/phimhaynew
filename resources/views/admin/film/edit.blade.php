@@ -8,7 +8,7 @@
 @endsection
 @section('content')
 <div class="col-lg-12" style="padding-bottom:120px">
-    <form action="{{ route('admin.film.getEdit', $film_id) }}" method="POST" class="form-add-film">
+    <form action="{{ route('admin.film.getEdit', $film_id) }}" method="POST" class="form-add-film" enctype="multipart/form-data">
         @include('admin.messages.messages')
         <input type="hidden" name="_token" value="{!! csrf_token() !!}">
 
@@ -296,14 +296,23 @@
             </div>
             <div class="form-group">
                 <label>Ảnh Thumbnail small (300x400)</label>
+                <br>
+                <img src="{!! $film_list->getFilmThumbnailSmall() !!}" alt="Error thumbnail small" style="width: 75px; height: 100px;">
+                <input type="file" name="film_thumbnail_small_file" accept="image/*">
                 <textarea name="film_thumbnail_small" class="form-control" placeholder="Nhập URL ảnh thumnail small" >{!! old('film_thumbnail_small', $film_list->film_thumbnail_small) !!}</textarea>
             </div>
             <div class="form-group">
                 <label>Ảnh Thumbnail big (450x600)</label>
+                <br>
+                <img src="{!! $film_detail->getFilmThumbnailBig() !!}" alt="Error thumbnail small" style="width: 75px; height: 100px;">
+                <input type="file" name="film_thumbnail_big_file" accept="image/*">
                 <textarea name="film_thumbnail_big" class="form-control" placeholder="Nhập URL ảnh thumnail big" >{!! old('film_thumbnail_big', $film_detail->film_thumbnail_big) !!}</textarea>
             </div>
             <div class="form-group">
                 <label>Ảnh Poster Video</label>
+                <br>
+                <img src="{!! $film_detail->getFilmPosterVideo() !!}" alt="Error thumbnail small" style="width: 100px; height: 75px;">
+                <input type="file" name="film_poster_video_file" accept="image/*">
                 <textarea name="film_poster_video" class="form-control" placeholder="Nhập URL ảnh poster video" >{!! old('film_poster_video', $film_detail->film_poster_video) !!}</textarea>
             </div>
             <div class="form-group">           

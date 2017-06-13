@@ -26,7 +26,7 @@
                     <td>{{ $data->id }}</td>
                     <td class="center"><i class="fa fa-pencil fa-fw"></i> <a href="{!! route('admin.person.getEdit', $data->id) !!}">Sửa</a></td>
                     <td class="center"><i class="fa fa-trash-o  fa-fw"></i><a onclick="return checkDelete('Bạn có muốn xóa Person id là {!! $data->id !!} không');" href="{!! route('admin.person.getDelete', $data->id) !!}"> Xóa</a></td> 
-                    <td><img src="{{ $data->person_image }}" class="img-responsive" alt=""></td>
+                    <td><img src="{{ $data->getPersonImage() }}" class="img-responsive" alt=""></td>
                     <td>{{ $data->person_name }}</td>
                     <td title="{!! $data->created_at !!}">{!! \Carbon\Carbon::createFromTimestamp(strtotime($data->created_at))->diffForHumans() !!}</td>
                     <td title="{!! $data->updated_at !!}">{!! \Carbon\Carbon::createFromTimestamp(strtotime($data->updated_at))->diffForHumans() !!}</td>

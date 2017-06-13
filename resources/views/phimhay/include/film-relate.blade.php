@@ -9,7 +9,7 @@
 	  			<div class="film-relate-item">
 	  				<a href="{!! route('film.getFilm', [$relate->filmList->film_dir_name, $relate->id]) !!}" title="{!! $film_process->getFilmNameVnEn($relate->filmList->film_name_vn, $relate->filmList->film_name_en) !!}">
 		  				<div class="film-relate-item-img">
-		  					<img src="{!! $relate->filmList->film_thumbnail_small !!}" alt="">
+		  					<img src="{!! $relate->filmList->getFilmThumbnailSmall() !!}" alt="">
 		  				</div>
 		  				<div class="film-relate-item-title">
 		  					<span class="film-title-vn" title="{!! $film_process->getFilmNameVn($relate->filmList->film_name_vn, $relate->filmList->film_name_en) !!}">{!! $film_process->getFilmNameVn($relate->filmList->film_name_vn, $relate->filmList->film_name_en) !!}</span>
@@ -27,7 +27,7 @@
 	  			<div class="film-relate-item">
 	  				<a href="{!! route('film.getFilm', [$relate->filmList->film_dir_name, $relate->id]) !!}" title="{!! $film_process->getFilmNameVnEn($relate->filmList->film_name_vn, $relate->filmList->film_name_en) !!}">
 		  				<div class="film-relate-item-img">
-		  					<img src="{!! $relate->filmList->film_thumbnail_small !!}" alt="">
+		  					<img src="{!! $relate->filmList->getFilmThumbnailSmall() !!}" alt="">
 		  				</div>
 		  				<div class="film-relate-item-title">
 		  					<span class="film-title-vn" title="{!! $film_process->getFilmNameVn($relate->filmList->film_name_vn, $relate->filmList->film_name_en) !!}">{!! $film_process->getFilmNameVn($relate->filmList->film_name_vn, $relate->filmList->film_name_en) !!}</span>

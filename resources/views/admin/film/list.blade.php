@@ -28,7 +28,7 @@
                 <tr>
                     <td>{!! $film->id !!}</td>
                     <td>
-                        <img src="{!! $film->filmList->film_thumbnail_small !!}" alt="Error Poster" width="100" height="133">
+                        <img src="{!! $film->filmList->getFilmThumbnailSmall() !!}" alt="Error Poster" width="100" height="133">
                     </td>
                     <td>{!! $film->filmList->film_name_vn !!}</td>
                     <td>{!! $film->filmList->film_name_en !!}</td>
