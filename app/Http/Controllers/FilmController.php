@@ -51,8 +51,155 @@ use App\Lib\GuestInfo;
 class FilmController extends Controller {
 
 	public function getTest(Request $request){
-		$film_list = FilmList::find(1);
-		var_dump($film_list->getFilmThumbnailSmall());exit;
+		 Schema::table('video_playbacks', function($table){
+
+			// $table->dropColumn('film_episode_id');
+			// $table->integer('film_id')->unsigned()->default(1);
+			// $table->foreign('film_id')->references('id')->on('film_details')->onDelete('cascade');
+			// $table->integer('film_source_id')->unsigned()->default(1);
+			// $table->foreign('film_source_id')->references('id')->on('film_sources')->onDelete('cascade');
+		});
+		exit;
+		ini_set('max_execution_time', 300); //300 seconds = 5 minutes
+		$ffmpeg = \FFMpeg\FFMpeg::create();
+		$video = $ffmpeg->open('resources/phim/movies/720p.mp4');
+		$video
+	    ->filters()
+	    ->resize(new \FFMpeg\Coordinate\Dimension(480, 360))
+	    ->synchronize();
+	    // ->save(new \FFMpeg\Format\Video\X264(), 'export-x264-320-240.mp4');
+		$format = new \FFMpeg\Format\Video\X264();
+		$format->setAudioCodec('aac');
+		//360p
+		$format
+    	->setKiloBitrate(250)
+    	->setAudioChannels(2)
+    	->setAudioKiloBitrate(96);
+    	 $video->save($format, 'resources/phim/movies/360-1.mp4');
+    	//480p
+    	$video
+	    ->filters()
+	    ->resize(new \FFMpeg\Coordinate\Dimension(640, 480))
+	    ->synchronize();
+    	$format
+    	->setKiloBitrate(400)
+    	->setAudioChannels(2)
+    	->setAudioKiloBitrate(128);
+    	$video->save($format, 'resources/phim/movies/480-1.mp4');
+    	//720p
+    	$video
+	    ->filters()
+	    ->resize(new \FFMpeg\Coordinate\Dimension(1280, 720))
+	    ->synchronize();
+    	$format
+    	->setKiloBitrate(1000)
+    	->setAudioChannels(2)
+    	->setAudioKiloBitrate(192);
+	    $video->save($format, 'resources/phim/movies/720.mp4');
+		exit;
+		//resize
+		/*
+		$video
+	    ->filters()
+	    ->resize(new FFMpeg\Coordinate\Dimension(320, 240))
+	    ->synchronize();
+	    */
+	    // convert
+	    /*
+	    $video
+	    ->save(new FFMpeg\Format\Video\X264(), 'export-x264.mp4')
+	    ->save(new FFMpeg\Format\Video\WMV(), 'export-wmv.wmv')
+	    ->save(new FFMpeg\Format\Video\WebM(), 'export-webm.webm');
+	    */
+	    $ffprobe = \FFMpeg\FFProbe::create();
+		$dimension = $ffprobe
+		    ->streams('resources/phim/movies/1080p.mp4') // extracts streams informations
+		    ->videos()                      // filters video streams
+		    ->first()                       // returns the first video stream
+		    ->getDimensions();              // returns a FFMpeg\Coordinate\Dimension object
+		$v = $ffprobe
+		    ->streams('resources/phim/movies/1080p.mp4')
+		    ->videos()
+		    ->first();
+		/*
+		FFMpeg\FFProbe\DataMapping\Stream Object
+		(
+		    [properties:FFMpeg\FFProbe\DataMapping\AbstractData:private] => Array
+		        (
+		            [index] => 0
+		            [codec_name] => h264
+		            [codec_long_name] => H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10
+		            [profile] => High
+		            [codec_type] => video
+		            [codec_time_base] => 1/60
+		            [codec_tag_string] => avc1
+		            [codec_tag] => 0x31637661
+		            [width] => 1920
+		            [height] => 1080
+		            [coded_width] => 1920
+		            [coded_height] => 1080
+		            [has_b_frames] => 1
+		            [sample_aspect_ratio] => 1:1
+		            [display_aspect_ratio] => 16:9
+		            [pix_fmt] => yuv420p
+		            [level] => 40
+		            [chroma_location] => left
+		            [refs] => 1
+		            [is_avc] => true
+		            [nal_length_size] => 4
+		            [r_frame_rate] => 30/1
+		            [avg_frame_rate] => 30/1
+		            [time_base] => 1/90000
+		            [start_pts] => 0
+		            [start_time] => 0.000000
+		            [duration_ts] => 1794060
+		            [duration] => 19.934000
+		            [bit_rate] => 4118786
+		            [bits_per_raw_sample] => 8
+		            [nb_frames] => 598
+		            [disposition] => Array
+		                (
+		                    [default] => 1
+		                    [dub] => 0
+		                    [original] => 0
+		                    [comment] => 0
+		                    [lyrics] => 0
+		                    [karaoke] => 0
+		                    [forced] => 0
+		                    [hearing_impaired] => 0
+		                    [visual_impaired] => 0
+		                    [clean_effects] => 0
+		                    [attached_pic] => 0
+		                    [timed_thumbnails] => 0
+		                )
+
+		            [tags] => Array
+		                (
+		                    [language] => und
+		                    [handler_name] => VideoHandler
+		                )
+
+		        )
+
+		)
+		*/
+		// var_dump($dimension);
+		var_dump($v->get('width'));
+		// var_dump($v->get('duration'));// get times- thoi luong video
+		echo '<pre>';
+		print_r($v);//
+		echo '</pre>';
+		//Use $dimension->getWidth() and $dimension->getHeight();
+		//get frame from sesonds return image
+		/*
+		$video->frame(\FFMpeg\Coordinate\TimeCode::fromSeconds(10))
+    		->save('resources/phim/movies/frame.jpg');
+    		*/
+
+		// var_dump($video);
+
+		// $film_list = FilmList::find(1);
+		// var_dump($film_list->getFilmThumbnailSmall());exit;
 		//
 		// $film_detail = FilmDetail::all();
 		// foreach ($film_detail as $key) {

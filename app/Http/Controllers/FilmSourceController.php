@@ -12,6 +12,7 @@ use App\Lib\GetLinkVideo\GetLinkVideo;
 use App\Lib\ParseUrlInfo;
 use App\Lib\CheckLinks\HttpResponseCode;
 use App\Lib\FilmProcess\FilmProcess;
+use File;
 
 class FilmSourceController extends Controller {
 	
@@ -81,6 +82,9 @@ class FilmSourceController extends Controller {
 		}
 		//
 		//
+		$film_list = FilmList::findOrFail($film_id);
+		$film_episode = FilmEpisode::findOrFail($request->film_episode_id);
+		$film_process = new FilmProcess();
 		$film_source = new FilmSource();
 		//
 		$film_source->film_episode_id = $request->film_episode_id;
@@ -90,11 +94,111 @@ class FilmSourceController extends Controller {
 		$film_source->film_episode_quality = $request->film_episode_quality;
 		//
 		if($request->film_src_name == 'local'){
-			$film_source->film_src_360p = $request->film_src_360p;
-			$film_source->film_src_480p = $request->film_src_480p;
-			$film_source->film_src_720p = $request->film_src_720p;
-			$film_source->film_src_1080p = $request->film_src_1080p;
-			$film_source->film_src_2160p = $request->film_src_2160p;
+			//check exists
+			if(File::exists('resources/phim/movies/'.$request->film_src_360p)){
+				//ex
+				//check resolution width and height
+				$ffprobe = \FFMpeg\FFProbe::create();
+				$dimension = $ffprobe
+				    ->streams('resources/phim/movies/'.$request->film_src_360p) // extracts streams informations
+				    ->videos() // filters video streams
+				    ->first() // returns the first video stream
+				    ->getDimensions();// returns a FFMpeg\Coordinate\Dimension object
+				//check
+				ini_set('max_execution_time', 0); //300 seconds = 5 minutes
+				$ffmpeg = \FFMpeg\FFMpeg::create();
+				$video = $ffmpeg->open('resources/phim/movies/'.$request->film_src_360p);
+				$format = new \FFMpeg\Format\Video\X264();
+				$format->setAudioCodec('aac');				
+				//720p
+				$name_720p = '';
+				$name_480p = '';
+				$name_360p = '';
+				if($dimension->getWidth() >= 1280 || $dimension->getHeight() >= 720){
+					//chua check exists name
+					//generate 720
+					$name_720p = $film_process->getNameVideoSourceLocal($film_list, $film_episode, '720p', $request->film_episode_language);
+					if($dimension->getHeight() < 1080){
+						$video->filters()
+					    ->resize(new \FFMpeg\Coordinate\Dimension(1280, $dimension->getHeight()))
+					    ->synchronize();
+					}else{
+						$video->filters()
+					    ->resize(new \FFMpeg\Coordinate\Dimension(1280, 720))
+					    ->synchronize();
+					}
+					
+				    $format
+				    	->setKiloBitrate(1000)
+				    	->setAudioChannels(2)
+				    	->setAudioKiloBitrate(192);
+				    $video->save($format, 'resources/phim/movies/'.$name_720p);
+				    //generate 480
+				    $name_480p = $film_process->getNameVideoSourceLocal($film_list, $film_episode, '480p', $request->film_episode_language);
+				    $video
+					    ->filters()
+					    ->resize(new \FFMpeg\Coordinate\Dimension(640, 480))
+					    ->synchronize();
+			    	$format
+				    	->setKiloBitrate(400)
+				    	->setAudioChannels(2)
+				    	->setAudioKiloBitrate(128);
+			    	$video->save($format, 'resources/phim/movies/'.$name_480p);
+			    	//generate 360
+			    	$name_360p = $film_process->getNameVideoSourceLocal($film_list, $film_episode, '360p', $request->film_episode_language);
+			    	$video
+						->filters()
+						->resize(new \FFMpeg\Coordinate\Dimension(480, 360))
+						->synchronize();
+					$format
+						->setKiloBitrate(250)
+						->setAudioChannels(2)
+						->setAudioKiloBitrate(96);
+					$video->save($format, 'resources/phim/movies/'.$name_360p);
+				}elseif($dimension->getWidth() >= 640 && $dimension->getHeight() >= 480){
+					//chua check exists name
+				    //generate 480
+				    $name_480p = $film_process->getNameVideoSourceLocal($film_list, $film_episode, '480p', $request->film_episode_language);
+				    $video
+					    ->filters()
+					    ->resize(new \FFMpeg\Coordinate\Dimension(640, 480))
+					    ->synchronize();
+			    	$format
+				    	->setKiloBitrate(400)
+				    	->setAudioChannels(2)
+				    	->setAudioKiloBitrate(128);
+			    	$video->save($format, 'resources/phim/movies/'.$name_480p);
+			    	//generate 360
+			    	$name_360p = $film_process->getNameVideoSourceLocal($film_list, $film_episode, '360p', $request->film_episode_language);
+			    	$video
+						->filters()
+						->resize(new \FFMpeg\Coordinate\Dimension(480, 360))
+						->synchronize();
+					$format
+						->setKiloBitrate(250)
+						->setAudioChannels(2)
+						->setAudioKiloBitrate(96);
+					$video->save($format, 'resources/phim/movies/'.$name_360p);
+				}
+				elseif($dimension->getWidth() >= 480 && $dimension->getHeight() >= 360){
+					//chua check exists name
+			    	//generate 360
+			    	$name_360p = $film_process->getNameVideoSourceLocal($film_list, $film_episode, '360p', $request->film_episode_language);
+			    	$video
+						->filters()
+						->resize(new \FFMpeg\Coordinate\Dimension(480, 360))
+						->synchronize();
+					$format
+						->setKiloBitrate(250)
+						->setAudioChannels(2)
+						->setAudioKiloBitrate(96);
+					$video->save($format, 'resources/phim/movies/'.$name_360p);
+				}
+				$film_source->film_src_360p = $name_360p;
+				$film_source->film_src_480p = $name_480p;
+				$film_source->film_src_720p = $name_720p;
+			}
+			
 		}
 		//
 		$film_source->save();
@@ -114,8 +218,6 @@ class FilmSourceController extends Controller {
 			}
 		}
 		//change -- status
-		$film_process = new FilmProcess();
-		$film_list = FilmList::find($film_id);
 		$film_list->film_quality = $film_process->xulyAddFilmQuality($film_list->film_quality, $request->film_episode_quality);
 		//set status
 		if($film_list->film_category == 'le'){
@@ -123,7 +225,7 @@ class FilmSourceController extends Controller {
 			//change status
 			$film_list->film_status = $film_process->xulyGetFilmQuality($film_list->film_quality);
 		}else{
-			$film_episode = FilmEpisode::findOrFail($request->film_episode_id);
+			
 			//bo,
 			$temp = explode(' ', $film_list->film_status);
 			if(count($temp) == 3){

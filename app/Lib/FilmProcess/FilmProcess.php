@@ -75,6 +75,24 @@ class FilmProcess
 			return $this->getTitleWatch($film_name_vn, $film_name_en, $film_years, $film_quality, $film_category, $film_episode);
 		}
 	}
+	public function getNameVideoSourceLocal($film_list, $film_episode, $quality, $language = 'vs'){
+		//process name
+		$name = $this->processNameVideo($film_list->film_name_en).'.'.$film_list->film_years;
+		if($film_list->film_category == 'bo'){
+			$name .= '.'.$film_episode->film_episode;
+		}
+		$name .= '.'.$quality.'.'.$language.'.mp4';
+		return $name;
+	}
+	protected function processNameVideo($name_video)
+	{
+		$name = trim($name_video);
+		// xoa ki tu 2 cham : ( )
+		$name = preg_replace('/[()"\']/u', '', $name);
+		// thay ki tu space thanh .
+		$name = preg_replace('/ :-/', '.', $name);
+		return $name;
+	}
 	//get 1 so tu dau tien
 	protected function getWords($str, $wordCount = 10){
 		return implode( 
@@ -254,7 +272,7 @@ class FilmProcess
 		$t = preg_replace('/[íìỉĩị]/u' ,'i', $t);
 		$t = preg_replace('/[óòỏõọôốồổỗộơớờởỡợ]/u' ,'o', $t);
 		$t = preg_replace('/[úùủũụưứừửữự]/u' ,'u', $t);
-		$t = preg_replace('/[đĐ]/u' ,'d', $t);
+		$t = preg_replace('/[đ]/u' ,'d', $t);
 		return $t;
 	}
 	public function getFilmNameVnEnNoUtf8($film_name)

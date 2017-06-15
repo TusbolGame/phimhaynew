@@ -29,17 +29,15 @@ class FilmEpisodeAjaxController extends Controller {
 				$result['content'] = 'Video ko dc support';
 				return response()->json($result);
 			}
-			//check size
-			if(!empty($file_svae->getClientSize()) && $file_svae->getClientSize() > 1000000){
+			//check size < ~5GB
+			if(!empty($file_save->getClientSize()) && $file_save->getClientSize() > 5000000000){
 				//is video
 				// $result['content'] = $file_save->getClientOriginalExtension();
-				$result['content'] = 'Size Video too big';
+				$result['content'] = 'Size Video too big < 5GB';
 				return response()->json($result);
 			}
 			
 			// var_dump($file_save);
-
-			exit;
 			$path = base_path('resources/phim/movies').'/';
 			$name = $file_save->getClientOriginalName();
 			//check exit file
@@ -49,12 +47,6 @@ class FilmEpisodeAjaxController extends Controller {
 			}
 			//upload
 			$file_save->move($path, $name);
-			//converter file to mp4, if differen
-
-			//generate resolution -> using ffmpeg
-
-			//or generate file hls m3u8, if using hls
-			//save file name and return result
 			$result['status'] = 1;
 			return response()->json($result);
 		}

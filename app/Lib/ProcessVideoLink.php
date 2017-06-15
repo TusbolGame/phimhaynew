@@ -30,7 +30,7 @@ class ProcessVideoLink
 		$videoplayback = new VideoPlayback();
 		$videoplayback->id = hash('crc32', $time);
 		$videoplayback->film_id = $film_id;
-		$videoplayback->film_episode_id = $film_source->film_episode_id;
+		$videoplayback->film_source_id = $film_source->id;
 		$videoplayback->time = $cache_link;
 		//
 		if($film_source->film_src_name == 'youtube'){
@@ -51,6 +51,13 @@ class ProcessVideoLink
 				}
 				elseif($film_source->film_src_name == 'google drive'){
 					// $get_link_video->getLinkVideoIo($film_source->film_src_full);
+					//using proxy drive
+					$get_link_video->getLinkDriveUseProxy($film_source->film_src_full);
+					$cookie = $get_link_video->getCookie();
+					$config = ['proxy' => true, 'drive_cookie' => ['DRIVE_STREAM' => $cookie['data']['DRIVE_STREAM']]];
+					$videoplayback->config = json_encode($config);
+					$film_source->config = json_encode($config);
+
 				}
 				if(!empty($get_link_video->getSrcVideoJson())){
 					//get ok
@@ -66,7 +73,9 @@ class ProcessVideoLink
 			}
 			//is cache
 			//update data_source
-			//create id -> public id: time() + ?? + int + 5
+			//update if drive using proxy
+			$videoplayback->config = $film_source->config;
+			//
 			if(!empty($film_source->film_src_360p)){
 				$videoplayback->src_360p = $film_source->film_src_360p;
 				$this->data['film_src_360p'] = route('videoPlayback', [$videoplayback->id, 0]);

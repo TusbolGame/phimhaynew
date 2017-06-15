@@ -11,8 +11,7 @@ class ProxyStreamingVideo
 		# code...
 	}
 	//ok;
-	function getStreamDrive($url_video, $cookie){
-		
+	function getStreamDrive($url_video, $cookie){		
 		//http://stackoverflow.com/questions/8401412/php-streaming-video-handler
 		$real_file_location_path_or_url = $url_video;
 		// ini_set('memory_limit','1024M');
@@ -30,7 +29,8 @@ class ProxyStreamingVideo
 		$opts['http']['header'][0]="Range: ".$_SERVER['HTTP_RANGE'];
 
 		$opts['http']['method']= "HEAD";
-		$opts['http']['header'][1]= "Cookie: DRIVE_STREAM=".$cookie->data->DRIVE_STREAM."; path=/; expires=Session; domain=.drive.google.com";
+		$opts['http']['header'][1]= "Cookie: DRIVE_STREAM=".$cookie['drive_cookie']['DRIVE_STREAM']."; path=/; expires=Session; domain=.drive.google.com";
+		// $opts['http']['header'][1]= "Cookie: DRIVE_STREAM=P_QTEsLKwN4; path=/; expires=Session; domain=.drive.google.com";
 
 		$conh=stream_context_create($opts);
 
