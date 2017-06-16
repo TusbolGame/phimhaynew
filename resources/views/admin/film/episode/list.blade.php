@@ -13,15 +13,15 @@
 </div>
 <div class="div-overflow">         
     <table class="table table-bordered table-striped">
-        <caption class="text-danger"><strong>Danh sách tập <span class="badge">{!! $film_episodes->count() !!}</span></strong></caption>
+        <caption class="text-danger"><strong>Danh sách tập <span class="badge">{!! $film_episodes->total() !!}</span></strong></caption>
         <thead>
             <tr>
                 
                 {{-- <th>ID</th>                --}}
                 <th>Episode</th>               
                 <th>Episode Name</th>
-                <th>Total</th>
-                <th>Chi tiet</th>
+                <th>Total source</th>
+                <th>Chi tiết</th>
                 <th>Sửa</th>
                 <th>Xóa</th>
             </tr>
@@ -34,7 +34,7 @@
                 <td>{!! $film_episode->film_episode !!}</td> 
                 <td>{!! $film_episode->film_episode_name !!}</td>
                 <td>{!! $film_episode->filmSource->count() !!}</td>
-                <td><a href="{!! route('admin.film.episode.source.getList', [$film_id, $film_episode->id]) !!}" class="btn btn-info">Chi tiết {!! $film_episode->film_episode !!}</a></td>
+                <td><a href="{!! route('admin.film.episode.source.getList', [$film_id, $film_episode->id]) !!}" class="btn btn-info">Chi tiết episode {!! $film_episode->film_episode !!}</a></td>
                 <td><a href="{!! route('admin.film.episode.getEdit', [$film_id, $film_episode->id]) !!}" class="btn btn-primary">Sửa Episode {!! $film_episode->film_episode !!}</a></td>
                 <td><a onclick="return checkDelete('Bạn có muốn xóa Episode là {!! $film_episode->film_episode !!} không?');" href="{!! route('admin.film.episode.getDelete', [$film_id, $film_episode->id]) !!}" class="btn btn-danger"> Xóa Episode {!! $film_episode->film_episode !!}</a></td>
             </tr>

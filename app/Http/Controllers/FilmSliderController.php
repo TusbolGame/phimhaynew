@@ -26,9 +26,10 @@ class FilmSliderController extends Controller {
 		$slider->slider_dir = $request->slider_dir;
 		$slider->slider_image = $request->slider_image;
 		$slider->save();
-		//update cache slider
-		$cache_slider = FilmSlider::all();
-		Cache::forever('film_slider', $cache_slider);
+		//forget cache
+		if(Cache::has('film_slider')){
+			Cache::forget('film_slider');
+		}
 		//
 		return redirect()->route('admin.slider.getList')->with(['flash_message'=>'Success ! Complete Add Slider new']);
 	}
@@ -42,9 +43,10 @@ class FilmSliderController extends Controller {
 		$slider->slider_dir = $request->slider_dir;
 		$slider->slider_image = $request->slider_image;
 		$slider->save();
-		//update cache slider
-		$cache_slider = FilmSlider::all();
-		Cache::forever('film_slider', $cache_slider);
+		//forget cache
+		if(Cache::has('film_slider')){
+			Cache::forget('film_slider');
+		}
 		//
 		return redirect()->route('admin.slider.getList')->with(['flash_message'=>'Success ! Complete Edit Slider '.$id]);
 	}
@@ -55,9 +57,10 @@ class FilmSliderController extends Controller {
 	public function getDelete($id){
 		$slider = FilmSlider::find($id);
 		$slider->delete();
-		//update cache slider
-		$cache_slider = FilmSlider::all();
-		Cache::forever('film_slider', $cache_slider);
+		//forget cache
+		if(Cache::has('film_slider')){
+			Cache::forget('film_slider');
+		}
 		//
 		return redirect()->route('admin.slider.getList')->with(['flash_message'=>'Success ! Complete Delete Slider']);
 	}

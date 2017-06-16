@@ -2007,16 +2007,16 @@
         },
         {
             "name": "npt-nguyen/libs",
-            "version": "1.1.5",
+            "version": "1.1.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/npt-nguyen/Libs.git",
-                "reference": "02549d39908a8350568d255f369cececec796936"
+                "reference": "506d37818be7b286f71361558b24df94cc82c273"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/npt-nguyen/Libs/zipball/02549d39908a8350568d255f369cececec796936",
-                "reference": "02549d39908a8350568d255f369cececec796936",
+                "url": "https://api.github.com/repos/npt-nguyen/Libs/zipball/506d37818be7b286f71361558b24df94cc82c273",
+                "reference": "506d37818be7b286f71361558b24df94cc82c273",
                 "shasum": ""
             },
             "require": {
@@ -2043,7 +2043,7 @@
                 }
             ],
             "description": "Library for PHP or Laravel",
-            "time": "2017-05-31 02:44:36"
+            "time": "2017-06-16 08:44:32"
         },
         {
             "name": "paragonie/random_compat",

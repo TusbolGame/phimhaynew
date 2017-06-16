@@ -45,6 +45,7 @@
                 <option value="google photos" @if(old('film_src_name') == 'google photos') selected @endif>Google Photos</option>
                 <option value="google drive" @if(old('film_src_name') == 'google drive') selected @endif>Google Drive</option> --}}
                 <option value="zing tv" @if(old('film_src_name') == 'zing tv') selected @endif>Zing Tv</option>
+                <option value="youtube" @if(old('film_src_name') == 'youtube') selected @endif>Youtube</option>
               </select>
             </div>
           </div>
@@ -54,6 +55,7 @@
               <li>Phim phải chưa có tồn tại tập</li>
               <li>Link hỗ trợ:</li>
               <li>Zing Tv: http://tv.zing.vn/series/den-tu-hu-khong-seikaisuru-kado-seikaisuru-kado</li>
+              <li>Youtube: https://www.youtube.com/watch?v=LQ2vHZB3mn8&list=PLr1rBKUqSS3nrOkUc7GiLi3_ef_5I_V7p'</li>
             </ul>
             <textarea name="film_src_full" class="form-control" placeholder="Nhập URL episode" required="true">{!! old('film_src_full') !!}</textarea>
           </div>

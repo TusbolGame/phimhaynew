@@ -37,7 +37,7 @@ class VideoPlaybackController extends Controller {
 			//get not using proxy
 		}
 		//remote
-		// return redirect($videoplayback->{$arr[$quality]});
+		return redirect($videoplayback->{$arr[$quality]});
 	}
 
 }

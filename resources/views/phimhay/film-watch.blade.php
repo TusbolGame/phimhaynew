@@ -62,56 +62,24 @@
 					    	<span class="caret"></span>
 					  	</a>
 					  	<ul class="dropdown-menu">
-					  		@if($film_source_watch->film_src_name == 'local')
-							    @if(!empty($film_source_watch->film_src_360p))
-							    <li><a href="{!! route('videoStream.getVideoStream', $film_source_watch->film_src_360p) !!}" download="true" target="_blank">360p</a></li>
+						    @if($film_source_watch->film_src_name == 'youtube')
+						    	<li><a href="http://fr.savefrom.net/#url={!! $film_source_watch->film_src_full !!}" target="_blank">Dowload</a></li>
+						    @else
+							    @if(isset($data_source['film_src_360p']))
+							    <li><a href="{!! $data_source['film_src_360p'] !!}" download="true" target="_blank">360p</a></li>
 							    @endif
-							    @if(!empty($film_source_watch->film_src_480p))
-							    <li><a href="{!! route('videoStream.getVideoStream', $film_source_watch->film_src_480p) !!}" download="true" target="_blank">480p</a></li>
+							    @if(isset($data_source['film_src_480p']))
+							    <li><a href="{!! $data_source['film_src_480p'] !!}" download="true" target="_blank">480p</a></li>
 							    @endif
-							    @if(!empty($film_source_watch->film_src_720p))
-							    <li><a href="{!! route('videoStream.getVideoStream', $film_source_watch->film_src_720p) !!}" download="true" target="_blank">720p</a></li>
+							    @if(isset($data_source['film_src_720p']))
+							    <li><a href="{!! $data_source['film_src_720p'] !!}" download="true" target="_blank">720p</a></li>
 							    @endif
-							    @if(!empty($film_source_watch->film_src_1080p))
-							    <li><a href="{!! route('videoStream.getVideoStream', $film_source_watch->film_src_1080p) !!}" download="true" target="_blank">1080p</a></li>
+							    @if(isset($data_source['film_src_1080p']))
+							    <li><a href="{!! $data_source['film_src_1080p'] !!}" download="true" target="_blank">1080p</a></li>
 							    @endif
-							    @if(!empty($film_source_watch->film_src_2160p))
-							    <li><a href="{!! route('videoStream.getVideoStream', $film_source_watch->film_src_2160p) !!}" download="true" target="_blank">2160p</a></li>
+							    @if(isset($data_source['film_src_2160p']))
+							    <li><a href="{!! $data_source['film_src_2160p'] !!}" download="true" target="_blank">2160p</a></li>
 							    @endif
-						    @elseif($film_source_watch->film_src_name == 'google photos')
-							    @if(!empty($film_source_watch->film_src_360p))
-							    <li><a href="{!! $film_source_watch->film_src_360p !!}" download="true" target="_blank">360p</a></li>
-							    @endif
-							    @if(!empty($film_source_watch->film_src_480p))
-							    <li><a href="{!! $film_source_watch->film_src_480p !!}" download="true" target="_blank">480p</a></li>
-							    @endif
-							    @if(!empty($film_source_watch->film_src_720p))
-							    <li><a href="{!! $film_source_watch->film_src_720p !!}" download="true" target="_blank">720p</a></li>
-							    @endif
-							    @if(!empty($film_source_watch->film_src_1080p))
-							    <li><a href="{!! $film_source_watch->film_src_1080p !!}" download="true" target="_blank">1080p</a></li>
-							    @endif
-							    @if(!empty($film_source_watch->film_src_2160p))
-							    <li><a href="{!! $film_source_watch->film_src_2160p !!}" download="true" target="_blank">2160p</a></li>
-							    @endif
-							@elseif($film_source_watch->film_src_name == 'google drive')
-							    @if(!empty($film_source_watch->film_src_360p))
-							    <li><a href="{!! route('videoStream.getProxy', [$film_source_watch->id, '360p']) !!}" download="true" target="_blank">360p</a></li>
-							    @endif
-							    @if(!empty($film_source_watch->film_src_480p))
-							    <li><a href="{!! route('videoStream.getProxy', [$film_source_watch->id, '480p']) !!}" download="true" target="_blank">480p</a></li>
-							    @endif
-							    @if(!empty($film_source_watch->film_src_720p))
-							    <li><a href="{!! route('videoStream.getProxy', [$film_source_watch->id, '720p']) !!}" download="true" target="_blank">720p</a></li>
-							    @endif
-							    @if(!empty($film_source_watch->film_src_1080p))
-							    <li><a href="{!! route('videoStream.getProxy', [$film_source_watch->id, '1080p']) !!}" download="true" target="_blank">1080p</a></li>
-							    @endif
-							    @if(!empty($film_source_watch->film_src_2160p))
-							    <li><a href="{!! route('videoStream.getProxy', [$film_source_watch->id, '2160p']) !!}" download="true" target="_blank">2160p</a></li>
-							    @endif
-						    @elseif($film_source_watch->film_src_name == 'youtube')
-						    	<p>Không có source để download</p>
 						    @endif
 					  	</ul>
 					</div>
@@ -130,20 +98,23 @@
 		@include('phimhay.include.film-evaluate', ['film_id' => $film_list->id, 'film_vote' => $film_list->film_vote, 'film_vote_count' => $film_list->film_vote_count])
 		<!-- end film evaluate -->
 		<div class="film-watch-source">
-			<div class="film-watch-source-list">
-				<h5 class="film-watch-source-list-title">Server</h5>
+			{{-- list server source --}}
+			<div class="film-watch-server-list">
+				<h5 class="film-watch-server-list-title">Server</h5>
 				<ul>
 				@if(count($film_source_list) >= 1)
 					@foreach ($film_source_list as $data)
 
 						<li><a href="{!! route('film.getFilmWatch', [$film_list->film_dir_name, $film_list->id, $data->id]) !!}"
-						 @if ($film_source_watch->id == $data->id) class="film-watch-source-selected" @endif
+						 @if ($film_source_watch->id == $data->id) class="film-watch-server-selected" @endif
 						>{!! $data->film_src_name.'-'.$film_process->xulyGetFilmLanguage($data->film_episode_language) !!}</a></li>
 						
 					@endforeach
 				@endif
 				</ul>
 			</div>
+			{{-- end list server source --}}
+			{{-- list source --}}
 			<div class="film-watch-source-list">
 				<!-- <h5 class="film-watch-source-list-title">Server 1</h5>
 				<ul>
@@ -167,7 +138,7 @@
 
 								<li><a href="{!! route('film.getFilmWatch', [$film_list->film_dir_name, $film_list->id, $film_episode->filmSource->first()]) !!}"
 								 @if ($film_source_watch->film_episode_id == $film_episode->id) class="film-watch-source-selected" @endif
-								>{!! $film_episode->film_episode !!} @if($film_episode->film_episode_name != ''){!! $film_episode->film_episode_name !!}@endif</a></li>
+								>{!! $film_episode->film_episode !!} @if($film_episode->film_episode_name != '') - {!! $film_episode->film_episode_name !!}@endif</a></li>
 							
 						@endforeach
 					@endif
@@ -180,6 +151,7 @@
 					<li><a href="" title="">234</a></li>
 				</ul> -->
 			</div>
+			{{-- end list source --}}
 		</div>
 		<div class="film-key-word">
 			<h5 class="film-title-box"><span class="glyphicon glyphicon-flag"></span> TỪ KHÓA</h5>

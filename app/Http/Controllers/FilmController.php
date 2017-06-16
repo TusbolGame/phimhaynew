@@ -37,7 +37,7 @@ use App\Lib\FilmPlayers\FilmPlayer;
 use App\Lib\FilmCookies\CookieVideoStream;
 use App\Lib\ParseUrlInfo;
 use File;
-
+use Cache;
 
 use Input;
 use Auth;
@@ -51,14 +51,14 @@ use App\Lib\GuestInfo;
 class FilmController extends Controller {
 
 	public function getTest(Request $request){
-		 Schema::table('video_playbacks', function($table){
+		 // Schema::table('video_playbacks', function($table){
 
 			// $table->dropColumn('film_episode_id');
 			// $table->integer('film_id')->unsigned()->default(1);
 			// $table->foreign('film_id')->references('id')->on('film_details')->onDelete('cascade');
 			// $table->integer('film_source_id')->unsigned()->default(1);
 			// $table->foreign('film_source_id')->references('id')->on('film_sources')->onDelete('cascade');
-		});
+		// });
 		exit;
 		ini_set('max_execution_time', 300); //300 seconds = 5 minutes
 		$ffmpeg = \FFMpeg\FFMpeg::create();
@@ -478,40 +478,7 @@ class FilmController extends Controller {
 			$process_link->getVideoPlayback($film_id, $film_source_watch);
 			$data_source = $process_link->getData();
 			// var_dump($data_source);exit;
-			/*
-			//local ... change
-			if($film_source_watch->film_src_name == 'local'){
-				//set cookie video stream
-				$cookie_video = null;
-				if(!empty($film_source_watch->film_src_360p)){
-					$cookie_video = new CookieVideoStream($film_source_watch->film_src_360p);
-					$cookie_video->createCookie();
-				}
-				if(!empty($film_source_watch->film_src_480p)){
-					$cookie_video = new CookieVideoStream($film_source_watch->film_src_480p);
-					$cookie_video->createCookie();
-				}
-				if(!empty($film_source_watch->film_src_720p)){
-					$cookie_video = new CookieVideoStream($film_source_watch->film_src_720p);
-					$cookie_video->createCookie();
-				}
-				if(!empty($film_source_watch->film_src_1080p)){
-					$cookie_video = new CookieVideoStream($film_source_watch->film_src_1080p);
-					$cookie_video->createCookie();
-				}
-				if(!empty($film_source_watch->film_src_2160p)){
-					$cookie_video = new CookieVideoStream($film_source_watch->film_src_2160p);
-					$cookie_video->createCookie();
-				}
-			}
-			*/
-			//loi ko lay dc source first
 			$film_episode_list = FilmEpisode::where('film_id', $film_id)->orderBy('film_episode', 'ASC')->get();
-			// $film_episode_list = FilmEpisode::where('film_id', $film_id)->orderBy('id', 'ASC')->with(['filmSource' => function($query){
-			// 	$query->orderBy('id', 'ASC')->take(1);
-			// 	// $query->latest();
-			// }])->get();
-			// dump($film_episode_list);
 			$film_source_track = FilmSourceTrack::where('film_source_id', $film_source_id)->first();
 		}
 		//
@@ -885,6 +852,29 @@ class FilmController extends Controller {
 		if(count($film_detail) == 0){
 			return redirect()->route('admin.film.getList')->with(['flash_message_error' =>'Lỗi! Delete: Không tồn tại film id: '.$film_id]);
 		}
+		$film_list = FilmList::find($film_id);
+		//cache film new
+		if($film_list->film_kind == 'hoat-hinh'){
+			//update cache film hh new
+			if(Cache::has('film_hh_new')){
+				Cache::forget('film_hh_new');
+			}
+		}else{
+			//kind is truyen
+			if($film_list->film_category == 'le'){
+				//cache film le new
+				if(Cache::has('film_le_new')){
+					Cache::forget('film_le_new');
+				}
+			}
+			elseif($film_list->film_category == 'bo'){
+				//cache film bo new
+				if(Cache::has('film_bo_new')){
+					Cache::forget('film_bo_new');
+				}
+			}
+		}
+		//end cache
 		$film_detail->delete();
 		return redirect()->route('admin.film.getList')->with(['flash_message' =>'Thành công! Delete: Đã Delete Film_Id: '.$film_id]);
 	}

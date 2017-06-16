@@ -1052,24 +1052,30 @@ div.vote a{
 .film-watch-option>ul>li:hover a>span{
     color: aqua;
 }
-.film-watch-source-list{
+/* server-list - source-list */
+.film-watch-source-list, .film-watch-server-list
+{
     padding-left: 10px;
 }
-.film-watch-source-list-title{
+.film-watch-source-list-title, .film-watch-server-list-title
+{
     color: #dacb46;
     font-weight: bold;
 }
-.film-watch-source-list ul{
+.film-watch-source-list ul, .film-watch-server-list ul
+{
     list-style: none;
     overflow: hidden;
     padding-left: 35px;
 }
-.film-watch-source-list ul li{
+.film-watch-source-list ul li, .film-watch-server-list ul li
+{
     float: left;
     padding-right: 10px;
     margin-bottom: 10px;
 }
-.film-watch-source-list ul li a{
+.film-watch-source-list ul li a, .film-watch-server-list ul li a
+{
     display: block;
     font-size: 13px;
     text-align: center;
@@ -1081,12 +1087,13 @@ div.vote a{
     border-radius: 3px;
     text-transform: capitalize;
 }
-.film-watch-source-list ul li a:hover{
+.film-watch-source-list ul li a:hover, .film-watch-server-list ul li a:hover{
     background-color: #ea8f99; /* color red */
     color: #702526;
     text-decoration: none;
 }
-.film-watch-source-selected{
+.film-watch-source-selected, .film-watch-server-selected
+{
     background-color: #ea8f99 !important; /* color red */
     color: #fff !important;
 }
@@ -1095,7 +1102,7 @@ div.vote a{
     color: #702526;
     text-decoration: none;
 }
-.source-active{
+.source-active, .server-active{
     background-color: #ea8f99;
     color: #702526;
 }
