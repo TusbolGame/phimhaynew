@@ -12,6 +12,8 @@ use App\Lib\FilmProcess\FilmProcess;
 use App\Http\Requests\AdminAddFilmPersonRequest;
 use Illuminate\Http\Request;
 use File;
+use Cache;
+use Auth;
 
 class FilmPersonController extends Controller {
 
@@ -62,7 +64,8 @@ class FilmPersonController extends Controller {
 	//search person
 	public function getPersonList(Request $request){
 		//job
-		$film_job = FilmJob::orderBy('job_name', 'ASC')->get();
+		// $film_job = FilmJob::orderBy('job_name', 'ASC')->get();
+		$film_job = Cache::get('film_job');
 
 		$person_name = $request->person_name;
 		$person_job = (int)$request->person_job;
@@ -97,10 +100,16 @@ class FilmPersonController extends Controller {
 		return view('phimhay.person.search', compact('film_person', 'film_job'))->with(['person_name' => $person_name, 'person_job' => $person_job]);
 	}
 	public function getAdd(){
+		if(!Auth::user()->hasPermission('createPerson')){
+			return redirect()->route('admin.getHome')->with('flash_message_error', '403! Không thể Create Person');
+		}
 		$film_job = FilmJob::orderBy('job_name', 'ASC')->get();
 		return view('admin.person.add', compact('film_job'));
 	}
 	public function postAdd(AdminAddFilmPersonRequest $request){
+		if(!Auth::user()->hasPermission('createPerson')){
+			return redirect()->route('admin.getHome')->with('flash_message_error', '403! Không thể Create Person');
+		}
 		//check exist name
 		$check = FilmPerson::where('person_name', $request->person_name)->select('id')->get();
 		if(count($check) >= 1){
@@ -141,6 +150,9 @@ class FilmPersonController extends Controller {
 		return redirect()->route('admin.person.getList')->with(['flash_message'=>'Thành công ! Hoàn thành thêm mới một Person: '.$person->person_name]);
 	}
 	public function getEdit($id){
+		if(!Auth::user()->hasPermission('editPerson')){
+			return redirect()->route('admin.getHome')->with('flash_message_error', '403! Không thể Edit Person');
+		}
 		$person = FilmPerson::find($id);
 		// var_dump($person);die();
 		if(count($person) == 0){
@@ -152,6 +164,9 @@ class FilmPersonController extends Controller {
 		return view('admin.person.edit', compact('person', 'film_job', 'film_person_job'));
 	}
 	public function postEdit($id, AdminAddFilmPersonRequest $request){
+		if(!Auth::user()->hasPermission('editPerson')){
+			return redirect()->route('admin.getHome')->with('flash_message_error', '403! Không thể Edit Person');
+		}
 		//check exist name
 		$person = FilmPerson::find($id);
 		if(count($person) == 0){
@@ -202,12 +217,18 @@ class FilmPersonController extends Controller {
 		return redirect()->route('admin.person.getList')->with(['flash_message'=>'Thành công ! Hoàn thành Cập nhật một Person']);
 	}
 	public function getList(){
+		if(!Auth::user()->hasPermission('showPerson')){
+			return redirect()->route('admin.getHome')->with('flash_message_error', '403! Không thể Show Person');
+		}
 		$film_person = FilmPerson::orderBy('id', 'DESC')->with('filmPersonJob.filmJob')->paginate(10);
 		// dump($film_person);die();
 		$film_person->setPath(route('admin.person.getList'));
 		return view('admin.person.list', compact('film_person'));
 	}
 	public function getDelete($id){
+		if(!Auth::user()->hasPermission('deletePerson')){
+			return redirect()->route('admin.getHome')->with('flash_message_error', '403! Không thể Delete Person');
+		}
 		$film_person = FilmPerson::find($id);
 		$message_info = 'Xóa thất bại! Không tồn tại person với id là '.$id;
 		if(count($film_person) == 1){

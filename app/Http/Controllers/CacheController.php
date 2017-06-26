@@ -47,6 +47,10 @@ class CacheController extends Controller {
 		if(Cache::has('film_slider')){
 			Cache::forget('film_slider');
 		}
+		//film_job
+		if(Cache::has('film_job')){
+			Cache::forget('film_job');
+		}
 		return redirect()->route('admin.getHome')->with(['flash_message' => 'Susscess! Clear Cache']);
 	}
 }

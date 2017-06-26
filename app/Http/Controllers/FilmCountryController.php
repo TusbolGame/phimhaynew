@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\FilmCountry;
 use App\Lib\FilmProcess\FilmProcess;
 use Cache;
+use Auth;
 
 class FilmCountryController extends Controller {
 
@@ -17,6 +18,9 @@ class FilmCountryController extends Controller {
 	 */
 	public function index()
 	{
+		if(!Auth::user()->hasPermission('showCountry')){
+			return redirect()->route('admin.getHome')->with('flash_message_error', '403! Không thể Show Country');
+		}
 		//
 		$film_country = FilmCountry::all();
 		return view('admin.country.list', compact('film_country'));
@@ -29,6 +33,9 @@ class FilmCountryController extends Controller {
 	 */
 	public function create()
 	{
+		if(!Auth::user()->hasPermission('createCountry')){
+			return redirect()->route('admin.getHome')->with('flash_message_error', '403! Không thể Create Country');
+		}
 		//
 		return view('admin.country.add');
 	}
@@ -40,6 +47,9 @@ class FilmCountryController extends Controller {
 	 */
 	public function store(Request $request)
 	{
+		if(!Auth::user()->hasPermission('createCountry')){
+			return redirect()->route('admin.getHome')->with('flash_message_error', '403! Không thể Create Country');
+		}
 		//check null
 		if($request->country_name == ''){
 			return redirect()->back()->withErrors('Chưa nhập tên quốc gia')->withInput();
@@ -81,6 +91,9 @@ class FilmCountryController extends Controller {
 	 */
 	public function edit($id)
 	{
+		if(!Auth::user()->hasPermission('editCountry')){
+			return redirect()->route('admin.getHome')->with('flash_message_error', '403! Không thể Edit Country');
+		}
 		//
 		$film_country = FilmCountry::findOrFail($id);
 		return view('admin.country.edit', compact('film_country'));
@@ -94,6 +107,9 @@ class FilmCountryController extends Controller {
 	 */
 	public function update($id, Request $request)
 	{
+		if(!Auth::user()->hasPermission('editCountry')){
+			return redirect()->route('admin.getHome')->with('flash_message_error', '403! Không thể Edit Country');
+		}
 		//
 		$film_process = new FilmProcess();
 		$film_country = FilmCountry::findOrFail($id);
@@ -116,9 +132,12 @@ class FilmCountryController extends Controller {
 	public function destroy($id)
 	{
 		//
+		if(!Auth::user()->hasPermission('deleteCountry')){
+			return redirect()->route('admin.getHome')->with('flash_message_error', '403! Không thể Delete Country');
+		}
 		//check existss
 		$film_country = FilmCountry::findOrFail($id);
-		$film_country->destroy($id);
+		$film_country->delete();
 		//forget cache
 		if(Cache::has('film_country')){
 			Cache::forget('film_country');

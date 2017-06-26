@@ -12,7 +12,7 @@
         <tr align="center">
             <th>ID</th>
             <th>Tên tài khoản</th>
-            <th>Level</th>
+            <th>Role</th>
             <th>Tên</th>
             <th>Họ</th>
             <th>Email</th>
@@ -30,15 +30,9 @@
             <tr class="odd gradeX" align="center">
                 <td>{!! $data->id !!}</td>
                 <td>{!! $data->username !!}</td>
-                <!-- level -->
+                <!-- role -->
                 <td>
-                    @if($data->id == 1)
-                        Supperadmin
-                    @elseif($data->level == 1)
-                        Admin
-                    @elseif($data->level == 2)
-                        Member
-                    @endif
+                   @if(count($data->userRole) == 1) {!! $data->userRole->role->role_name !!} @endif
                 </td>
                 <td>{!! $data->first_name !!}</td>
                 <td>{!! $data->last_name !!}</td>

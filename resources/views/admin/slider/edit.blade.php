@@ -14,19 +14,20 @@
 
         <div class="col-lg-8">
             <div class="form-group">
-                <label>Silder Name</label>
-                <textarea name="slider_name" class="form-control" placeholder="Nhập Slider name">{!! old('slider_name', isset($slider) ? $slider->slider_name : '') !!}</textarea>
+                <label>Phim đã chọn: </label>
+                <strong>{!! $slider->filmList->film_name_en.'-'.$slider->filmList->film_name_en.' ['.$slider->filmList->film_years !!}]</strong>
             </div>
             <div class="form-group">
-                <label>Silder Dir (full)</label>
-                <textarea name="slider_dir" class="form-control" placeholder="Nhập Slider dir">{!! old('slider_dir', isset($slider) ? $slider->slider_dir : '') !!}</textarea>
-            </div>
-            <div class="form-group">
-                <label>Silder Image (url)</label>
-                <textarea name="slider_image" class="form-control" placeholder="Nhập Slider image">{!! old('slider_image', isset($slider) ? $slider->slider_image : '') !!}</textarea>
+                <label>Chọn phim khác:</label>
+                <select name="film_id" class="form-control">
+                @foreach($film_list as $data)
+                    <option value="{!! $data->id !!}">{!! $data->film_name_vn.' - '.$data->film_name_en.' ['.$data->film_years !!}]</option>
+                @endforeach
+                </select>
+                {!! $film_list->render() !!}
             </div>
             <div class="text-center">
-                <input type="submit" name="submit" class="btn btn-primary" value="Sửa Slider">
+                <input type="submit" name="submit" class="btn btn-primary" value="Update Slider">
                 <button type="reset" class="btn btn-default">Reset</button>
             </div>
         </div>

@@ -45,6 +45,7 @@
                 <option value="google photos" @if(old('film_src_name') == 'google photos') selected @endif>Google Photos</option>
                 <option value="google drive" @if(old('film_src_name') == 'google drive') selected @endif>Google Drive</option>
                 <option value="zing tv" @if(old('film_src_name') == 'zing tv') selected @endif>Zing Tv</option>
+                <option value="fptplay" @if(old('film_src_name') == 'fptplay') selected @endif>Fpt Play</option>
               </select>
             </div>
           </div>

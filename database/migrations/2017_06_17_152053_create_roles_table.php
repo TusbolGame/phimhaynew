@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateFilmSlidersTable extends Migration {
+class CreateRolesTable extends Migration {
 
 	/**
 	 * Run the migrations.
@@ -12,12 +12,12 @@ class CreateFilmSlidersTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('film_sliders', function(Blueprint $table)
+		Schema::create('roles', function(Blueprint $table)
 		{
 			$table->increments('id');
-			$table->integer('film_id')->unsigned();
-			$table->foreign('film_id')->references('id')->on('film_details')->onDelete('cascade');
-			// $table->timestamps();
+			$table->string('role_name', 50)->unique();
+			$table->string('role_description', 100)->nullable();
+			$table->timestamps();
 		});
 	}
 
@@ -28,7 +28,7 @@ class CreateFilmSlidersTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('film_sliders');
+		Schema::drop('roles');
 	}
 
 }

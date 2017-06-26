@@ -52,7 +52,7 @@
 		      		<ul class="dropdown-menu">
 				    <li><a href="{!! route('user.getProfile', Auth::user()->id) !!}">Trang Cá Nhân</a></li>
 				    <li role="separator" class="divider"></li>
-				    @if(Auth::user()->level == 1)
+				    @if(Auth::user()->hasPermission('accessAdmin'))
 					    <!-- admin -->
 					    <li><a href="{!! url('admin') !!}">Administrator Page</a></li>
 					    <li role="separator" class="divider"></li>

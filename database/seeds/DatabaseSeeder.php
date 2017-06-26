@@ -14,11 +14,12 @@ class DatabaseSeeder extends Seeder {
 	{
 		Model::unguard();
 		
-		$this->call('FilmRelateDatabaseSeeder');
-		$this->call('FilmJobDatabaseSeeder');	
-		$this->call('FilmCountryDatabaseSeeder');
-		$this->call('FilmTypeDatabaseSeeder');
-		$this->call('UserDatabaseSeeder');
+		// $this->call('FilmRelateDatabaseSeeder');
+		// $this->call('FilmJobDatabaseSeeder');	
+		// $this->call('FilmCountryDatabaseSeeder');
+		// $this->call('FilmTypeDatabaseSeeder');
+		// $this->call('UserDatabaseSeeder');
+		$this->call('RoleDatabaseSeeder');
 		
 	}
 
@@ -38,7 +39,7 @@ class FilmRelateDatabaseSeeder extends Seeder {
 			//2
 			['film_relate_name' => 'Tần Thời Minh Nguyệt'],
 			//3
-			['film_relate_name' => 'Lost'],
+			['film_relate_name' => 'Lost - Mất tích'],
 			//4
 			['film_relate_name' => 'Terra Formars'],
 			//5
@@ -158,6 +159,217 @@ class UserDatabaseSeeder extends Seeder {
 				'blocked' => 0,
 			]
 			]);
+	}
+
+}
+//role
+class RoleDatabaseSeeder extends Seeder {
+
+	/**
+	 * Run the database seeds.
+	 *
+	 * @return void
+	 */
+	public function run()
+	{
+		
+		DB::table('roles')->insert([
+			//1
+			[
+				'role_name' => 'Superadmin',
+				'role_description' => 'All role'
+			],
+			[
+				'role_name' => 'Admin',
+				'role_description' => 'Is Admin role'
+			]
+			,
+			[
+				'role_name' => 'Member',
+				'role_description' => 'Is Member role'
+			]
+		]);
+		//user-role
+		DB::table('user_roles')->insert([
+			//1
+			[
+				'user_id' => 1,
+				'role_id' => 1
+			]
+		]);
+		//permission
+		DB::table('permissions')->insert([
+			//allow access admin page
+			[
+				'permission_name' => 'accessAdmin', 
+				'permission_description' => ''
+			],
+			//role
+			[
+				'permission_name' => 'createRole',
+				'permission_description' => ''
+			],
+			[
+				'permission_name' => 'editRole',
+				'permission_description' => ''
+			],
+			[
+				'permission_name' => 'deleteRole',
+				'permission_description' => ''
+			],
+			[
+				'permission_name' => 'showRole',
+				'permission_description' => ''
+			],
+			//user
+			[
+				'permission_name' => 'createUser',
+				'permission_description' => ''
+			],
+			[
+				'permission_name' => 'editUser',
+				'permission_description' => ''
+			],
+			[
+				'permission_name' => 'deleteUser',
+				'permission_description' => ''
+			],
+			[
+				'permission_name' => 'showUser',
+				'permission_description' => ''
+			],
+			//film
+			[
+				'permission_name' => 'createFilm',
+				'permission_description' => ''
+			],
+			[
+				'permission_name' => 'editFilm',
+				'permission_description' => ''
+			],
+			[
+				'permission_name' => 'deleteFilm',
+				'permission_description' => ''
+			],
+			[
+				'permission_name' => 'showFilm',
+				'permission_description' => ''
+			],
+			//slider
+			[
+				'permission_name' => 'createSlider',
+				'permission_description' => ''
+			],
+			[
+				'permission_name' => 'editSlider',
+				'permission_description' => ''
+			],
+			[
+				'permission_name' => 'deleteSlider',
+				'permission_description' => ''
+			],
+			[
+				'permission_name' => 'showSlider',
+				'permission_description' => ''
+			],
+			//type
+			[
+				'permission_name' => 'createType',
+				'permission_description' => ''
+			],
+			[
+				'permission_name' => 'editType',
+				'permission_description' => ''
+			],
+			[
+				'permission_name' => 'deleteType',
+				'permission_description' => ''
+			],
+			[
+				'permission_name' => 'showType',
+				'permission_description' => ''
+			],
+			//country
+			[
+				'permission_name' => 'createCountry',
+				'permission_description' => ''
+			],
+			[
+				'permission_name' => 'editCountry',
+				'permission_description' => ''
+			],
+			[
+				'permission_name' => 'deleteCountry',
+				'permission_description' => ''
+			],
+			[
+				'permission_name' => 'showCountry',
+				'permission_description' => ''
+			],
+			//person
+			[
+				'permission_name' => 'createPerson',
+				'permission_description' => ''
+			],
+			[
+				'permission_name' => 'editPerson',
+				'permission_description' => ''
+			],
+			[
+				'permission_name' => 'deletePerson',
+				'permission_description' => ''
+			],
+			[
+				'permission_name' => 'showPerson',
+				'permission_description' => ''
+			],
+			//job
+			[
+				'permission_name' => 'createJob',
+				'permission_description' => ''
+			],
+			[
+				'permission_name' => 'editJob',
+				'permission_description' => ''
+			],
+			[
+				'permission_name' => 'deleteJob',
+				'permission_description' => ''
+			],
+			[
+				'permission_name' => 'showJob',
+				'permission_description' => ''
+			],
+
+		]);
+
+		//permission role
+		//superadmin -> all
+		$data = DB::table('permissions')->where('id', '>=', 1)->get();
+		foreach ($data as $key) {
+			//insert
+			DB::table('permission_roles')->insert([
+				[
+					'permission_id' => $key->id,
+					'role_id' => 1
+				]
+			]);
+		}
+		//admin -> all but deny role
+		foreach ($data as $key) {
+			//check -> deny role
+			$arr = ['createRole', 'editRole', 'showRole', 'deleteRole'];
+			if(!in_array($key->permission_name, $arr)){
+				//insert
+				DB::table('permission_roles')->insert([
+					[
+						'permission_id' => $key->id,
+						'role_id' => 2 //is id role admin
+					]
+				]);
+			}
+			
+		}
 	}
 
 }

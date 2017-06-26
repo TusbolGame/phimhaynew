@@ -8,7 +8,6 @@ use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\RecoverRequest;
 use Hash;
-use Auth;
 use App\Lib\UserEncrypt;
 use Session;
 use App\Lib\CaptchaImages\CaptchaSessionLoginUser;
@@ -18,9 +17,10 @@ use App\Lib\SessionTimeouts\SessionTimeout;
 use App\Lib\RandomGenerates\RandomGenerate;
 use App\User;
 use Mail;
-// use Request;
 use Illuminate\Http\Request;
 use App\UserSession;
+use Cache;
+
 class AuthController extends Controller {
 
 	/*
@@ -35,6 +35,7 @@ class AuthController extends Controller {
 	*/
 
 	use AuthenticatesAndRegistersUsers;
+	protected $user_permission;
 
 	/**
 	 * Create a new authentication controller instance.
@@ -49,6 +50,11 @@ class AuthController extends Controller {
 		$this->registrar = $registrar;
 
 		$this->middleware('guest', ['except' => 'getLogout']);
+		//permisssion
+		$this->user_permission = [];
+		if($this->auth->check()){
+			$this->user_permission = Cache::get('user_permission_'.$this->auth->user()->id);
+		}
 	}
 	//
 	// 
@@ -114,7 +120,7 @@ class AuthController extends Controller {
 			$user->first_name = $request->txtFirstName;
 			$user->last_name = $request->txtLastName;
 			$user->email = $request->txtEmail;
-			$user->level = 2; //is member
+			// $user->level = 2; //is member
 			$user->actived = 1; //is active
 			$user->blocked = 0;
 			$user->active_hash = null;
@@ -122,6 +128,9 @@ class AuthController extends Controller {
 			$user->remember_token = $request->_token;
 			$user->save();
 			//dk thanh cong
+			//add role, default is member ~ id 3
+			\App\UserRole::insert(['user_id' => $user->id, 'role_id' => 3]);
+			//
 			return redirect()->route('auth.getActiveMessage')->with(['message_active'=>'is_active_success']);
 			
 		}
@@ -143,7 +152,7 @@ class AuthController extends Controller {
 			$user->first_name = $request->txtFirstName;
 			$user->last_name = $request->txtLastName;
 			$user->email = $request->txtEmail;
-			$user->level = 2; //is member
+			// $user->level = 2; //is member
 			$user->actived = 0; //chua active
 			$user->blocked = 0;
 			$user->active_hash = null;
@@ -167,7 +176,7 @@ class AuthController extends Controller {
 			//test not mail
 			//active_timeout->createSessionUses($user_id, $user->active_hash);
 			//end test not mail
-			die();
+			// die();
 			//send mail code active
 			//send mail  if success thi insert db, else back()
 			if($this->sendMailActiveUser($username, $fullname, $email, $user->active_hash)){
@@ -221,8 +230,11 @@ class AuthController extends Controller {
 		//return redirect()->route('auth.getActiveMessage');
 	}
 	public function getLogout(){
-		if (Auth::check()) {
-			Auth::logout();
+		if ($this->auth->check()) {
+			//delete permission
+			Cache::forget('user_permission_'.$this->auth->user()->id);
+			$this->auth->logout();
+			//remo
 		}
 		return redirect()->route('home');
 	}

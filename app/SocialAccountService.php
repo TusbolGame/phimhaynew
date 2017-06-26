@@ -38,8 +38,11 @@ class SocialAccountService
                 $user->first_name = $providerUser->getName();
                 $user->image = $providerUser->getAvatar();
                 $user->actived = 1; //is active
-                $user->level = 2; //member
+                // $user->level = 2; //member
                 $user->save();
+                //add role member default, id 3
+                \App\UserRole::insert(['user_id' => $user->id, 'role_id' => 3]);
+                //
             }
 
             $account->user()->associate($user);

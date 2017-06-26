@@ -36,13 +36,12 @@
             <input type="email" class="form-control" name="txtEmail" value="{{ old('txtEmail') }}" placeholder="Nhập Email" required="true" />
         </div>
         <div class="form-group">
-            <label>User Level</label>
-            <label class="radio-inline">
-                <input name="rdoLevel" value="1" @if(old('rdoLevel')=='1') checked @endif type="radio">Admin
-            </label>
-            <label class="radio-inline">
-                <input name="rdoLevel" value="2" type="radio" @if(old('rdoLevel')=='2') checked @endif @if(!old('rdoLevel')) checked @endif>Member
-            </label>
+            <label>Role</label>
+            <select name="role_id" class="form-control">
+                @foreach($role as $data)
+                    <option value="{!! $data->id !!}" @if(old('role_id') == $data->id) selected @endif>{!! $data->role_name !!}</option>
+                @endforeach
+            </select> 
         </div>
         <div class="form-group">
             <label>Kích hoạt</label>

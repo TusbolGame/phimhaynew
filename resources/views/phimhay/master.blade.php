@@ -5,20 +5,25 @@
 	<meta http-equiv="X-UA-Compatible" username="IE=edge">
 	<meta content="width=device-width,initial-scale=1" name="viewport">
 	<title>@yield('title')</title>
+	<base href="http://localhost/phimhaynew" />
 	<meta name="description" content="@yield('description')">
 	<meta property="fb:app_id" content="{!! env('FB_APP_ID') !!}" />
 	<meta property="fb:admins" content="{!! env('FB_ADMINS') !!}"/>
+	<meta property="fb:pages" content="209494239231892" />
 	<link rel="icon" type="image/png" href="{!! asset('public/favicon.ico') !!}">
 
 	<meta property="og:title" content="@yield('title')">
     <meta property="og:image" content="">
-    <meta property="og:description" content="@yield('title')">
+    <meta property="og:description" content="@yield('description')">
     <meta property="article:author" content="NPT">
-    <meta property="og:url" content="https://scotch.io/tutorials/build-search-functionality-with-laravel-scout-and-vue-js">
-    <meta property="og:type" content="article">
-    <meta property="article:publisher" content="https://www.facebook.com/scotchdevelopment">
+    <meta property="og:url" content="@yield('url')">
+    {{-- <meta property="og:type" content="article"> --}}
+    {{-- using website for page categories --}}
+    {{-- <meta property="og:type" content="website"> --}}
+    <meta property="og:type" content="video.movie" />
     <meta property="og:site_name" content="PhimHay">
-
+	<meta property="og:updated_time" content="1498357443" />
+	<meta property="article:publisher" content="https://www.facebook.com/scotchdevelopment">
     <link rel="publisher" href="https://plus.google.com/b/113854128330570384219">
     <link rel="author" href="https://plus.google.com/b/113854128330570384219">
     

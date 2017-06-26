@@ -71,6 +71,7 @@
                 <option value="google drive" @if(old('film_src_name') == 'google drive') selected @endif>Google Drive</option>
                 <option value="local" @if(old('film_src_name') == 'local') selected @endif>Local</option>
                 <option value="zing tv" @if(old('film_src_name') == 'zing tv') selected @endif>Zing Tv</option>
+                <option value="fptplay" @if(old('film_src_name') == 'fptplay') selected @endif>Fpt Play</option>
               </select>
             </div>
           </div>

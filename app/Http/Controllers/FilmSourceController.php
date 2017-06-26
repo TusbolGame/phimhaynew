@@ -13,11 +13,16 @@ use App\Lib\ParseUrlInfo;
 use App\Lib\CheckLinks\HttpResponseCode;
 use App\Lib\FilmProcess\FilmProcess;
 use File;
+use Auth;
 
 class FilmSourceController extends Controller {
 	
 	//
 	public function getAdd($film_id){
+		//check permission
+		if(!Auth::user()->hasPermission('createFilm')){
+			return redirect()->route('admin.getHome')->with('flash_message_error', '403! Không thể Create Film');
+		}
 		$film_list = FilmList::find($film_id);
 		if(count($film_list) == 0){
 			return redirect()->route('admin.film.getList')->with(['flash_message_error' => 'Lỗi! Không có Film Id: '.$film_id]);
@@ -29,6 +34,10 @@ class FilmSourceController extends Controller {
 		return view('admin.film.episode.source.add', compact('film_list', 'film_id', 'film_episodes'));
 	}
 	public function postAdd($film_id, Request $request){
+		//check permission
+		if(!Auth::user()->hasPermission('createFilm')){
+			return redirect()->route('admin.getHome')->with('flash_message_error', '403! Không thể Create Film');
+		}
 		//check domain, status http
 		if($request->film_src_name != 'local'){
 			//check
@@ -265,6 +274,10 @@ class FilmSourceController extends Controller {
 	}
 	//chua
 	public function getList($film_id, $episode_id){
+		//check permission
+		if(!Auth::user()->hasPermission('showFilm')){
+			return redirect()->route('admin.getHome')->with('flash_message_error', '403! Không thể Show Film');
+		}
 		$http_response_code = new HttpResponseCode();
 		$film_list = FilmList::find($film_id);
 		$film_sources = FilmSource::where('film_episode_id', $episode_id)->paginate(10);
@@ -273,6 +286,10 @@ class FilmSourceController extends Controller {
 	}
 	//test lai
 	public function postEdit($film_id, $episode_id, $source_id, Request $request){
+		//check permission
+		if(!Auth::user()->hasPermission('editFilm')){
+			return redirect()->route('admin.getHome')->with('flash_message_error', '403! Không thể Edit Film');
+		}
 		//check domain, status http
 		if($request->film_src_name != 'local'){
 			//check
@@ -431,6 +448,10 @@ class FilmSourceController extends Controller {
 	}
 	//ok
 	public function getDelete($film_id, $episode_id, $source_id){
+		//check permission
+		if(!Auth::user()->hasPermission('deleteFilm')){
+			return redirect()->route('admin.getHome')->with('flash_message_error', '403! Không thể Delete Film');
+		}
 		$film_list = FilmList::find($film_id);
 		if(count($film_list) == 0){
 			return redirect()->route('admin.film.getList')->with(['flash_message_error' => 'Lỗi! Không có Film Id: '.$film_id]);

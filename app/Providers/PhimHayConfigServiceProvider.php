@@ -7,6 +7,7 @@ use App\FilmCountry;
 use App\FilmType;
 use App\FilmSlider;
 use App\FilmEpisode;
+use App\FilmJob;
 use Cache;
 use App\Lib\FilmProcess\FilmProcess;
 
@@ -18,7 +19,8 @@ class PhimHayConfigServiceProvider extends ServiceProvider {
 	 * @return void
 	 */
 	public function boot()
-	{
+	{		
+		//
 		$film_process = new FilmProcess();
 		$film_hots = [];
 		$cache_time_new = \Carbon\Carbon::now()->addMinutes(30); //30p
@@ -136,11 +138,24 @@ class PhimHayConfigServiceProvider extends ServiceProvider {
 		//cache slider
 		if(!Cache::has('film_slider')){
 			//no cache
-			$film_slider = FilmSlider::all();
+			$cache_slider = [];
+			$film_slider = FilmSlider::where('id', '>=', 1)->with('filmList')->get();
+			foreach ($film_slider as $key) {
+				$temp['slider_name'] = $film_process->getFilmNameVnEn($key->filmList->film_name_vn, $key->filmList->film_name_en);
+				$temp['film_id'] = $key->film_id;
+				$temp['slider_dir'] = $key->filmList->film_dir_name;
+				$temp['slider_image'] = $key->filmDetail->getFilmPosterVideo();
+				array_push($cache_slider, $temp);
+			}
 			//add cache
-			Cache::forever('film_slider', $film_slider);
+			Cache::forever('film_slider', $cache_slider);
 		}//end if(!Cache::has('film_type'))
 
+		//film_job
+		if(!Cache::has('film_job')){
+			$film_job = FilmJob::orderBy('job_name', 'ASC')->get();
+			Cache::forever('film_job', $film_job);
+		}
 
 	}
 

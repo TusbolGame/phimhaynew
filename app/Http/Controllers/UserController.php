@@ -12,57 +12,89 @@ use App\User;
 use App\FilmUserTick;
 use App\FilmUserWatch;
 use App\SocialAccount;
+use App\Role;
 use Hash;
 use Auth;
 use Validator;
 use Input;
 use File;
 use Intervention\Image\Facades\Image;
+use Cache;
 
 class UserController extends Controller {
 
+	protected $user_permission;
+
+	public function __construct(){
+		$this->user_permission = Cache::get('user_permission_'.Auth::user()->id);
+	}
 	//
 	//add
 	public function getAdd(){
-		return view('admin.user.add');
+		//check permission
+		if(!isset($this->user_permission['createUser'])){
+			return response()->view('phimhay.include.403', [], 403);
+		}
+		$role = Role::where('role_name', '!=', 'Superadmin')->get();
+		return view('admin.user.add', compact('role'));
 	}
 	public function postAdd(AdminAddUserRequest $request){
+		//check permission
+		if(!isset($this->user_permission['createUser'])){
+			return response()->view('phimhay.include.403', [], 403);
+		}
+		//check role
+		$check = Role::find($request->role_id);
+		if(count($check) == 0 && $check->role_name != 'Superadmin'){
+			return redirect()->back()->withErrors('Role chọn không tồn tại');
+		}
+		if($check->role_name == 'Superadmin'){
+			return redirect()->back()->withInput()->withErrors('Lỗi! Không được phép chọn Superadmin');
+		}
 		$user = new User();
 		$user->username = $request->txtUsername;
 		$user->password = Hash::make($request->txtPass);
 		$user->first_name = $request->txtFirstName;
 		$user->Last_name = $request->txtLastName;
 		$user->email = $request->txtEmail;
-		$user->level = $request->rdoLevel;
 		$user->actived = $request->rdoActived;
 		$user->blocked = $request->rdoBlocked;
 		//remember
 		$user->remember_token = $request->_token;
 		$user->save();
+		//add role
+		\App\UserRole::insert(['user_id' => $user->id, 'role_id' => $request->role_id]);
+		//
 		return redirect()->route('admin.user.getList')->with(['flash_message'=>'Thành công ! Thêm thành viên mới: '.$request->txtUsername]);
 	}
 	//list
 	public function getList(){
-		$users = User::select('id', 'username', 'first_name', 'last_name', 'email', 'level', 'actived', 'blocked', 'created_at', 'updated_at')->orderBy('id', 'DESC')->with('socialAccount')->paginate(10);
+		//check permission
+		if(!isset($this->user_permission['showUser'])){
+			return response()->view('phimhay.include.403', [], 403);
+		}
+		$users = User::select('id', 'username', 'first_name', 'last_name', 'email', 'level', 'actived', 'blocked', 'created_at', 'updated_at')->orderBy('id', 'DESC')->with('socialAccount', 'userRole.role')->paginate(10);
 		// dump($users);die();
 		$users->setPath(route('admin.user.getList'));
 		return view('admin.user.list', compact('users'));
 	}
 	//edit
 	public function getEdit($id){
-		$user = User::findOrFail($id)->toArray();
-		//admin bt, ko edit dc diff admin, supperadmin
-		if(Auth::user()->id != 1 && ($id == 1 || ($user['level'] == 1) && Auth::user()->id != $id)){
-			return redirect()->route('admin.user.getList')->with(['flash_message'=>'Lỗi ! Không thể cập nhật user '.$id.'! Bởi vì Admin không thể cập nhật Supperadmin hoặc không thể cập nhật Admin khác']);
+		//check permission
+		if(!isset($this->user_permission['editUser'])){
+			return response()->view('phimhay.include.403', [], 403);
 		}
-		return view('admin.user.edit', compact('user', 'id'));
+		$user = User::findOrFail($id);
+		$role = Role::where('role_name', '!=', 'Superadmin')->get();
+		return view('admin.user.edit', compact('user', 'id', 'role'));
 	}
 	//fix lại
 	public function postEdit($id, Request $request){
-		$user = User::findOrFail($id);
-		if(Auth::user()->id != 1 && ($id == 1 || ($user->level == 1) && Auth::user()->id != $id)){
-			return redirect()->route('admin.user.getList')->with(['flash_message'=>'Lỗi ! Không thể cập nhật user '.$id.'! Bởi vì Admin không thể cập nhật Supperadmin hoặc không thể cập nhật Admin khác']);
+		//check permission
+		if(!isset($this->user_permission['editUser'])){
+			return response()->view('phimhay.include.403', [], 403);
 		}
+		$user = User::findOrFail($id);
 		$v = null;
 		//only admin can edit me
 		if(Auth::user()->id == $id){
@@ -105,7 +137,7 @@ class UserController extends Controller {
 				//
 				$tt = User::where('id', '!=', Auth::user()->id)->where('email', $request->txtEmail)->get();
 				if(count($tt) >= 1){
-					return redirect()->back()->withErrors('Email đã tồn tại');
+					return redirect()->back()->withInput()->withErrors('Email đã tồn tại');
 				}
 				unset($tt);
 				$user->email = $request->txtEmail;
@@ -113,51 +145,72 @@ class UserController extends Controller {
 		}
 		//hiển thị thông báo lỗi
 		if ($v != null && $v->fails()) {
-			return redirect()->back()->withErrors($v->errors());
+			return redirect()->back()->withInput()->withErrors($v->errors());
 		}
 		
-		if(Auth::user()->id == $id){
-			if(Input::has('chkEditPassword')){
-				if(!Hash::check($request->txtPassOld, $user->password)){
-					return redirect()->back()->withErrors('Mật khẩu nhập không đúng');
-				}
-				$user->password = Hash::make($request->txtPass);
+		if(Input::has('chkEditPassword')){
+			if(!Hash::check($request->txtPassOld, $user->password)){
+				return redirect()->back()->withErrors('Mật khẩu nhập không đúng');
 			}
-			$user->first_name = $request->txtFirstName;
-			$user->Last_name = $request->txtLastName;
-			$user->email = $request->txtEmail;
+			$user->password = Hash::make($request->txtPass);
 		}
-		//is admin -> not edit level of chinh minh
-		if(Auth::user()->id != $id && $id != 1){
-			$user->level = $request->rdoLevel;	
+		$user->first_name = $request->txtFirstName;
+		$user->Last_name = $request->txtLastName;
+		$user->email = $request->txtEmail;
+		//is user -> not edit role, block, active of chinh minh
+		if(Auth::user()->id != $id){
+			//check role
+			$role = Role::findOrFail($request->role_id);
+			//is role
+			//check not superadmin
+			if($role->role_name == 'Superadmin'){
+				return redirect()->back()->withInput()->withErrors('Lỗi! Không được phép chọn Superadmin');
+			}
+			$user_role = \App\UserRole::where('user_id', $id)->first();
+			$user_role->role_id = $role->id;
+			$user_role->save();
+
 			$user->actived = $request->rdoActived;
 			$user->blocked = $request->rdoBlocked;
 		}
 		//remember
 		$user->remember_token = $request->_token;
 		$user->save();
+		if(Cache::has('user_permission_'.$id)){
+			//update time cache, if change role id -> delete cache user update
+			Cache::forget('user_permission_'.$id);
+		}
+		//
 		return redirect()->route('admin.user.getList')->with(['flash_message'=>'Thành công ! Cập nhật User '.$id]);
 	}
 	//delete
 	public function getDelete($id){
+		//check permission
+		if(!isset($this->user_permission['deleteUser'])){
+			return response()->view('phimhay.include.403', [], 403);
+		}
 		$user = User::find($id);
 		//if supperadmin, id == 1 --> xoa admin +member
 		//admin --> xoa member
 		// neu la admin ma ko phai la supperadmin va ko dc xoa supperadmin, admin khac
-		if(Auth::user()->id != 1 && ($id == 1 || $user->level == 1)){
-			return redirect()->route('admin.user.getList')->with(['flash_message'=>'Fail ! Can\'t delete this user! Because Amin do not delete Supperadmin or do not delete diff Admin']);
+		if(Auth::user()->id == $id){
+			return redirect()->route('admin.user.getList')->with(['flash_message_error'=>'Fail! Không thể delete chính mình']);
 		}
-		//supperadmin, admin, ko dc xoa chinh no
-		else if(Auth::user()->id == $id){
-			return redirect()->route('admin.user.getList')->with(['flash_message'=>'Fail ! Can\'t delete this user! Because User do not delete this user']);
-		}else{
-			//xoa
-			$user->delete($id);
-			return redirect()->route('admin.user.getList')->with(['flash_message'=>'Success ! Complete Deleted User ID '.$id.'!']);
+		//xoa
+		$user->delete($id);
+		//delete cache
+		if(Cache::has('user_permission_'.$id)){
+			//update time cache, if change role id -> delete cache user update
+			Cache::forget('user_permission_'.$id);
 		}
+		return redirect()->route('admin.user.getList')->with(['flash_message'=>'Success ! Complete Deleted User ID '.$id.'!']);
 	}
 	//search
 	public function getSearch(){
+		//check permission
+		if(!isset($this->user_permission['showUser'])){
+			return response()->view('phimhay.include.403', [], 403);
+		}
 		return view('admin.user.search');
 	}
 

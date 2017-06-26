@@ -14,9 +14,7 @@ class CreateVideoPlaybacksTable extends Migration {
 	{
 		Schema::create('video_playbacks', function(Blueprint $table)
 		{
-			$table->string('id', 11);
-			$table->primary('id');
-			$table->index('id');
+			$table->increments('id');
 			$table->integer('film_id')->unsigned()->default(1);
 			$table->foreign('film_id')->references('id')->on('film_details')->onDelete('cascade');
 			$table->integer('film_source_id')->unsigned()->default(1);

@@ -2,6 +2,7 @@
 
 use App\VideoPlayback;
 use App\FilmSource;
+use Crypt;
 // use \NptNguyen\Libs\GetLinkVideos\GetLinkVideo;
 /**
 * 
@@ -28,21 +29,24 @@ class ProcessVideoLink
 		$this->data['film_src_name'] = $film_source->film_src_name;
 		//
 		$videoplayback = new VideoPlayback();
-		$videoplayback->id = hash('crc32', $time);
+		// $videoplayback->id = hash('crc32', $time);
 		$videoplayback->film_id = $film_id;
 		$videoplayback->film_source_id = $film_source->id;
 		$videoplayback->time = $cache_link;
+		$videoplayback->save();
+		//
+		$id_crypt = Crypt::encrypt($videoplayback->id);
 		//
 		if($film_source->film_src_name == 'youtube'){
 			//insert videoplayback	
 			$videoplayback->src_360p = $film_source->film_src_full;
-			$videoplayback->save();
 			//youtube error redirect
 			// $this->data['film_src_full'] = route('videoPlayback', $videoplayback->id);
 			$this->data['film_src_full'] = $film_source->film_src_full;
 		}else{
 			//get link
 			//
+			// if(true){
 			if((int)$film_source->time == 0 || (int)$film_source->time < $time){
 				if($film_source->film_src_name == 'zing tv'){
 					$get_link_video->getLinkZingTv($film_source->film_src_full);
@@ -78,28 +82,29 @@ class ProcessVideoLink
 			//
 			if(!empty($film_source->film_src_360p)){
 				$videoplayback->src_360p = $film_source->film_src_360p;
-				$this->data['film_src_360p'] = route('videoPlayback', [$videoplayback->id, 0]);
+				$this->data['film_src_360p'] = route('videoPlayback', [$id_crypt, 0]);
 
 			}
 			if(!empty($film_source->film_src_480p)){
 				$videoplayback->src_480p = $film_source->film_src_480p;
-				$this->data['film_src_480p'] = route('videoPlayback', [$videoplayback->id, 1]);
+				$this->data['film_src_480p'] = route('videoPlayback', [$id_crypt, 1]);
 			}
 			if(!empty($film_source->film_src_720p)){
 				$videoplayback->src_720p = $film_source->film_src_720p;
-				$this->data['film_src_720p'] = route('videoPlayback', [$videoplayback->id, 2]);
+				$this->data['film_src_720p'] = route('videoPlayback', [$id_crypt, 2]);
 			}
 			if(!empty($film_source->film_src_1080p)){
 				$videoplayback->src_1080p = $film_source->film_src_1080p;
-				$this->data['film_src_1080p'] = route('videoPlayback', [$videoplayback->id, 3]);
+				$this->data['film_src_1080p'] = route('videoPlayback', [$id_crypt, 3]);
 			}
 			if(!empty($film_source->film_src_2160p)){
 				$videoplayback->src_2160p = $film_source->film_src_2160p;
-				$this->data['film_src_2160p'] = route('videoPlayback', [$videoplayback->id, 4]);
+				$this->data['film_src_2160p'] = route('videoPlayback', [$id_crypt, 4]);
 			}
-			//save videoplayback
-			$videoplayback->save();
+			
 		} // end else
+		//save videoplayback
+		$videoplayback->save();
 	}
 	function getData(){
 		return $this->data;

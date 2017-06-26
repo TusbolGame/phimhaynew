@@ -9,10 +9,15 @@ use App\FilmSource;
 use App\Lib\FilmProcess\FilmProcess;
 use Illuminate\Http\Request;
 use Cache;
+use Auth;
 
 class FilmEpisodeController extends Controller {
 
 	public function getAdd($film_id){
+		//check permission
+		if(!Auth::user()->hasPermission('createFilm')){
+			return redirect()->route('admin.getHome')->with('flash_message_error', '403! Không thể Create Film');
+		}
 		$film_list = FilmList::find($film_id);
 		if(count($film_list) == 0){
 			return redirect()->route('admin.film.getList')->with(['flash_message_error' => 'Lỗi! Không có Film Id: '.$film_id]);
@@ -21,6 +26,10 @@ class FilmEpisodeController extends Controller {
 	}
 	public function postAdd($film_id, Request $request){
 		//
+		//check permission
+		if(!Auth::user()->hasPermission('createFilm')){
+			return redirect()->route('admin.getHome')->with('flash_message_error', '403! Không thể Create Film');
+		}
 		$film_list = FilmList::find($film_id);
 		if(count($film_list) == 0){
 			return redirect()->route('admin.film.getList')->with(['flash_message_error' => 'Lỗi! Không có Film Id: '.$film_id]);
@@ -56,12 +65,20 @@ class FilmEpisodeController extends Controller {
 	}
 	
 	public function getList($film_id){
+		//check permission
+		if(!Auth::user()->hasPermission('showFilm')){
+			return redirect()->route('admin.getHome')->with('flash_message_error', '403! Không thể Show Film');
+		}
 		$film_list = FilmList::find($film_id);
 		$film_episodes = FilmEpisode::where('film_id', $film_id)->paginate(10);
 		$film_episodes->setPath(route('admin.film.episode.getList', $film_id));
 		return view('admin.film.episode.list', compact('film_episodes', 'film_id', 'film_list'));
 	}
 	public function getEdit($film_id, $episode_id, Request $request){
+		//check permission
+		if(!Auth::user()->hasPermission('editFilm')){
+			return redirect()->route('admin.getHome')->with('flash_message_error', '403! Không thể Edit Film');
+		}
 		$film_episode = FilmEpisode::find($episode_id);
 		$film_list = FilmList::find($film_id);
 		if(count($film_list) == 0){
@@ -75,6 +92,10 @@ class FilmEpisodeController extends Controller {
 	}
 	//
 	public function postEdit($film_id, $episode_id, Request $request){
+		//check permission
+		if(!Auth::user()->hasPermission('editFilm')){
+			return redirect()->route('admin.getHome')->with('flash_message_error', '403! Không thể Edit Film');
+		}
 		//
 		$film_episode =  FilmEpisode::find($episode_id);
 		if(count($film_episode) == 0){
@@ -86,6 +107,10 @@ class FilmEpisodeController extends Controller {
 		return redirect()->route('admin.film.episode.getList', $film_id)->with(['flash_message' => 'Thành công! Cập nhật Episode '.$request->film_episode.' ở Film ID: '.$film_id]);
 	}
 	public function getDelete($film_id, $episode_id){
+		//check permission
+		if(!Auth::user()->hasPermission('deleteFilm')){
+			return redirect()->route('admin.getHome')->with('flash_message_error', '403! Không thể Delete Film');
+		}
 		$film_episode = FilmEpisode::find($episode_id);
 		$film_list = FilmList::find($film_id);
 		if(count($film_episode) == 0 && count($film_list) == 0){
@@ -117,6 +142,10 @@ class FilmEpisodeController extends Controller {
 		return redirect()->route('admin.film.episode.getList', $film_id)->with(['flash_message' => 'Thành công! Đã xóa Episode ID '.$episode_id.' ở Film_id '.$film_id]);
 	}
 	public function getAddWithSource($film_id){
+		//check permission
+		if(!Auth::user()->hasPermission('createFilm')){
+			return redirect()->route('admin.getHome')->with('flash_message_error', '403! Không thể Create Film');
+		}
 		$film_list = FilmList::find($film_id);
 		$film_episodes = FilmEpisode::orderBy('film_episode', 'DESC')->take(50)->get();
 		if(count($film_list) == 0){
@@ -125,6 +154,10 @@ class FilmEpisodeController extends Controller {
 		return view('admin.film.episode.add-with-source', compact('film_list', 'film_id', 'film_episodes'));
 	}
 	public function postAddWithSource($film_id, Request $request){
+		//check permission
+		if(!Auth::user()->hasPermission('createFilm')){
+			return redirect()->route('admin.getHome')->with('flash_message_error', '403! Không thể Create Film');
+		}
 		$dk = count($request->film_episode);
 		// var_dump($request->film_episode);
 		if($dk == 0){
@@ -207,6 +240,10 @@ class FilmEpisodeController extends Controller {
 	}
 
 	public function getGrabLink($film_id){
+		//check permission
+		if(!Auth::user()->hasPermission('createFilm')){
+			return redirect()->route('admin.getHome')->with('flash_message_error', '403! Không thể Create Film');
+		}
 		$film_list = FilmList::find($film_id);
 		// $film_episodes = FilmEpisode::orderBy('film_episode', 'DESC')->take(50)->get();
 		if(count($film_list) == 0){
@@ -215,6 +252,10 @@ class FilmEpisodeController extends Controller {
 		return view('admin.film.episode.grab-link', compact('film_list', 'film_id'));
 	}
 	public function postGrabLink($film_id, Request $request){
+		//check permission
+		if(!Auth::user()->hasPermission('createFilm')){
+			return redirect()->route('admin.getHome')->with('flash_message_error', '403! Không thể Create Film');
+		}
 		if($request->film_src_full == ''){
 			return redirect()->back()->with(['flash_message_error' =>'Error! Chưa nhập Source Full'])->withInput();
 		}

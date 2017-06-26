@@ -6,11 +6,8 @@
 		<div id="carousel-home-slider" class="carousel slide" data-ride="carousel">
 		  	<!-- Indicators -->
 		  	<ol class="carousel-indicators">
-		  		<?php 
-		  			$i = 0;
-		  			$dk = count($film_sliders);
-		  		?>
-		  		@while($i < $dk)		  		
+		  		<?php $i=0; ?>
+		  		@while($i < count($film_sliders))		  		
 			    	<li data-target="#carousel-home-slider" data-slide-to="{!! $i !!}" class="@if($i == 0) active @endif"></li>
 			    	<?php $i++;  ?>
 			   	@endwhile
@@ -24,10 +21,10 @@
 		  		@foreach($film_sliders as $slider)
 				    <div class="item @if($the_active) active @endif">
 				    	<?php $the_active = false;  ?>
-				    	<a href="{!! $slider->slider_dir !!}" title="">
-				      		<img src="{!! $slider->slider_image !!}" class="home-slider-item-img" alt="Error image slider">
+				    	<a href="{!! route('film.getFilm', [$slider['slider_dir'], $slider['film_id']]) !!}" title="">
+				      		<img src="{!! $slider['slider_image'] !!}" class="home-slider-item-img" alt="Error image slider">
 				      		<div class="carousel-caption">
-				      			<h3 class="home-slider-item-name">{!! $slider->slider_name !!}</h3>
+				      			<h3 class="home-slider-item-name">{!! $slider['slider_name'] !!}</h3>
 				      		</div>
 				      	</a>
 				    </div>

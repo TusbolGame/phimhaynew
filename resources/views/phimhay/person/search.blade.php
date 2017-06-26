@@ -16,7 +16,7 @@
 				<input type="text" class="form-control" name="person_name" value="{!! $person_name !!}" placeholder="Tên nhân vật">
 			</div>
 			<div class="form-group">
-				<select name="person_job" class="form-control">
+				<select name="person_job" class="form-control select-option-capitalize">
 					<option value="">Nghề nghiệp</option>
 					@foreach ($film_job as $job)
 					<option value="{!! $job->id !!}" @if ($person_job == $job->id) selected @endif>{!! $job->job_name !!}</option>

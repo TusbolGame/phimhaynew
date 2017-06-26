@@ -28,7 +28,7 @@ class AdminAddUserRequest extends Request {
 			'txtFirstName' => 'required',
 			'txtLastName' => 'required',
 			'txtEmail' => 'required|email|unique:users,email',
-			'rdoLevel' => 'required',
+			'role_id' => 'required',
 			'rdoActived' => 'required',
 			'rdoBlocked' => 'required',
 		];
@@ -47,7 +47,7 @@ class AdminAddUserRequest extends Request {
 			'txtEmail.required' => 'Chưa nhập Email',
 			'txtEmail.email' => 'Đây không phải là Email',
 			'txtEmail.unique' => 'Email đã tồn tại',
-			'rdoLevel.required' => 'Chưa nhập Level',
+			'role_id.required' => 'Chưa chọn Role',
 			'rdoActived.required' => 'Chưa nhập Actived',
 			'rdoBlocked.required' => 'Chưa nhập Blocked',
 		];

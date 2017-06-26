@@ -47,18 +47,26 @@ use Schema;
 //
 use App\Sessions;
 use App\Lib\GuestInfo;
+use App\User;
+use App\Permission;
 
 class FilmController extends Controller {
 
 	public function getTest(Request $request){
-		 // Schema::table('video_playbacks', function($table){
-
-			// $table->dropColumn('film_episode_id');
-			// $table->integer('film_id')->unsigned()->default(1);
-			// $table->foreign('film_id')->references('id')->on('film_details')->onDelete('cascade');
-			// $table->integer('film_source_id')->unsigned()->default(1);
-			// $table->foreign('film_source_id')->references('id')->on('film_sources')->onDelete('cascade');
-		// });
+		//test check
+		/*
+		$user_permission = Cache::get('user_permission_'.Auth::user()->id);
+		var_dump(Cache::get('role_updated_at_'.Auth::user()->userRole->role_id));
+		var_dump($user_permission);
+		if(Cache::get('role_updated_at_'.Auth::user()->userRole->role_id) > $user_permission['updated_at']){
+			echo 'role lon';
+		}else{
+			echo 'nho';
+		}
+		var_dump(Cache::has('role_updated_at_6'));
+		*/
+		// FilmPersonJob::where('film_job_id', 8)->update(['film_job_id' => 7]);
+		// Cache::forget('film_job');
 		exit;
 		ini_set('max_execution_time', 300); //300 seconds = 5 minutes
 		$ffmpeg = \FFMpeg\FFMpeg::create();
@@ -427,7 +435,7 @@ class FilmController extends Controller {
 		$film_list = FilmList::find($film_id);
 		//check
 		if(count($film_list) != 1 || $film_list->film_dir_name != $film_dir){
-			return view('phimhay.include.404');
+			return response()->view('phimhay.include.404', [], 404);
 			exit;
 		}
 		//ok
@@ -469,7 +477,7 @@ class FilmController extends Controller {
 			$film_source_watch = FilmSource::find($film_source_id);
 			//check exists source id
 			if(count($film_source_watch) != 1){
-				return view('phimhay.include.404');
+				return response()->view('phimhay.include.404', [], 404);
 				exit;
 			}
 			$film_source_list = FilmSource::where('film_episode_id', $film_source_watch->film_episode_id)->get();
@@ -545,11 +553,19 @@ class FilmController extends Controller {
 
 	//admin
 	public function getAdd(){
+		//check permission
+		if(!Auth::user()->hasPermission('createFilm')){
+			return redirect()->route('admin.getHome')->with('flash_message_error', '403! Không thể Create Film');
+		}
 		$film_job = FilmJob::all();
 		// $film_country = FilmCountry::all();//da co trong service
 		return view('admin.film.add', compact('film_job'));
 	}
 	public function postAdd(Request $request){
+		//check permission
+		if(!Auth::user()->hasPermission('createFilm')){
+			return redirect()->route('admin.getHome')->with('flash_message_error', '403! Không thể Create Film');
+		}
 		// Start transaction!
 		DB::beginTransaction();
 		$film_detail = new FilmDetail();
@@ -667,12 +683,20 @@ class FilmController extends Controller {
 		return redirect()->back()->with(['flash_message_error' =>'Error! Không thể thêm phim'])->withInput();
 	}
 	public function getList(){
+		//check permission
+		if(!Auth::user()->hasPermission('showFilm')){
+			return redirect()->route('admin.getHome')->with('flash_message_error', '403! Không thể Show Film');
+		}
 		$films = FilmDetail::orderBy('id', 'DESC')->with('filmList')->paginate(5);
 		$films->setPath(route('admin.film.getList'));
 		//dump($film_detail);
 		return view('admin.film.list', compact('films'));
 	}
 	public function getEdit($film_id){
+		//check permission
+		if(!Auth::user()->hasPermission('editFilm')){
+			return redirect()->route('admin.getHome')->with('flash_message_error', '403! Không thể Edit Film');
+		}
 		$film_detail = FilmDetail::find($film_id);
 		if(count($film_detail) == 0){
 			return redirect()->route('admin.film.getList')->with(['flash_message_error' =>'Get Edit! Không tồn tại film id: '.$film_id]);
@@ -690,6 +714,10 @@ class FilmController extends Controller {
 		return view('admin.film.edit', compact('film_id', 'film_detail', 'film_list','film_job', 'directors', 'actors', 'film_detail_country', 'film_detail_type'));
 	}
 	public function postEdit($film_id, Request $request){
+		//check permission
+		if(!Auth::user()->hasPermission('editFilm')){
+			return redirect()->route('admin.getHome')->with('flash_message_error', '403! Không thể Edit Film');
+		}
 		$film_detail = FilmDetail::find($film_id);
 		if(count($film_detail) == 0){
 			return redirect()->route('admin.film.getList')->with(['flash_message_error' =>'Post Edit! Không tồn tại film id: '.$film_id]);
@@ -848,6 +876,10 @@ class FilmController extends Controller {
 		return redirect()->route('admin.film.getShow', $film_detail->id);
 	}
 	public function getDelete($film_id){
+		//check permission
+		if(!Auth::user()->hasPermission('deleteFilm')){
+			return redirect()->route('admin.getHome')->with('flash_message_error', '403! Không thể Delete Film');
+		}
 		$film_detail = FilmDetail::find($film_id);
 		if(count($film_detail) == 0){
 			return redirect()->route('admin.film.getList')->with(['flash_message_error' =>'Lỗi! Delete: Không tồn tại film id: '.$film_id]);
@@ -879,6 +911,10 @@ class FilmController extends Controller {
 		return redirect()->route('admin.film.getList')->with(['flash_message' =>'Thành công! Delete: Đã Delete Film_Id: '.$film_id]);
 	}
 	public function getShow($film_id){
+		//check permission
+		if(!Auth::user()->hasPermission('showFilm')){
+			return redirect()->route('admin.getHome')->with('flash_message_error', '403! Không thể Show Film');
+		}
 		$film_detail = FilmDetail::find($film_id);
 		if(count($film_detail) == 0){
 			return redirect()->route('admin.film.getList')->with(['flash_message_error' =>'Lỗi! Show! Không tồn tại film_id: '.$film_id]);
@@ -964,6 +1000,10 @@ class FilmController extends Controller {
 	}
 	//
 	public function getSearchAdmin(){
+		//check permission
+		if(!Auth::user()->hasPermission('showFilm')){
+			return redirect()->route('admin.getHome')->with('flash_message_error', '403! Không thể Show Film');
+		}
 		return view('admin.film.search');
 	}
 }

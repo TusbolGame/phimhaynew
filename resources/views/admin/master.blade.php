@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{!! config('app.locale') !!}">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -208,6 +208,18 @@
                                 <li>
                                     <a href="{!! route('admin.user.getSearch') !!}">Search User</a>
                                 </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-users fa-fw"></i> Role<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="{!! route('admin.role.index') !!}">List Role</a>
+                                </li>
+                                <li>
+                                    <a href="{!! route('admin.role.create') !!}">Add Role</a>
+                                </li> 
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>

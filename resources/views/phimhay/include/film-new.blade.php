@@ -16,7 +16,7 @@
 					<div class="film-new-detail">
 						<span class="film-title-vn" title="{!! $film_process->getFilmNameVn($phim_moi->filmList->film_name_vn, $phim_moi->filmList->film_name_en) !!}">{!! $film_process->getFilmNameVn($phim_moi->filmList->film_name_vn, $phim_moi->filmList->film_name_en) !!}</span>
 						<span class="film-title-en" title="{!! $film_process->getFilmNameEn($phim_moi->filmList->film_name_vn, $phim_moi->filmList->film_name_en) !!}">{!! $film_process->getFilmNameEn($phim_moi->filmList->film_name_vn, $phim_moi->filmList->film_name_en) !!}</span>
-						<span class="film-title-time">{!! $film_process->xulyGetFilmTime($phim_moi->filmList->film_time, $phim_moi->filmList->film_category) !!}</span>
+						{{-- <span class="film-title-time">{!! $film_process->xulyGetFilmTime($phim_moi->filmList->film_time, $phim_moi->filmList->film_category) !!}</span> --}}
 						<span class="film-title-year">{!! $phim_moi->filmList->film_years !!}</span>
 					</div>
 				</a>
@@ -41,7 +41,7 @@
 					<div class="film-new-detail">
 						<span class="film-title-vn" title="{!! $film_process->getFilmNameVn($phim_moi->filmList->film_name_vn, $phim_moi->filmList->film_name_en) !!}">{!! $film_process->getFilmNameVn($phim_moi->filmList->film_name_vn, $phim_moi->filmList->film_name_en) !!}</span>
 						<span class="film-title-en" title="{!! $film_process->getFilmNameEn($phim_moi->filmList->film_name_vn, $phim_moi->filmList->film_name_en) !!}">{!! $film_process->getFilmNameEn($phim_moi->filmList->film_name_vn, $phim_moi->filmList->film_name_en) !!}</span>
-						<span class="film-title-time">{!! $film_process->xulyGetFilmTime($phim_moi->filmList->film_time, $phim_moi->filmList->film_category) !!}</span>
+						{{-- <span class="film-title-time">{!! $film_process->xulyGetFilmTime($phim_moi->filmList->film_time, $phim_moi->filmList->film_category) !!}</span> --}}
 						<span class="film-title-year">{!! $phim_moi->filmList->film_years !!}</span>
 					</div>
 				</a>
@@ -66,7 +66,7 @@
 					<div class="film-new-detail">
 						<span class="film-title-vn" title="{!! $film_process->getFilmNameVn($phim_moi->filmList->film_name_vn, $phim_moi->filmList->film_name_en) !!}">{!! $film_process->getFilmNameVn($phim_moi->filmList->film_name_vn, $phim_moi->filmList->film_name_en) !!}</span>
 						<span class="film-title-en" title="{!! $film_process->getFilmNameEn($phim_moi->filmList->film_name_vn, $phim_moi->filmList->film_name_en) !!}">{!! $film_process->getFilmNameEn($phim_moi->filmList->film_name_vn, $phim_moi->filmList->film_name_en) !!}</span>
-						<span class="film-title-time">{!! $film_process->xulyGetFilmTime($phim_moi->filmList->film_time, $phim_moi->filmList->film_category) !!}</span>
+						{{-- <span class="film-title-time">{!! $film_process->xulyGetFilmTime($phim_moi->filmList->film_time, $phim_moi->filmList->film_category) !!}</span> --}}
 						<span class="film-title-year">{!! $phim_moi->filmList->film_years !!}</span>
 					</div>
 				</a>

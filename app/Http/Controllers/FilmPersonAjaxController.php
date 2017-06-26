@@ -21,6 +21,12 @@ class FilmPersonAjaxController extends Controller {
 			$result['login'] = 0;
 			//die(json_encode($result));
 			return response()->json($result);
+		}else{
+			//check permission
+			if(!Auth::user()->hasPermission('createPerson')){
+				$result['content'] = '403! Không có quyền';
+				return response()->json($result);
+			}
 		}
 		if (Request::ajax())
 		{
@@ -78,6 +84,12 @@ class FilmPersonAjaxController extends Controller {
 			$result['login'] = 0;
 			//die(json_encode($result));
 			return response()->json($result);
+		}else{
+			//check permission
+			if(!Auth::user()->hasPermission('createPerson')){
+				$result['content'] = '403! Không có quyền';
+				return response()->json($result);
+			}
 		}
 		if (Request::ajax())
 		{

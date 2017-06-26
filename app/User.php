@@ -5,6 +5,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use App\Permission;
+use Cache;
+use Auth;
 
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract {
 
@@ -39,5 +42,15 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	}
 	public function filmUserWatch(){
 		return $this->hasMany('App\FilmUserWatch', 'user_id', 'id');
+	}
+	public function userRole(){
+		return $this->hasOne('App\UserRole', 'user_id', 'id');
+	}
+	public function hasPermission($per){
+		$user_permission = Cache::get('user_permission_'.Auth::user()->id);
+		if(isset($user_permission[$per])){
+			return true;
+		}
+		return false;
 	}
 }

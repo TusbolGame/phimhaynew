@@ -18,7 +18,7 @@ class FilmEpisodeAjaxController extends Controller {
 			// $file_save = Input::file('file');
 			$file_save = $request->file('file');
 			if(!$file_save->isValid()){
-				$result['content'] = 'khong thanh cong';
+				$result['content'] = 'Không thành công';
 				return response()->json($result);
 			}
 			//check extension type video

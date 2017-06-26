@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\FilmType;
 use App\Lib\FilmProcess\FilmProcess;
 use Cache;
+use Auth;
 
 class FilmTypeController extends Controller {
 
@@ -17,6 +18,9 @@ class FilmTypeController extends Controller {
 	 */
 	public function index()
 	{
+		if(!Auth::user()->hasPermission('showType')){
+			return redirect()->route('admin.getHome')->with('flash_message_error', '403! Không thể Show Type');
+		}
 		//
 		// $film_type = FilmType::all();
 		return view('admin.type.list');
@@ -29,6 +33,9 @@ class FilmTypeController extends Controller {
 	 */
 	public function create()
 	{
+		if(!Auth::user()->hasPermission('createType')){
+			return redirect()->route('admin.getHome')->with('flash_message_error', '403! Không thể Create Type');
+		}
 		//
 		return view('admin.type.add');
 	}
@@ -40,6 +47,9 @@ class FilmTypeController extends Controller {
 	 */
 	public function store(Request $request)
 	{
+		if(!Auth::user()->hasPermission('createType')){
+			return redirect()->route('admin.getHome')->with('flash_message_error', '403! Không thể Create Type');
+		}
 		//
 		//check null
 		if($request->type_name == ''){
@@ -82,6 +92,9 @@ class FilmTypeController extends Controller {
 	 */
 	public function edit($id)
 	{
+		if(!Auth::user()->hasPermission('editType')){
+			return redirect()->route('admin.getHome')->with('flash_message_error', '403! Không thể Edit Type');
+		}
 		//
 		$film_type = FilmType::findOrFail($id);
 		return view('admin.type.edit', compact('film_type'));
@@ -95,6 +108,9 @@ class FilmTypeController extends Controller {
 	 */
 	public function update($id, Request $request)
 	{
+		if(!Auth::user()->hasPermission('editType')){
+			return redirect()->route('admin.getHome')->with('flash_message_error', '403! Không thể Edit Type');
+		}
 		//
 		$film_process = new FilmProcess();
 		$film_type = FilmType::findOrFail($id);
@@ -116,9 +132,12 @@ class FilmTypeController extends Controller {
 	 */
 	public function destroy($id)
 	{
+		if(!Auth::user()->hasPermission('deleteType')){
+			return redirect()->route('admin.getHome')->with('flash_message_error', '403! Không thể Delete Type');
+		}
 		//
 		$film_type = FilmType::findOrFail($id);
-		$film_type->destroy($id);
+		$film_type->delete();
 		//forget cache
 		if(Cache::has('film_type')){
 			Cache::forget('film_type');

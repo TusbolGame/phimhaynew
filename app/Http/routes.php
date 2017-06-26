@@ -172,6 +172,7 @@ Route::group(['prefix' => '/', 'middleware' => 'phimhay'], function(){
             //ajax search user
              Route::post('search', ['as' => 'admin.userAjax.postSearch', 'uses' => 'UserAjaxController@postSearch']);
         });
+        Route::resource('role', 'RoleController');
         //cache
         Route::group(['prefix' => 'cache'], function() {
             //add

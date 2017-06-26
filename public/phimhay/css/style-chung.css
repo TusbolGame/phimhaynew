@@ -128,6 +128,12 @@ div.vote a{
 }
 /*end style rate vote*/
 
+/* chung */
+select.select-option-capitalize option{
+    text-transform: capitalize;
+}
+/* end chung */
+
 #wapper{
 	background: url('../../../resources/images/bg_body.gif') #6f6d72;
 }

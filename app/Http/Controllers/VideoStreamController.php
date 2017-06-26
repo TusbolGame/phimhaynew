@@ -80,7 +80,8 @@ class VideoStreamController extends Controller {
 	public function getProxy($id, $quality){
 		//check
 		$quality = (int)$quality;
-		$videoplayback = VideoPlayback::find($id);
+		$id_decrypt = Crypt::decrypt($id);
+		$videoplayback = VideoPlayback::find((int)$id_decrypt);
 		if(count($videoplayback) == 0){
 			return response(404);
 		}
