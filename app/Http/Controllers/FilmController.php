@@ -557,7 +557,7 @@ class FilmController extends Controller {
 		if(!Auth::user()->hasPermission('createFilm')){
 			return redirect()->route('admin.getHome')->with('flash_message_error', '403! Không thể Create Film');
 		}
-		$film_job = FilmJob::all();
+		$film_job = Cache::get('film_job');
 		// $film_country = FilmCountry::all();//da co trong service
 		return view('admin.film.add', compact('film_job'));
 	}
@@ -702,7 +702,7 @@ class FilmController extends Controller {
 			return redirect()->route('admin.film.getList')->with(['flash_message_error' =>'Get Edit! Không tồn tại film id: '.$film_id]);
 		}
 		$film_list = FilmList::find($film_id);
-		$film_job = FilmJob::all();
+		$film_job = Cache::get('film_job');
 		$directors = FilmDirector::where('film_id', $film_id)->with(['filmPerson' => function($query){
 			$query->select('id', 'person_name');
 		}])->get();
