@@ -27,8 +27,8 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 - Edit file .env : DB....
 - Create table: php artisan migrate
 - Database seed: php artisan db:seed
-- Uses account: admin
+- User account: admin
 - Password: 123456
-- Please access Admin Interface: Select Cache and select Clear Cache after enter infomation.
+- Please access Admin Interface: Select Cache and select Clear Cache after entered infomation.
 
 
